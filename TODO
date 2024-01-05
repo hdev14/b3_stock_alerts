@@ -1,0 +1,8 @@
+[ ] - Register alerts: The user should be able to register a stock alert with a 
+max amount of sales and a min amount of purchase.
+[ ] - Delete alerts: The user should be able to delete a specific stock alert.
+[ ] - List stock alerts: The should be able to see all your stock alerts.
+[ ] - Stock notification: The application must send a notification by email 
+for each user, notifying about stocks updates.
+[ ] - Auth with captcha: The application must enforce authentication with captcha 
+to protect users informations.
