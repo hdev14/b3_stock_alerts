@@ -1,8 +1,8 @@
-export default class User {
-  constructor(
-    readonly id: string, 
-    readonly name: string,
-    readonly email: string, 
-    readonly password: string
-  ) {}
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  phone_number: string;
+  password: string;
 }
+

@@ -4,19 +4,19 @@
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "@api": [
+      "@api/*": [
         "src/api/*"
       ],
-      "@b3_stock_alerts": [
+      "@b3_stock_alerts/*": [
         "src/b3_stock_alerts/*"
       ],
-      "@notification_worker": [
+      "@notification_worker/*": [
         "src/notification_worker/*"
       ],
-      "@stocks_job": [
+      "@stocks_job/*": [
         "src/stocks_job/*"
       ],
-      "@shared": [
+      "@shared/*": [
         "src/_shared/*"
       ]
     },

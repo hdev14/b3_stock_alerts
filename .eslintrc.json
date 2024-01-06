@@ -15,6 +15,12 @@
     "plugins": [
         "@typescript-eslint"
     ],
-    "rules": {
-    }
+    "settings": {
+        "import/resolver": {
+            "typescript": {
+                "project": "./tsconfig.json"
+            }
+        }
+    },
+    "rules": {}
 }
