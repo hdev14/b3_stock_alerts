@@ -13,7 +13,7 @@ module.exports = {
     clearMocks: true,
     setupFilesAfterEnv: [],
     testMatch: [
-      "**/__tests__/**/*.unit.(spec|test).[jt]s?(x)"
+      "**/*.unit.(spec|test).[jt]s?(x)"
     ]
   }
 }

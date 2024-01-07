@@ -7,8 +7,7 @@
     "start:dev": "",
     "start:prod": "",
     "build": "",
-    "test:unit": "echo \"Error: no test specified\" && exit 1",
-    "test:unit:watch": ""
+    "test:unit": "npx jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +24,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@faker-js/faker": "^8.3.1",
     "pg": "^8.11.3"
   }
 }

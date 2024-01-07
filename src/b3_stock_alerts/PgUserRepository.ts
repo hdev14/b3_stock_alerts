@@ -1,0 +1,49 @@
+import Postgres from "@shared/Postgres";
+import { Client } from "pg";
+import { User } from "./User";
+import UserRepository from "./UserRepository";
+
+export default class PgUserRepository implements UserRepository {
+  private readonly client: Client;
+
+  constructor() {
+    this.client = Postgres.getClient();
+  }
+
+  async getUsers(): Promise<User[]> {
+    const result = await this.client.query('SELECT id, email, name, password, phone_number FROM users');
+
+    return result.rows;
+  }
+
+  async getUser(user_id: string): Promise<User | null> {
+    const result = await this.client.query(
+      'SELECT id, email, name, password, phone_number FROM users WHERE id = $1',
+      [user_id]
+    );
+
+    if (result.rows[0] === undefined) {
+      return null;
+    }
+
+    return result.rows[0];
+  }
+
+  async createUser(user: User): Promise<void> {
+    await this.client.query(
+      'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+      [user.id, user.email, user.name, user.password, user.phone_number]
+    );
+  }
+
+  async updateUser(user: User): Promise<void> {
+    await this.client.query(
+      'UPDATE users SET email = $2, name = $3, password = $4, phone_number = $5 WHERE id = $1',
+      [user.id, user.email, user.name, user.password, user.phone_number]
+    );
+  }
+
+  async deleteUser(user_id: string): Promise<void> {
+    await this.client.query('DELETE FROM users WHERE id = $1', [user_id]);
+  }
+}

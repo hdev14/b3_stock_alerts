@@ -1,10 +1,10 @@
 import { Client } from "pg";
 
 export default class Postgres {
-  private client?: Client;
+  private static client?: Client;
 
   private constructor() {
-    this.client = new Client({
+    Postgres.client = new Client({
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT!, 10),
       database: process.env.DB_DATABSE,
@@ -13,11 +13,11 @@ export default class Postgres {
     });
   }
 
-  getClient() {
-    if (this.client === undefined) {
+  static getClient() {
+    if (Postgres.client === undefined) {
       new Postgres();
     }
 
-    return this.client;
+    return Postgres.client!;
   }
 }
