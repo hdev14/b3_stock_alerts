@@ -13,7 +13,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.7",
     "@types/pg": "^8.10.9",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
@@ -25,6 +27,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.3.1",
+    "bcrypt": "^5.1.1",
     "pg": "^8.11.3"
   }
 }
