@@ -42,13 +42,13 @@ export default class UserService {
   }
 
   async createUser(params: CreateUserParams): Promise<Result<User>> {
-    const passwordHash = this.encryptor.createHash(params.password);
+    const password_hash = this.encryptor.createHash(params.password);
 
     const user: User = {
       id: randomUUID(),
       email: params.email,
       name: params.name,
-      password: passwordHash,
+      password: password_hash,
       phone_number: params.phone_number,
     };
 
@@ -68,11 +68,11 @@ export default class UserService {
       user.password = this.encryptor.createHash(rest.password);
     }
 
-    const newData = Object.assign({}, user, rest);
+    const new_data = Object.assign({}, user, rest);
 
-    await this.repository.updateUser(newData);
+    await this.repository.updateUser(new_data);
 
-    return { data: newData };
+    return { data: new_data };
   }
 
   async removeUser(user_id: string): Promise<Result | void> {
