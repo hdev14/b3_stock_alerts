@@ -48,8 +48,4 @@ export default class AlertService {
 
     await this.repository.deleteAlert(alert_id);
   }
-
-  listUserAlerts(user_id: string): Promise<Result<Array<Alert>>> {
-    throw new Error('not implemented');
-  }
 }
