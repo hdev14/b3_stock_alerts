@@ -14,7 +14,7 @@ describe('AlertService', () => {
   describe('AlertService.createMaxAlert', () => {
     it('creates a new max alert', async () => {
       expect.assertions(6);
-
+      
       const params = {
         user_id: faker.string.uuid(),
         amount: faker.number.float(),
