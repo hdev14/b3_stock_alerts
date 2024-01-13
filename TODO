@@ -4,5 +4,8 @@ max amount of sales and a min amount of purchase.
 [ ] - List stock alerts: The should be able to see all your stock alerts.
 [ ] - Stock notification: The application must send a notification by email 
 for each user, notifying about stocks updates.
-[ ] - Auth with captcha: The application must enforce authentication with captcha 
+[ ] - Auth with captcha: The application must enforce authentication with login and captcha 
 to protect users informations.
+[ ] - Create account: The guest should be able to create an account
+[ ] - Remove account: The user should be able to delete your account (soft delete)
+[ ] - Subscriptions: To be able to add more than 3 alerts, the user must subscribe paying a specific amount for it(TBD)
