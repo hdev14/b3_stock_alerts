@@ -7,6 +7,7 @@ beforeAll(async () => {
   try {
     globalThis.request = supertest(new Server().application);
     globalThis.db_client = Postgres.getClient();
+    await globalThis.db_client.connect();
   } catch (e: any) {
     console.error(e.stack);
   }

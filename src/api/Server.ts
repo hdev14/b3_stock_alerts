@@ -21,8 +21,7 @@ export default class Server {
   }
 
   private setupRouters() {
-    this._application.use('/users', users);
-    this._application.use('/alerts', alerts);
+    this._application.use('/v1', users, alerts);
   }
 
   private setupBottomMiddlewares() {
