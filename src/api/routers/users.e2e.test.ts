@@ -17,7 +17,7 @@ describe('Users endpoints', () => {
       };
 
       const response = await globalThis.request
-        .post('/v1/users')
+        .post('/api/users')
         .set('Content-Type', 'application/json')
         .send(body);
 
