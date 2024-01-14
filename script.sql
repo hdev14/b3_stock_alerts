@@ -1,5 +1,5 @@
 CREATE TABLE users (
-	  id VARCHAR(32) NOT NULL,
+	  id VARCHAR(36) NOT NULL,
 	  name VARCHAR(50) NOT NULL,
  	  email VARCHAR(50) NOT NULL,
   	phone_number VARCHAR(20) NOT NULL,
@@ -8,8 +8,8 @@ CREATE TABLE users (
 );
 
 CREATE TABLE alerts (
-	  id VARCHAR(32) NOT NULL,
-	  user_id VARCHAR(32) NOT NULL,
+	  id VARCHAR(36) NOT NULL,
+	  user_id VARCHAR(36) NOT NULL,
   	stock VARCHAR(6) NOT NULL,
   	max_amount float DEFAULT 0,
   	min_amount float DEFAULT 0,
