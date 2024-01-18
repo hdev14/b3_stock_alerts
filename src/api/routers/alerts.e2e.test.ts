@@ -1,4 +1,4 @@
-describe('Alerts endpoints', () => {
+describe.skip('Alerts endpoints', () => {
   it('', () => {
     console.log(globalThis.db_client);
     console.log(globalThis.request);

@@ -40,13 +40,50 @@ describe('Users endpoints', () => {
       };
 
       const response = await globalThis.request
-        .post('/v1/users')
+        .post('/api/users')
         .set('Content-Type', 'application/json')
         .send(body);
 
-      console.log(response.body.errors);
       expect(response.status).toEqual(400);
       expect(response.body.errors).toHaveLength(4);
+    });
+  });
+
+  describe('GET: /users/:id', () => {
+    const user_id = faker.string.uuid();
+
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+      );
+    });
+
+    it('returns an user by id', async () => {
+      expect.assertions(5);
+
+      const response = await globalThis.request
+        .get(`/api/users/${user_id}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body.id).toEqual(user_id);
+      expect(response.body.name).toBeDefined();
+      expect(response.body.email).toBeDefined();
+      expect(response.body.phone_number).toBeDefined();
+    });
+
+    it("returns not found if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/api/users/${faker.string.uuid()}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('User not found');
     });
   });
 });

@@ -5,6 +5,7 @@ import UserService from '@b3_stock_alerts/UserService';
 import { NextFunction, Request, Response, Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { create_user } from './validations';
+import NotFoundError from '@shared/NotFoundError';
 
 const router = Router();
 const userService = new UserService(new PgUserRepository(), new BcryptEncryptor());
@@ -32,9 +33,14 @@ router.post('/users',
   }
 );
 
-router.get('/users/:id', (_request: Request, response: Response, next: NextFunction) => {
+router.get('/users/:id', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    return response.status(204).json();
+    const result = await userService.getUser(request.params.id);
+    if (result.error instanceof NotFoundError) {
+      return response.status(404).json({ message: result.error.message });
+    }
+
+    return response.status(200).json(result.data);
   } catch (e) {
     return next(e);
   }
