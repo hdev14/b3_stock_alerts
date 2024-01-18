@@ -112,4 +112,38 @@ describe('Users endpoints', () => {
       expect(response.body).toHaveLength(2);
     });
   });
+
+  describe('DELETE: /users/:id', () => {
+    const user_id = faker.string.uuid();
+
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+      );
+    });
+    
+    it("deletes an user by id", async () => {
+      expect.assertions(1);
+
+      const response = await globalThis.request
+        .delete(`/api/users/${user_id}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(204);
+    });
+
+    it("returns not found if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .delete(`/api/users/${user_id}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('User not found');
+    });
+  });
 });

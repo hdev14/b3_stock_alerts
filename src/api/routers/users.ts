@@ -64,9 +64,15 @@ router.put('/users/:id', (_request: Request, response: Response, next: NextFunct
   }
 });
 
-router.delete('/users/:id', (_request: Request, response: Response, next: NextFunction) => {
+router.delete('/users/:id', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    return response.status(204).json();
+    const result = await user_service.removeUser(request.params.id);
+
+    if (result && result.error instanceof NotFoundError) {
+      return response.status(404).json({ message: result.error.message });
+    }
+
+    return response.sendStatus(204);
   } catch (e) {
     return next(e);
   }
