@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker/locale/pt_BR";
 
 describe('Users endpoints', () => {
-  afterAll(async () => {
+  afterEach(async () => {
     await globalThis.db_client.query('DELETE FROM users');
   });
 
@@ -84,6 +84,32 @@ describe('Users endpoints', () => {
 
       expect(response.status).toEqual(404);
       expect(response.body.message).toEqual('User not found');
+    });
+  });
+
+  describe('GET: /users', () => {
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [faker.string.uuid(), faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+      );
+
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [faker.string.uuid(), faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+      );
+    });
+
+    it('returns an array of users', async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get('/api/users')
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toHaveLength(2);
     });
   });
 });

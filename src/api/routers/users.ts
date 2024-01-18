@@ -2,13 +2,13 @@ import validator from '@api/middlewares/validator';
 import BcryptEncryptor from '@b3_stock_alerts/BcryptEncryptor';
 import PgUserRepository from '@b3_stock_alerts/PgUserRepository';
 import UserService from '@b3_stock_alerts/UserService';
+import NotFoundError from '@shared/NotFoundError';
 import { NextFunction, Request, Response, Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { create_user } from './validations';
-import NotFoundError from '@shared/NotFoundError';
 
 const router = Router();
-const userService = new UserService(new PgUserRepository(), new BcryptEncryptor());
+const user_service = new UserService(new PgUserRepository(), new BcryptEncryptor());
 
 router.post('/users',
   checkSchema(create_user),
@@ -22,7 +22,7 @@ router.post('/users',
         password
       } = request.body;
 
-      const result = await userService.createUser({ name, email, phone_number, password });
+      const result = await user_service.createUser({ name, email, phone_number, password });
 
       if (result.data) {
         return response.status(201).json(result.data);
@@ -35,7 +35,7 @@ router.post('/users',
 
 router.get('/users/:id', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const result = await userService.getUser(request.params.id);
+    const result = await user_service.getUser(request.params.id);
     if (result.error instanceof NotFoundError) {
       return response.status(404).json({ message: result.error.message });
     }
@@ -46,9 +46,11 @@ router.get('/users/:id', async (request: Request, response: Response, next: Next
   }
 });
 
-router.get('/users', (_request: Request, response: Response, next: NextFunction) => {
+router.get('/users', async (_: Request, response: Response, next: NextFunction) => {
   try {
-    return response.status(204).json();
+    const result = await user_service.listUsers();
+
+    return response.status(200).json(result.data);
   } catch (e) {
     return next(e);
   }
