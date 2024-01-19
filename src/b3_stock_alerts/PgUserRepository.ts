@@ -37,9 +37,25 @@ export default class PgUserRepository implements UserRepository {
   }
 
   async updateUser(user: User): Promise<void> {
+    const entries = Object.entries(user).filter(([key, value]) => key !== 'id' && !!value);
+
+    const set = entries.reduce((acc, [key, value], index) => {
+      if (value) {
+        acc += `${key} = $${index + 2}`;
+      }
+
+      if (index + 1 < entries.length) {
+        acc += ', ';
+      }
+
+      return acc;
+    }, '');
+
+    const values = entries.map(([, value]) => value);
+
     await this.client.query(
-      'UPDATE users SET email = $2, name = $3, password = $4, phone_number = $5 WHERE id = $1',
-      [user.id, user.email, user.name, user.password, user.phone_number]
+      `UPDATE users SET ${set} WHERE id = $1`,
+      [user.id, ...values]
     );
   }
 
