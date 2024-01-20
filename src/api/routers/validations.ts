@@ -45,3 +45,22 @@ export const update_user: Schema = {
     },
   },
 }
+
+export const create_alert: Schema = {
+  isMax: {
+    isBoolean: true,
+  },
+  user_id: {
+    isString: true,
+    isUUID: true,
+  },
+  stock: {
+    isString: true,
+    isLength: {
+      options: { min: 5, max: 6 }
+    },
+  },
+  amount: {
+    isFloat: true,
+  }
+}

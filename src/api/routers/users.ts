@@ -4,13 +4,14 @@ import PgUserRepository from '@b3_stock_alerts/PgUserRepository';
 import UserService from '@b3_stock_alerts/UserService';
 import NotFoundError from '@shared/NotFoundError';
 import { NextFunction, Request, Response, Router } from 'express';
-import { checkSchema } from 'express-validator';
+import { checkSchema, param } from 'express-validator';
 import { create_user, update_user } from './validations';
 
 const router = Router();
 const user_service = new UserService(new PgUserRepository(), new BcryptEncryptor());
 
-router.post('/users',
+router.post(
+  '/users',
   checkSchema(create_user),
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
@@ -33,18 +34,23 @@ router.post('/users',
   }
 );
 
-router.get('/users/:id', async (request: Request, response: Response, next: NextFunction) => {
-  try {
-    const result = await user_service.getUser(request.params.id);
-    if (result.error instanceof NotFoundError) {
-      return response.status(404).json({ message: result.error.message });
-    }
+router.get(
+  '/users/:id',
+  param('id').isUUID(),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await user_service.getUser(request.params.id);
+      if (result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message });
+      }
 
-    return response.status(200).json(result.data);
-  } catch (e) {
-    return next(e);
+      return response.status(200).json(result.data);
+    } catch (e) {
+      return next(e);
+    }
   }
-});
+);
 
 router.get('/users', async (_: Request, response: Response, next: NextFunction) => {
   try {
@@ -56,7 +62,9 @@ router.get('/users', async (_: Request, response: Response, next: NextFunction) 
   }
 });
 
-router.put('/users/:id',
+router.put(
+  '/users/:id',
+  param('id').isUUID(),
   checkSchema(update_user),
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
@@ -87,18 +95,23 @@ router.put('/users/:id',
   }
 );
 
-router.delete('/users/:id', async (request: Request, response: Response, next: NextFunction) => {
-  try {
-    const result = await user_service.removeUser(request.params.id);
+router.delete(
+  '/users/:id',
+  param('id').isUUID(),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await user_service.removeUser(request.params.id);
 
-    if (result && result.error instanceof NotFoundError) {
-      return response.status(404).json({ message: result.error.message });
+      if (result && result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message });
+      }
+
+      return response.sendStatus(204);
+    } catch (e) {
+      return next(e);
     }
-
-    return response.sendStatus(204);
-  } catch (e) {
-    return next(e);
   }
-});
+);
 
 export default router;
