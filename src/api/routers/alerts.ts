@@ -4,7 +4,7 @@ import PgAlertRepository from '@b3_stock_alerts/PgAlertRepository';
 import PgUserRepository from '@b3_stock_alerts/PgUserRepository';
 import NotFoundError from '@shared/NotFoundError';
 import { NextFunction, Request, Response, Router } from 'express';
-import { checkSchema } from 'express-validator';
+import { checkSchema, param } from 'express-validator';
 import { create_alert } from './validations';
 
 const router = Router();
@@ -41,8 +41,23 @@ router.post(
   }
 );
 
-router.delete('/alerts/:id', (_request: Request, response: Response) => {
-  return response.status(204).json();
-});
+router.delete(
+  '/alerts/:id',
+  param('id').isUUID(),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await alert_service.removeAlert(request.params.id);
+
+      if (result && result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message })
+      }
+
+      return response.sendStatus(204);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
 
 export default router;
