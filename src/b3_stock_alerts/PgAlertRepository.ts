@@ -33,4 +33,10 @@ export default class PgAlertRepository implements AlertRepository {
   async deleteAlert(alert_id: string): Promise<void> {
     await this.client.query('DELETE FROM alerts WHERE id = $1', [alert_id]);
   }
+
+  async listAlertsByUserId(user_id: string): Promise<Alert[]> {
+    const result = await this.client.query('SELECT id, stock, user_id, max_amount, min_amount FROM alerts WHERE user_id = $1', [user_id]);
+
+    return result.rows;
+  }
 }

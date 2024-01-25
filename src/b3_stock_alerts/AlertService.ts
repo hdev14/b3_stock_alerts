@@ -12,7 +12,10 @@ export type CreateAlertParams = {
 };
 
 export default class AlertService {
-  constructor(readonly alert_repository: AlertRepository, readonly user_repository: UserRepository) { }
+  constructor(
+    private readonly alert_repository: AlertRepository,
+    private readonly user_repository: UserRepository
+  ) { }
 
   async createMaxAlert(params: CreateAlertParams): Promise<Result<Alert>> {
     const alert: Alert = {
@@ -60,5 +63,17 @@ export default class AlertService {
     }
 
     await this.alert_repository.deleteAlert(alert_id);
+  }
+
+  async listUserAlerts(user_id: string): Promise<Result<Alert[]>> {
+    const user = await this.user_repository.getUser(user_id);
+
+    if (!user) {
+      return { error: new NotFoundError('User not found') };
+    }
+
+    const alerts = await this.alert_repository.listAlertsByUserId(user_id);
+
+    return { data: alerts };
   }
 }

@@ -64,7 +64,7 @@ describe('PgAlertRepository', () => {
         min_amount: faker.number.float(),
       };
 
-      queryMock.mockResolvedValueOnce({ rows: [alert]});
+      queryMock.mockResolvedValueOnce({ rows: [alert] });
 
       const result = await repository.getAlert(alert.id);
 
@@ -75,7 +75,7 @@ describe('PgAlertRepository', () => {
     it("returns NULL if alert doesn't exist", async () => {
       expect.assertions(2);
 
-      queryMock.mockResolvedValueOnce({ rows: []  });
+      queryMock.mockResolvedValueOnce({ rows: [] });
 
       const alert_id = faker.string.uuid();
 
@@ -83,6 +83,38 @@ describe('PgAlertRepository', () => {
 
       expect(queryMock).toHaveBeenCalledWith('SELECT id, stock, user_id, max_amount, min_amount FROM alerts WHERE id = $1', [alert_id]);
       expect(result).toBeNull();
+    });
+  });
+
+  describe('PgAlertRepository.listAlertsByUserId', () => {
+    it('returns an array of alerts', async () => {
+      expect.assertions(2);
+
+      const user_id = faker.string.uuid();
+
+      queryMock.mockResolvedValueOnce({
+        rows: [
+          {
+            id: faker.string.uuid(),
+            stock: faker.string.alphanumeric(6),
+            user_id,
+            max_amount: faker.number.float(),
+            min_amount: faker.number.float(),
+          },
+          {
+            id: faker.string.uuid(),
+            stock: faker.string.alphanumeric(6),
+            user_id,
+            max_amount: faker.number.float(),
+            min_amount: faker.number.float(),
+          }
+        ]
+      });
+
+      const alerts = await repository.listAlertsByUserId(user_id);
+
+      expect(queryMock).toHaveBeenCalledWith('SELECT id, stock, user_id, max_amount, min_amount FROM alerts WHERE user_id = $1', [user_id]);
+      expect(alerts).toHaveLength(2);
     });
   });
 });
