@@ -60,4 +60,23 @@ router.delete(
   }
 );
 
+router.get(
+  '/alerts/users/:id',
+  param('id').isUUID(),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const result = await alert_service.listUserAlerts(request.params.id);
+
+      if (result && result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message })
+      }
+
+      return response.status(200).json(result.data);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
 export default router;

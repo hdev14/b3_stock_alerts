@@ -123,4 +123,49 @@ describe('Alerts endpoints', () => {
       expect(response.status).toEqual(204);
     });
   });
+
+  describe('GET: /alerts/users/:id', () => {
+    const user_id = faker.string.uuid();
+
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+      );
+
+      await globalThis.db_client.query(
+        'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
+        [faker.string.uuid(), faker.string.alphanumeric(6), user_id, faker.number.float(), faker.number.float()]
+      );
+
+      await globalThis.db_client.query(
+        'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
+        [faker.string.uuid(), faker.string.alphanumeric(6), user_id, faker.number.float(), faker.number.float()]
+      );
+    });
+
+    it("returns not found if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/api/alerts/users/${faker.string.uuid()}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('User not found');
+    });
+
+    it("returns an array of user's alerts", async () => {
+      expect.assertions(2);
+
+      const response = await globalThis.request
+        .get(`/api/alerts/users/${user_id}`)
+        .set('Content-Type', 'application/json')
+        .send();
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toHaveLength(2);
+    });
+  });
 });
