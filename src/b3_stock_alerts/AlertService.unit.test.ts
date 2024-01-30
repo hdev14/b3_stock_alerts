@@ -8,6 +8,7 @@ describe('AlertService', () => {
     deleteAlert: jest.fn(),
     getAlert: jest.fn(),
     listAlertsByUserId: jest.fn(),
+    listAlerts: jest.fn(),
   };
 
   const userRepositoryMock = {

@@ -1,7 +1,9 @@
 import Postgres from "@shared/Postgres";
 import { Client } from "pg";
 import { Alert } from "./Alert";
-import AlertRepository from "./AlertRepository";
+import AlertRepository, { ListAlertParams } from "./AlertRepository";
+
+
 
 export default class PgAlertRepository implements AlertRepository {
   private readonly client: Client;
@@ -36,6 +38,15 @@ export default class PgAlertRepository implements AlertRepository {
 
   async listAlertsByUserId(user_id: string): Promise<Alert[]> {
     const result = await this.client.query('SELECT id, stock, user_id, max_amount, min_amount FROM alerts WHERE user_id = $1', [user_id]);
+
+    return result.rows;
+  }
+
+  async listAlerts(params: ListAlertParams): Promise<Alert[]> {
+    const result = await this.client.query(
+      'SELECT id, stock, user_id, max_amount, min_amount FROM alerts LIMIT $1 OFFSET $2',
+      [params.limit, params.skip]
+    );
 
     return result.rows;
   }

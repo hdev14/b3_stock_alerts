@@ -117,4 +117,37 @@ describe('PgAlertRepository', () => {
       expect(alerts).toHaveLength(2);
     });
   });
+
+  describe('PgAlertRepository.listAlerts', () => {
+    it('returns an array of alerts', async () => {
+      expect.assertions(2);
+
+      queryMock.mockResolvedValueOnce({
+        rows: [
+          {
+            id: faker.string.uuid(),
+            stock: faker.string.alphanumeric(6),
+            user_id: faker.string.uuid(),
+            max_amount: faker.number.float(),
+            min_amount: faker.number.float(),
+          },
+          {
+            id: faker.string.uuid(),
+            stock: faker.string.alphanumeric(6),
+            user_id: faker.string.uuid(),
+            max_amount: faker.number.float(),
+            min_amount: faker.number.float(),
+          }
+        ]
+      });
+
+      const limit = faker.number.int();
+      const skip = faker.number.int();
+
+      const alerts = await repository.listAlerts({ limit, skip })
+
+      expect(queryMock).toHaveBeenCalledWith('SELECT id, stock, user_id, max_amount, min_amount FROM alerts LIMIT $1 OFFSET $2', [limit, skip]);
+      expect(alerts).toHaveLength(2);
+    });
+  });
 });
