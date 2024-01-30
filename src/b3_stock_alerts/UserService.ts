@@ -1,5 +1,5 @@
 import NotFoundError from "@shared/NotFoundError";
-import Result from "@shared/Result";
+import { Result } from "@shared/generic_types";
 import { randomUUID } from "crypto";
 import Encryptor from "./Encryptor";
 import { User } from "./User";

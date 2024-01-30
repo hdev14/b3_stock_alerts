@@ -3,7 +3,7 @@ import NotFoundError from "@shared/NotFoundError";
 import AlertService from "./AlertService";
 
 describe('AlertService', () => {
-  const alertRepositoryMock = {
+  const alert_repository_mock = {
     createAlert: jest.fn(),
     deleteAlert: jest.fn(),
     getAlert: jest.fn(),
@@ -11,7 +11,7 @@ describe('AlertService', () => {
     listAlerts: jest.fn(),
   };
 
-  const userRepositoryMock = {
+  const user_repository_mock = {
     createUser: jest.fn(),
     deleteUser: jest.fn(),
     getUser: jest.fn(),
@@ -19,7 +19,7 @@ describe('AlertService', () => {
     updateUser: jest.fn()
   };
 
-  const service = new AlertService(alertRepositoryMock, userRepositoryMock);
+  const service = new AlertService(alert_repository_mock, user_repository_mock);
 
   describe('AlertService.createMaxAlert', () => {
     it('creates a new max alert', async () => {
@@ -31,12 +31,12 @@ describe('AlertService', () => {
         stock: faker.string.alphanumeric(4),
       };
 
-      userRepositoryMock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
+      user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
 
       const result = await service.createMaxAlert(params);
 
       if (result.data) {
-        expect(alertRepositoryMock.createAlert).toHaveBeenCalled();
+        expect(alert_repository_mock.createAlert).toHaveBeenCalled();
         expect(result.data.id).toBeDefined();
         expect(result.data.max_amount).toEqual(params.amount);
         expect(result.data.min_amount).toBeUndefined();
@@ -54,7 +54,7 @@ describe('AlertService', () => {
         stock: faker.string.alphanumeric(4),
       };
 
-      userRepositoryMock.getUser.mockResolvedValueOnce(null);
+      user_repository_mock.getUser.mockResolvedValueOnce(null);
 
       const result = await service.createMaxAlert(params);
 
@@ -72,12 +72,12 @@ describe('AlertService', () => {
         stock: faker.string.alphanumeric(4),
       };
 
-      userRepositoryMock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
+      user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
 
       const result = await service.createMinAlert(params);
 
       if (result.data) {
-        expect(alertRepositoryMock.createAlert).toHaveBeenCalled();
+        expect(alert_repository_mock.createAlert).toHaveBeenCalled();
         expect(result.data.id).toBeDefined();
         expect(result.data.max_amount).toBeUndefined();
         expect(result.data.min_amount).toEqual(params.amount);
@@ -95,7 +95,7 @@ describe('AlertService', () => {
         stock: faker.string.alphanumeric(4),
       };
 
-      userRepositoryMock.getUser.mockResolvedValueOnce(null);
+      user_repository_mock.getUser.mockResolvedValueOnce(null);
 
       const result = await service.createMinAlert(params);
 
@@ -105,8 +105,8 @@ describe('AlertService', () => {
 
   describe('AlertService.removeAlert', () => {
     afterEach(() => {
-      alertRepositoryMock.deleteAlert.mockClear();
-      alertRepositoryMock.getAlert.mockClear();
+      alert_repository_mock.deleteAlert.mockClear();
+      alert_repository_mock.getAlert.mockClear();
     });
 
     it("returns a Result with NotFoundError if alert doesn't exist", async () => {
@@ -114,12 +114,12 @@ describe('AlertService', () => {
 
       const alert_id = faker.string.uuid();
 
-      alertRepositoryMock.getAlert.mockResolvedValueOnce(null);
+      alert_repository_mock.getAlert.mockResolvedValueOnce(null);
 
       const result = await service.removeAlert(alert_id);
 
       if (result) {
-        expect(alertRepositoryMock.getAlert).toHaveBeenCalledWith(alert_id);
+        expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
         expect(result.error).toBeInstanceOf(NotFoundError);
       }
     });
@@ -129,7 +129,7 @@ describe('AlertService', () => {
 
       const alert_id = faker.string.uuid();
 
-      alertRepositoryMock.getAlert.mockResolvedValueOnce({
+      alert_repository_mock.getAlert.mockResolvedValueOnce({
         id: faker.string.uuid(),
         stock: faker.string.alphanumeric(4),
         user_id: faker.string.uuid(),
@@ -138,7 +138,7 @@ describe('AlertService', () => {
 
       const result = await service.removeAlert(alert_id);
 
-      expect(alertRepositoryMock.getAlert).toHaveBeenCalledWith(alert_id);
+      expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
       expect(result).toBeUndefined();
     });
   });
@@ -147,7 +147,7 @@ describe('AlertService', () => {
     it("returns a result with a NotFoundError if user doesn't exist", async () => {
       expect.assertions(2);
 
-      userRepositoryMock.getUser.mockResolvedValueOnce(null);
+      user_repository_mock.getUser.mockResolvedValueOnce(null);
 
       const result = await service.listUserAlerts(faker.string.uuid());
 
@@ -158,8 +158,8 @@ describe('AlertService', () => {
     it("returns a result with an array of alerts", async () => {
       expect.assertions(2);
 
-      userRepositoryMock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
-      alertRepositoryMock.listAlertsByUserId.mockResolvedValueOnce([
+      user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
+      alert_repository_mock.listAlertsByUserId.mockResolvedValueOnce([
         {
           id: faker.string.uuid(),
           stock: faker.string.alphanumeric(4),
