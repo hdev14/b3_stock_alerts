@@ -1,5 +1,5 @@
 import AlertRepository from "@b3_stock_alerts/AlertRepository";
-import StockSearcher from "@b3_stock_alerts/SockSearcher";
+import StockSearcher, { StockInfo } from "@b3_stock_alerts/SockSearcher";
 import StockNotFoundError from "@shared/StockNotFound";
 import { StockEvent } from "@shared/generic_types";
 import { EventEmitter } from "stream";
@@ -27,10 +27,18 @@ export default class JobHandler extends EventEmitter {
   }
 
   private async sendStockEvents(alerts: Alert[]) {
+    const searched_stocks: Record<string, StockInfo> = {};
+
     for (let i = 0; i < alerts.length; i++) {
       try {
         const alert = alerts[i];
-        const stock_info = await this.stock_searcher.search(alert.stock);
+        let stock_info = searched_stocks[alert.stock];
+
+        if (!stock_info) {
+          const result = await this.stock_searcher.search(alert.stock);
+          searched_stocks[alert.stock] = result;
+          stock_info = result;
+        }
 
         if (alert.max_amount && alert.max_amount !== 0 && alert.max_amount <= stock_info.amount) {
           this.emit('stock_event', {

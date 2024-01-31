@@ -101,4 +101,36 @@ describe('JobHandler unit tests', () => {
     expect(typeof emit_spy.mock.calls[1][1].isMax).toEqual('boolean');
     expect(emit_spy.mock.calls[1][1].stock).toEqual(alerts[1].stock);
   });
+
+  it("doesn't call stock_searcher.search twice if stock already had been searched", async () => {
+    expect.assertions(1);
+
+    const alerts = [
+      {
+        id: faker.string.uuid(),
+        stock: 'test',
+        user_id: faker.string.uuid(),
+        max_amount: 100,
+        min_amount: 0,
+      },
+      {
+        id: faker.string.uuid(),
+        stock: 'test',
+        user_id: faker.string.uuid(),
+        max_amount: 0,
+        min_amount: 10,
+      }
+    ];
+
+    alert_repository_mock.listAlerts
+      .mockResolvedValueOnce(alerts)
+      .mockResolvedValueOnce([]);
+
+    stock_searcher_mock.search
+      .mockResolvedValueOnce({ amount: 101 });
+
+    await handler.handle();
+
+    expect(stock_searcher_mock.search).toHaveBeenCalledTimes(1);
+  });
 });
