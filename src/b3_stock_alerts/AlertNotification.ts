@@ -1,4 +1,3 @@
-import { Alert } from "./Alert";
 import { User } from "./User";
 
 export enum AlertNotificationTypes {
@@ -6,6 +5,13 @@ export enum AlertNotificationTypes {
   MIN
 }
 
+export type NotificationData = {
+  stock: string;
+  amount: number;
+  user: User,
+  type: AlertNotificationTypes,
+};
+
 export default interface AlertNotification {
-  notify(alert: Alert, user: User, type: AlertNotificationTypes): Promise<void>;
+  notify(data: NotificationData): Promise<void>;
 }

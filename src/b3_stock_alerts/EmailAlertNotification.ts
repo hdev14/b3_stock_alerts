@@ -1,7 +1,5 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import { Alert } from "./Alert";
-import AlertNotification, { AlertNotificationTypes } from "./AlertNotification";
-import { User } from "./User";
+import AlertNotification, { AlertNotificationTypes, NotificationData } from "./AlertNotification";
 
 export default class EmailAlertNotification implements AlertNotification {
   private readonly transporter: Transporter;
@@ -18,25 +16,25 @@ export default class EmailAlertNotification implements AlertNotification {
     });
   }
 
-  async notify(alert: Alert, user: User, type: AlertNotificationTypes): Promise<void> {
+  async notify(data: NotificationData): Promise<void> {
     const message = {
       from: 'test@server.com',
-      to: user.email,
+      to: data.user.email,
       subject: '',
       text: '',
       html: '',
     };
 
-    if (type === AlertNotificationTypes.MAX) {
+    if (data.type === AlertNotificationTypes.MAX) {
       message.subject = "Alerta de aumento no valor da ação!";
-      message.text = `A ação com sigla ${alert.stock} ultrapassou o valor de R$ ${alert.max_amount}.`;
-      message.html = `<p>A ação com sigla ${alert.stock} ultrapassou o valor de R$ ${alert.max_amount}</p>`;
+      message.text = `A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}.`;
+      message.html = `<p>A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}</p>`;
     } else {
       message.subject = "Alerta de baixa no valor de ação!";
-      message.text = `A ação com sigla ${alert.stock} está abaixo do valor de R$ ${alert.min_amount}.`;
-      message.html = `<p>A ação com sigla ${alert.stock} está abaixo o valor de R$ ${alert.min_amount}</p>`;
+      message.text = `A ação com sigla ${data.stock} está abaixo do valor de R$ ${data.amount}.`;
+      message.html = `<p>A ação com sigla ${data.stock} está abaixo o valor de R$ ${data.amount}</p>`;
     }
-    
+
     await this.transporter.sendMail(message);
   }
 }

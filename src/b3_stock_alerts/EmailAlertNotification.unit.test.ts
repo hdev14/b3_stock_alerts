@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { faker } from "@faker-js/faker/locale/pt_BR";
 import nodemailer from 'nodemailer';
-import { Alert } from "./Alert";
-import { AlertNotificationTypes } from "./AlertNotification";
+import { AlertNotificationTypes, NotificationData } from "./AlertNotification";
 import EmailAlertNotification from "./EmailAlertNotification";
-import { User } from "./User";
 
 jest.mock('nodemailer');
 
-const nodemailerMock = jest.mocked(nodemailer);
+const nodemailer_mock = jest.mocked(nodemailer);
 describe('EmailAlertNotification', () => {
   const OLD_ENV = process.env;
 
@@ -27,71 +25,68 @@ describe('EmailAlertNotification', () => {
   });
 
   describe('EmailAlertNotification.notify', () => {
-    const transporteMock = { sendMail: jest.fn() } as any;
-    nodemailerMock.createTransport.mockReturnValue(transporteMock);
-    const alertNotification = new EmailAlertNotification();
+    const transport_mock = { sendMail: jest.fn() } as any;
+    nodemailer_mock.createTransport.mockReturnValue(transport_mock);
+    const alert_notification = new EmailAlertNotification();
 
     afterEach(() => {
-      transporteMock.sendMail.mockClear();
+      transport_mock.sendMail.mockClear();
     });
 
     it('sends an email notification for MAX stock alert', async () => {
       expect.assertions(1);
 
-      const alert: Alert = {
-        id: faker.string.uuid(),
+      const data: NotificationData = {
         stock: faker.string.alphanumeric(4),
-        user_id: faker.string.uuid(),
-        max_amount: faker.number.float(),
-        min_amount: faker.number.float(),
+        amount: faker.number.float(),
+        user: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.string.alphanumeric(11),
+          phone_number: faker.string.numeric(11),
+        },
+        type: AlertNotificationTypes.MAX,
       };
 
-      const user: User = {
-        id: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.string.alphanumeric(11),
-        phone_number: faker.string.numeric(11),
-      };
 
-      await alertNotification.notify(alert, user, AlertNotificationTypes.MAX);
 
-      expect(transporteMock.sendMail).toHaveBeenCalledWith({
+      await alert_notification.notify(data);
+
+      expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
-        to: user.email,
+        to: data.user.email,
         subject: "Alerta de aumento no valor da ação!",
-        text: `A ação com sigla ${alert.stock} ultrapassou o valor de R$ ${alert.max_amount}.`,
-        html: `<p>A ação com sigla ${alert.stock} ultrapassou o valor de R$ ${alert.max_amount}</p>`,
+        text: `A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}.`,
+        html: `<p>A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}</p>`,
       });
     });
 
     it('sends an email notification for MIN stock alert', async () => {
       expect.assertions(1);
 
-      const alert: Alert = {
-        id: faker.string.uuid(),
+      const data: NotificationData = {
         stock: faker.string.alphanumeric(4),
-        user_id: faker.string.uuid(),
-        max_amount: faker.number.float(),
-        min_amount: faker.number.float(),
+        amount: faker.number.float(),
+        user: {
+          id: faker.string.uuid(),
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.string.alphanumeric(11),
+          phone_number: faker.string.numeric(11),
+        },
+        type: AlertNotificationTypes.MIN,
       };
 
-      const user: User = {
-        id: faker.string.uuid(),
-        email: faker.internet.email(),
-        name: faker.person.fullName(),
-        password: faker.string.alphanumeric(11),
-        phone_number: faker.string.numeric(11),
-      };
 
-      await alertNotification.notify(alert, user, AlertNotificationTypes.MIN);
+      await alert_notification.notify(data);
 
-      expect(transporteMock.sendMail).toHaveBeenCalledWith({
+      expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
-        to: user.email,
+        to: data.user.email,
         subject: "Alerta de baixa no valor de ação!",
-        text: `A ação com sigla ${alert.stock} está abaixo do valor de R$ ${alert.min_amount}.`,
-        html: `<p>A ação com sigla ${alert.stock} está abaixo o valor de R$ ${alert.min_amount}</p>`,
+        text: `A ação com sigla ${data.stock} está abaixo do valor de R$ ${data.amount}.`,
+        html: `<p>A ação com sigla ${data.stock} está abaixo o valor de R$ ${data.amount}</p>`,
       });
     });
   });
