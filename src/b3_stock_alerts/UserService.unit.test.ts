@@ -4,7 +4,7 @@ import { User } from "./User";
 import UserService from "./UserService";
 
 describe("UserService's unit tests", () => {
-  const repositoryMock = {
+  const repository_mock = {
     createUser: jest.fn(),
     deleteUser: jest.fn(),
     getUser: jest.fn(),
@@ -12,15 +12,15 @@ describe("UserService's unit tests", () => {
     getUsers: jest.fn(),
   };
 
-  const encryptorMock = {
+  const encryptor_mock = {
     createHash: jest.fn(),
   }
 
-  const service = new UserService(repositoryMock, encryptorMock);
+  const service = new UserService(repository_mock, encryptor_mock);
 
   describe('UserService.getUser', () => {
     afterEach(() => {
-      repositoryMock.getUser.mockClear();
+      repository_mock.getUser.mockClear();
     });
 
     it('returns a Result with an user', async () => {
@@ -34,7 +34,7 @@ describe("UserService's unit tests", () => {
         phone_number: faker.string.numeric(11),
       };
 
-      repositoryMock.getUser.mockResolvedValueOnce(user);
+      repository_mock.getUser.mockResolvedValueOnce(user);
 
       const result = await service.getUser(faker.string.uuid());
 
@@ -45,7 +45,7 @@ describe("UserService's unit tests", () => {
     it("returns a Result with a NotFoundError if user doesn't exist", async () => {
       expect.assertions(2);
 
-      repositoryMock.getUser.mockResolvedValueOnce(null);
+      repository_mock.getUser.mockResolvedValueOnce(null);
 
       const result = await service.getUser(faker.string.uuid());
 
@@ -56,7 +56,7 @@ describe("UserService's unit tests", () => {
 
   describe('UserService.listUsers', () => {
     afterEach(() => {
-      repositoryMock.getUsers.mockClear();
+      repository_mock.getUsers.mockClear();
     });
 
     it('returns a Result with an array of users', async () => {
@@ -79,7 +79,7 @@ describe("UserService's unit tests", () => {
         }
       ];
 
-      repositoryMock.getUsers.mockResolvedValueOnce(users);
+      repository_mock.getUsers.mockResolvedValueOnce(users);
 
       const result = await service.listUsers();
 
@@ -93,8 +93,8 @@ describe("UserService's unit tests", () => {
 
   describe('UserService.createUser', () => {
     afterEach(() => {
-      repositoryMock.createUser.mockClear();
-      encryptorMock.createHash.mockClear();
+      repository_mock.createUser.mockClear();
+      encryptor_mock.createHash.mockClear();
     });
 
     it('generates a hash of the password before of the creation', async () => {
@@ -109,7 +109,7 @@ describe("UserService's unit tests", () => {
 
       await service.createUser(params);
 
-      expect(encryptorMock.createHash).toHaveBeenCalledWith(params.password);
+      expect(encryptor_mock.createHash).toHaveBeenCalledWith(params.password);
     });
 
     it('creates a new user', async () => {
@@ -122,12 +122,12 @@ describe("UserService's unit tests", () => {
         phone_number: faker.string.numeric(11),
       };
 
-      encryptorMock.createHash.mockReturnValueOnce('test');
+      encryptor_mock.createHash.mockReturnValueOnce('test');
 
       const result = await service.createUser(params);
 
       if (result.data) {
-        expect(repositoryMock.createUser).toHaveBeenCalled();
+        expect(repository_mock.createUser).toHaveBeenCalled();
         expect(result.data.id).toBeDefined();
         expect(result.data.email).toEqual(params.email);
         expect(result.data.name).toEqual(params.name);
@@ -139,8 +139,8 @@ describe("UserService's unit tests", () => {
 
   describe('UserService.updateUser', () => {
     afterEach(() => {
-      repositoryMock.updateUser.mockClear();
-      encryptorMock.createHash.mockClear();
+      repository_mock.updateUser.mockClear();
+      encryptor_mock.createHash.mockClear();
     });
 
     it("returns a Result with NotFoundError if user doesn't exist", async () => {
@@ -172,11 +172,11 @@ describe("UserService's unit tests", () => {
         phone_number: faker.string.numeric(11),
       };
 
-      repositoryMock.getUser.mockResolvedValueOnce(user);
+      repository_mock.getUser.mockResolvedValueOnce(user);
 
       await service.updateUser(params);
 
-      expect(encryptorMock.createHash).toHaveBeenCalledWith(params.password);
+      expect(encryptor_mock.createHash).toHaveBeenCalledWith(params.password);
     });
 
     it("updates an user", async () => {
@@ -197,12 +197,12 @@ describe("UserService's unit tests", () => {
         phone_number: faker.string.numeric(11),
       };
 
-      repositoryMock.getUser.mockResolvedValueOnce(user);
+      repository_mock.getUser.mockResolvedValueOnce(user);
 
       const result = await service.updateUser(params);
 
       if (result.data) {
-        expect(repositoryMock.updateUser).toHaveBeenCalled();
+        expect(repository_mock.updateUser).toHaveBeenCalled();
         expect(result.data.id).toBeDefined();
         expect(result.data.name).toEqual(params.name);
         expect(result.data.email).toEqual(params.email);
@@ -215,19 +215,19 @@ describe("UserService's unit tests", () => {
 
   describe('UserService.removeUser', () => {
     afterEach(() => {
-      repositoryMock.deleteUser.mockClear();
-      repositoryMock.getUser.mockClear();
+      repository_mock.deleteUser.mockClear();
+      repository_mock.getUser.mockClear();
     });
 
     it("returns a Result with a NotFoundError if user doesn't exist", async () => {
       expect.assertions(2);
 
-      repositoryMock.getUser.mockResolvedValueOnce(null);
+      repository_mock.getUser.mockResolvedValueOnce(null);
 
       const result = await service.removeUser(faker.string.uuid());
 
       if (result) {
-        expect(repositoryMock.getUser).toHaveBeenCalled();
+        expect(repository_mock.getUser).toHaveBeenCalled();
         expect(result.error).toBeInstanceOf(NotFoundError);
       }
     });
@@ -235,7 +235,7 @@ describe("UserService's unit tests", () => {
     it("deletes an user", async () => {
       expect.assertions(1);
 
-      repositoryMock.getUser.mockResolvedValueOnce({
+      repository_mock.getUser.mockResolvedValueOnce({
         id: faker.string.uuid(),
         email: faker.internet.email(),
         name: faker.person.fullName(),
@@ -245,7 +245,7 @@ describe("UserService's unit tests", () => {
 
       await service.removeUser(faker.string.uuid());
 
-      expect(repositoryMock.getUser).toHaveBeenCalled();
+      expect(repository_mock.getUser).toHaveBeenCalled();
     });
   });
 });

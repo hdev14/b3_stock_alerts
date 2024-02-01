@@ -4,19 +4,19 @@ import Postgres from "@shared/Postgres";
 import PgUserRepository from './PgUserRepository';
 import { User } from "./User";
 
-const getClientSpy = jest.spyOn(Postgres, 'getClient');
+const get_client_spy = jest.spyOn(Postgres, 'getClient');
 
 afterEach(() => {
-  getClientSpy.mockClear();
+  get_client_spy.mockClear();
 });
 
 describe('PgUserRepository', () => {
-  const queryMock = jest.fn();
-  getClientSpy.mockImplementation(() => ({ query: queryMock } as any));
+  const query_mock = jest.fn();
+  get_client_spy.mockImplementation(() => ({ query: query_mock } as any));
   const repository = new PgUserRepository();
 
   afterEach(() => {
-    queryMock.mockClear();
+    query_mock.mockClear();
   });
 
   describe('PgUserRepository.createUser', () => {
@@ -33,7 +33,7 @@ describe('PgUserRepository', () => {
 
       await repository.createUser(user);
 
-      expect(queryMock).toHaveBeenCalledWith('INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)', [
+      expect(query_mock).toHaveBeenCalledWith('INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)', [
         user.id, user.email, user.name, user.password, user.phone_number,
       ]);
     });
@@ -53,7 +53,7 @@ describe('PgUserRepository', () => {
 
       await repository.updateUser(user);
 
-      expect(queryMock).toHaveBeenCalledWith('UPDATE users SET email = $2, name = $3, password = $4, phone_number = $5 WHERE id = $1', [
+      expect(query_mock).toHaveBeenCalledWith('UPDATE users SET email = $2, name = $3, password = $4, phone_number = $5 WHERE id = $1', [
         user.id, user.email, user.name, user.password, user.phone_number,
       ]);
     });
@@ -71,24 +71,24 @@ describe('PgUserRepository', () => {
         phone_number: faker.string.numeric(11),
       };
 
-      queryMock.mockResolvedValueOnce({ rows: [user] });
+      query_mock.mockResolvedValueOnce({ rows: [user] });
 
       const result = await repository.getUser(user.id);
 
-      expect(queryMock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE id = $1', [user.id]);
+      expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE id = $1', [user.id]);
       expect(result).toEqual(user);
     });
 
     it("returns NULL if user doesn't exit", async () => {
       expect.assertions(2);
-      
+
       const user_id = faker.string.uuid();
 
-      queryMock.mockResolvedValueOnce({ rows: [] });
+      query_mock.mockResolvedValueOnce({ rows: [] });
 
       const result = await repository.getUser(user_id);
 
-      expect(queryMock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE id = $1', [user_id]);
+      expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE id = $1', [user_id]);
       expect(result).toBeNull();
     });
   });
@@ -114,11 +114,11 @@ describe('PgUserRepository', () => {
         }
       ];
 
-      queryMock.mockResolvedValueOnce({ rows: users });
+      query_mock.mockResolvedValueOnce({ rows: users });
 
       const result = await repository.getUsers();
 
-      expect(queryMock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users');
+      expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users');
       expect(result).toEqual(users);
     });
   });
@@ -126,12 +126,12 @@ describe('PgUserRepository', () => {
   describe('PgUserRepository.deleteUser', () => {
     it('deletes an user by id', async () => {
       expect.assertions(1);
-      
+
       const user_id = faker.string.uuid();
 
       await repository.deleteUser(user_id);
 
-      expect(queryMock).toHaveBeenCalledWith('DELETE FROM users WHERE id = $1', [user_id]);
+      expect(query_mock).toHaveBeenCalledWith('DELETE FROM users WHERE id = $1', [user_id]);
     });
   });
 })
