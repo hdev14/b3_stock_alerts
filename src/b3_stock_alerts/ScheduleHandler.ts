@@ -5,7 +5,7 @@ import { StockEvent } from "@shared/generic_types";
 import { EventEmitter } from "stream";
 import { Alert } from "./Alert";
 
-export default class JobHandler extends EventEmitter {
+export default class ScheduleHandler extends EventEmitter {
   constructor(
     private readonly alert_repository: AlertRepository,
     private readonly stock_searcher: StockSearcher,

@@ -1,14 +1,11 @@
-import validator from '@api/middlewares/validator';
-import BcryptEncryptor from '@b3_stock_alerts/BcryptEncryptor';
-import PgUserRepository from '@b3_stock_alerts/PgUserRepository';
-import UserService from '@b3_stock_alerts/UserService';
 import NotFoundError from '@shared/NotFoundError';
 import { NextFunction, Request, Response, Router } from 'express';
 import { checkSchema, param } from 'express-validator';
+import validator from 'src/application/middlewares/validator';
+import { user_service } from '../../bootstrap';
 import { create_user, update_user } from './validations';
 
 const router = Router();
-const user_service = new UserService(new PgUserRepository(), new BcryptEncryptor());
 
 router.post(
   '/users',

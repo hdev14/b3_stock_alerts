@@ -4,8 +4,8 @@
     "module": "commonjs",
     "baseUrl": ".",
     "paths": {
-      "@api/*": [
-        "src/api/*"
+      "@app/*": [
+        "src/application/*"
       ],
       "@b3_stock_alerts/*": [
         "src/b3_stock_alerts/*"

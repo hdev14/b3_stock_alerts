@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker/locale/pt_BR";
 import StockNotFoundError from "@shared/StockNotFound";
-import JobHandler from "./JobHandler";
+import ScheduleHandler from "./ScheduleHandler";
 
-describe('JobHandler unit tests', () => {
+describe('ScheduleHandler unit tests', () => {
   const alert_repository_mock = {
     createAlert: jest.fn(),
     deleteAlert: jest.fn(),
@@ -15,7 +15,7 @@ describe('JobHandler unit tests', () => {
     search: jest.fn(),
   };
 
-  const handler = new JobHandler(alert_repository_mock, stock_searcher_mock);
+  const handler = new ScheduleHandler(alert_repository_mock, stock_searcher_mock);
 
   beforeEach(() => {
     alert_repository_mock.listAlerts.mockClear();

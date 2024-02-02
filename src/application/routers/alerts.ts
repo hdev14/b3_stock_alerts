@@ -1,14 +1,11 @@
-import validator from '@api/middlewares/validator';
-import AlertService from '@b3_stock_alerts/AlertService';
-import PgAlertRepository from '@b3_stock_alerts/PgAlertRepository';
-import PgUserRepository from '@b3_stock_alerts/PgUserRepository';
 import NotFoundError from '@shared/NotFoundError';
 import { NextFunction, Request, Response, Router } from 'express';
 import { checkSchema, param } from 'express-validator';
+import validator from 'src/application/middlewares/validator';
+import { alert_service } from '../../bootstrap';
 import { create_alert } from './validations';
 
 const router = Router();
-const alert_service = new AlertService(new PgAlertRepository(), new PgUserRepository());
 
 router.post(
   '/alerts',
