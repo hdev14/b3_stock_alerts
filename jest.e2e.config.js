@@ -9,7 +9,7 @@ module.exports = {
       "src/b3_stock_alerts/",
     ],
     clearMocks: true,
-    setupFilesAfterEnv: ["<rootDir>/src/api/e2e_setup.ts"],
+    setupFilesAfterEnv: ["<rootDir>/src/application/e2e_setup.ts"],
     testMatch: [
       "**/*.e2e.(spec|test).[jt]s?(x)"
     ]
