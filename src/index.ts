@@ -2,7 +2,7 @@ import Server from "@app/Server";
 import cron from 'node-cron';
 import { schedule_handler } from "./bootstrap";
 
-const THIRTY_MIN = '30 * * * *';
+const THIRTY_MIN = '1 * * * *';
 
 (async function main() {
   try {
