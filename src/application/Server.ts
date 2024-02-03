@@ -25,8 +25,8 @@ export default class Server {
     this._application.use(cors());
     this._application.use(express.json());
     this._application.set('views', join(__dirname, 'views'));
-    this._application.set('view engine', 'mst');
-    this._application.engine('mst', mustache_express(join(__dirname, 'views/partials')));
+    this._application.set('view engine', 'html');
+    this._application.engine('html', mustache_express(join(__dirname, 'views/partials')));
   }
 
   private setupRouters() {

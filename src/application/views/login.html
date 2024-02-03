@@ -1,0 +1,29 @@
+{{> _head}}
+<main>
+  <h1>{{title}}</h1>
+
+  <form id="login-form" method="post">
+    <button type="submit">
+      Login
+    </button>
+  </form>
+
+  {{> components/test}}
+</main>
+
+<script>
+  const form = document.getElementById("login-form");
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    grecaptcha.ready(async () => {
+      const token = await grecaptcha.execute('6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA', { action: 'submit' });
+      console.log(token);
+      console.log(e);
+
+      const response = await fetch({ url: '/captcha', method: 'POST', body: JSON.stringify({ token }) });
+      console.log(resposne.status, await response.json());
+    });
+  });
+</script>
+{{> _footer}}

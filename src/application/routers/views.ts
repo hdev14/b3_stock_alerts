@@ -7,4 +7,10 @@ router.get('/index', (_request: Request, response: Response) => {
   response.render('index', { title: 'Hellow Mustache!' });
 });
 
+router.get('/login', (_request: Request, response: Response) => {
+  response.render('login', {
+    title: 'Login!',
+  });
+});
+
 export default router;
