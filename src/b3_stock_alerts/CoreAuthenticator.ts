@@ -16,15 +16,17 @@ export default class CoreAuthenticator implements Authenticator {
   }
 
   async verifyCaptcha(user_ip: string, token: string): Promise<boolean> {
-    const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+    const params = new URLSearchParams({
+      secret: process.env.GOOGLE_RECAPTCHA_SECRET!,
+      response: token,
+      remoteip: user_ip,
+    }).toString();
+
+    const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?${params}`, {
       method: 'POST',
-      body: JSON.stringify({
-        secret: process.env.GOOGLE_RECAPTCHA_SECRET,
-        response: token,
-        remoteip: user_ip,
-      }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       }
     });
 

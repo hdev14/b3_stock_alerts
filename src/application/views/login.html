@@ -21,8 +21,14 @@
       console.log(token);
       console.log(e);
 
-      const response = await fetch({ url: '/captcha', method: 'POST', body: JSON.stringify({ token }) });
-      console.log(resposne.status, await response.json());
+      const response = await fetch('/api/auth/captcha', {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log(response.status);
     });
   });
 </script>

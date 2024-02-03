@@ -30,15 +30,11 @@ describe("CoreAuthenticator's unit tests", () => {
       const result = await authenticator.verifyCaptcha(user_ip, token);
 
       expect(result).toBe(true);
-      expect(fetch_spy).toHaveBeenCalledWith('https://www.google.com/recaptcha/api/siteverify', {
+      expect(fetch_spy).toHaveBeenCalledWith(`https://www.google.com/recaptcha/api/siteverify?secret=fake_google_recaptcha_secret&response=${token}&remoteip=${user_ip}`, {
         method: 'POST',
-        body: JSON.stringify({
-          secret: 'fake_google_recaptcha_secret',
-          response: token,
-          remoteip: user_ip,
-        }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
     });
@@ -62,15 +58,11 @@ describe("CoreAuthenticator's unit tests", () => {
       const result = await authenticator.verifyCaptcha(user_ip, token);
 
       expect(result).toBe(false);
-      expect(fetch_spy).toHaveBeenCalledWith('https://www.google.com/recaptcha/api/siteverify', {
+      expect(fetch_spy).toHaveBeenCalledWith(`https://www.google.com/recaptcha/api/siteverify?secret=fake_google_recaptcha_secret&response=${token}&remoteip=${user_ip}`, {
         method: 'POST',
-        body: JSON.stringify({
-          secret: 'fake_google_recaptcha_secret',
-          response: token,
-          remoteip: user_ip,
-        }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
         }
       });
     });
