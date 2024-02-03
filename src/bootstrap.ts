@@ -1,5 +1,6 @@
 import AlertService from "@b3_stock_alerts/AlertService";
 import BcryptEncryptor from "@b3_stock_alerts/BcryptEncryptor";
+import CoreAuthenticator from "@b3_stock_alerts/CoreAuthenticator";
 import EmailAlertNotification from "@b3_stock_alerts/EmailAlertNotification";
 import PgAlertRepository from "@b3_stock_alerts/PgAlertRepository";
 import PgUserRepository from "@b3_stock_alerts/PgUserRepository";
@@ -16,6 +17,7 @@ export const alert_service = new AlertService(alert_repository, user_repository)
 export const user_service = new UserService(user_repository, new BcryptEncryptor());
 export const alert_notification = new EmailAlertNotification();
 export const stock_event_handler = new StockEventHandler(alert_notification, user_repository);
+export const authenticator = new CoreAuthenticator();
 
 schedule_handler.on('stock_event', stock_event_handler.handle.bind(stock_event_handler));
 

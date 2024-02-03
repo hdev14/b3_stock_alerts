@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Authenticator from "./Authenticator";
 import { User } from "./User";
 

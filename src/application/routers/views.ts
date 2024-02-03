@@ -7,7 +7,8 @@ router.get('/index', (_request: Request, response: Response) => {
   response.render('index', { title: 'Hellow Mustache!' });
 });
 
-router.get('/login', (_request: Request, response: Response) => {
+router.get('/login', (request: Request, response: Response) => {
+  console.log(request.headers);
   response.render('login', {
     title: 'Login!',
   });
