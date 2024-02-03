@@ -25,6 +25,7 @@ export default class Server {
   private setupTopMiddlewares() {
     this._application.use(cors());
     this._application.use(express.json());
+    this._application.use(express.urlencoded({ extended: true }));
     this._application.set('views', join(__dirname, 'views'));
     this._application.set('view engine', 'html');
     this._application.engine('html', mustache_express(join(__dirname, 'views/partials')));
@@ -40,7 +41,6 @@ export default class Server {
   }
 
   private setupBottomMiddlewares() {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this._application.use(error_handler);
   }
 }
