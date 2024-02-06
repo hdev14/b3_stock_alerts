@@ -6,12 +6,12 @@ module.exports = {
     displayName: "e2e Tests",
     coveragePathIgnorePatterns: [
       "/node_modules/",
-      "src/b3_stock_alerts/",
+      "src/application/views"
     ],
     clearMocks: true,
     setupFilesAfterEnv: ["<rootDir>/src/application/e2e_setup.ts"],
     testMatch: [
-      "**/*.e2e.(spec|test).[jt]s?(x)"
+      "<rootDir>src/application/routers/*.e2e.(spec|test).[jt]s?(x)"
     ]
   }
 }

@@ -6,9 +6,7 @@ module.exports = {
     displayName: "Unit Tests",
     coveragePathIgnorePatterns: [
       "/node_modules/",
-      "src/api/",
-      "src/notification_worker",
-      "src/stocks_job"
+      "src/application/"
     ],
     clearMocks: true,
     setupFilesAfterEnv: [],

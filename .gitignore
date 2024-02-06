@@ -130,3 +130,7 @@ dist
 .pnp.*
 
 .vscode
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
