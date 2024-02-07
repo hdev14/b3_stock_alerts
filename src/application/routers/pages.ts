@@ -14,4 +14,19 @@ router.get('/login', (request: Request, response: Response) => {
   });
 });
 
+router.get('/register', (request: Request, response: Response) => {
+  console.log(request.headers);
+  response.render('login', {
+    title: 'Login!',
+  });
+});
+
+router.get('/forgot-password', (request: Request, response: Response) => {
+  console.log(request.headers);
+  response.render('login', {
+    title: 'Login!',
+  });
+});
+
+
 export default router;

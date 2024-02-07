@@ -5,8 +5,9 @@ import { join } from 'path';
 import error_handler from './middlewares/error_handler';
 import alerts from './routers/alerts';
 import auth from './routers/auth';
+import forms from './routers/forms';
+import pages from './routers/pages';
 import users from './routers/users';
-import views from './routers/views';
 
 export default class Server {
   private _application: express.Application;
@@ -26,17 +27,18 @@ export default class Server {
     this._application.use(cors());
     this._application.use(express.json());
     this._application.use(express.urlencoded({ extended: true }));
-    this._application.set('views', join(__dirname, 'views'));
+    this._application.set('views', join(__dirname, 'pages'));
     this._application.set('view engine', 'html');
-    this._application.engine('html', mustache_express(join(__dirname, 'views/partials')));
+    this._application.engine('html', mustache_express(join(__dirname, 'pages/partials')));
     this._application.set('trust proxy', true);
   }
 
   private setupRouters() {
     this._application.use('/api', users, alerts, auth);
-    this._application.use('/views', views);
+    this._application.use('/pages', pages);
+    this._application.use('/forms', forms)
     this._application.get('/', (_, response) => {
-      response.redirect('/views/index');
+      response.redirect('/pages/index');
     });
   }
 

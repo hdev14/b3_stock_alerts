@@ -2,7 +2,11 @@
 <main>
   <h1>{{title}}</h1>
 
-  <form id="login-form" method="post">
+  <form id="login-form" method="post" action="/pages/login">
+    <input type="email" name="email" id="email" />
+
+    <input type="password" name="password" id="password" />
+
     <button type="submit">
       Login
     </button>
@@ -12,8 +16,9 @@
 </main>
 
 <script>
+  console.log(new Validator())
   const form = document.getElementById("login-form");
-  form.addEventListener('submit', function (e) {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     grecaptcha.ready(async () => {
@@ -28,7 +33,10 @@
           'Content-Type': 'application/json'
         }
       });
+
       console.log(response.status);
+
+      form.submit();
     });
   });
 </script>

@@ -17,7 +17,11 @@ const THIRTY_MIN = '30 * * * *';
     task.start();
 
     server.application.listen(process.env.SERVER_PORT, () => {
-      console.info(`Server is running on port ${process.env.SERVER_PORT}`)
+      if (process.env.NODE_ENV === 'development') {
+        console.info(`Server is running on http://localhost:${process.env.SERVER_PORT}/`)
+      } else {
+        console.info('Server is running!');
+      }
     });
   } catch (e: any) {
     console.error(e.stack, e.message);
