@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start:dev": "dotenv -e .env -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
-    "start": "dotenv -e .env -- npx ts-node -r tsconfig-paths/register ./src/index.ts",
+    "start:e2e": "dotenv -e .env.e2e -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
     "start:prod": "",
     "build": "",
     "test:unit": "dotenv -e .env.test -- npx jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js",
