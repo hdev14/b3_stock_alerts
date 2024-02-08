@@ -40,6 +40,10 @@ router.post(
       const remote_address = request.socket.remoteAddress ? request.socket.remoteAddress.split(':') : [];
       const user_id = remote_address[remote_address.length - 1];
 
+      if (process.env.NODE_ENV === 'test') { // for e2e tests
+        return response.sendStatus(204);
+      }
+
       const result = await authenticator.verifyCaptcha(user_id, token);
 
       if (!result) {

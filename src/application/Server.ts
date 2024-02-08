@@ -27,6 +27,7 @@ export default class Server {
     this._application.use(cors());
     this._application.use(express.json());
     this._application.use(express.urlencoded({ extended: true }));
+    this._application.use(express.static(join(__dirname, 'public')));
     this._application.set('views', join(__dirname, 'pages'));
     this._application.set('view engine', 'html');
     this._application.engine('html', mustache_express(join(__dirname, 'pages/partials')));
