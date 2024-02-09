@@ -10,6 +10,7 @@ describe("UserService's unit tests", () => {
     getUser: jest.fn(),
     updateUser: jest.fn(),
     getUsers: jest.fn(),
+    getUserByEmail: jest.fn(),
   };
 
   const encryptor_mock = {

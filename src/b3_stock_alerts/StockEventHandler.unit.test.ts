@@ -14,6 +14,7 @@ describe("StockEventHandler's unit tests", () => {
     getUser: jest.fn(),
     updateUser: jest.fn(),
     getUsers: jest.fn(),
+    getUserByEmail: jest.fn(),
   };
 
   const handler = new StockEventHandler(alert_notification_mock, user_repository_mock);

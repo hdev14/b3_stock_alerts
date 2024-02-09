@@ -1,9 +1,14 @@
 import { User } from "./User";
 
+export type AuthData = {
+  token: string;
+  expired_at: Date;
+};
+
 interface Authenticator {
-  generateAuthToken(user: User): Promise<string>;
-  verifyAuthToken(token: string): Promise<true>;
-  resetAuthToken(user: User, token: string): Promise<string>;
+  generateAuthToken(user: User): AuthData;
+  verifyAuthToken(token: string): true;
+  resetAuthToken(user: User, token: string): string;
   verifyCaptcha(user_ip: string, token: string): Promise<boolean>;
 }
 

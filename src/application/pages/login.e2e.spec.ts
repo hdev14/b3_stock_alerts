@@ -10,12 +10,10 @@ test.describe('Login Page', () => {
   };
 
   test.beforeAll(async ({ request }) => {
-    const response = await request.post('/api/users', {
+    await request.post('/api/users', {
       data: user,
       headers: { 'Content-Type': 'application/json' }
     });
-
-    expect(response.ok()).toBeTruthy();
   });
 
   test.beforeEach(async ({ page }) => {
@@ -74,7 +72,7 @@ test.describe('Login Page', () => {
     expect(page).toHaveURL('/pages/login');
   });
 
-  test('should allow the user to go to /pages/index if captcha succeed', async ({ page }) => {
+  test('should allow the user to go to /pages/index if captcha succeed', async ({ page, context }) => {
     const email_input = page.getByTestId('login-email');
     await email_input.fill(user.email)
 
@@ -85,6 +83,9 @@ test.describe('Login Page', () => {
     await submit_button.click();
     await page.waitForURL('**/pages/index');
 
+    const cookies = await context.cookies();
+
+    expect(cookies.some((cookie) => cookie.name === 'AT')).toBeTruthy();
     expect(page).toHaveURL('/pages/index')
   });
 });

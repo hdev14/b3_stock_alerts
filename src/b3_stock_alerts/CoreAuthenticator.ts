@@ -1,17 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Authenticator from "./Authenticator";
+import jwt from 'jsonwebtoken';
+import Authenticator, { AuthData } from "./Authenticator";
 import { User } from "./User";
 
 export default class CoreAuthenticator implements Authenticator {
-  generateAuthToken(user: User): Promise<string> {
+  generateAuthToken(user: User): AuthData {
+    const expires_in = 60 * 60; // 1h
+
+    const token = jwt.sign(user, process.env.JWT_PRIVATE_KEY!, {
+      expiresIn: expires_in,
+    });
+
+    const expired_at = new Date();
+    expired_at.setHours(expired_at.getHours() + expires_in);
+
+    return { token, expired_at };
+  }
+
+  verifyAuthToken(token: string): true {
     throw new Error("Method not implemented.");
   }
 
-  verifyAuthToken(token: string): Promise<true> {
-    throw new Error("Method not implemented.");
-  }
-
-  resetAuthToken(user: User, token: string): Promise<string> {
+  resetAuthToken(user: User, token: string): string {
     throw new Error("Method not implemented.");
   }
 

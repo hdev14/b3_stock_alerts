@@ -134,4 +134,38 @@ describe('PgUserRepository', () => {
       expect(query_mock).toHaveBeenCalledWith('DELETE FROM users WHERE id = $1', [user_id]);
     });
   });
+
+  describe('PgUserRepository.getUserByEmail', () => {
+    it('returns an user by email', async () => {
+      expect.assertions(2);
+
+      const user: User = {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.string.alphanumeric(10),
+        phone_number: faker.string.numeric(11),
+      };
+
+      query_mock.mockResolvedValueOnce({ rows: [user] });
+
+      const result = await repository.getUserByEmail(user.email);
+
+      expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE email = $1', [user.email]);
+      expect(result).toEqual(user);
+    });
+
+    it("returns NULL if user doesn't exit", async () => {
+      expect.assertions(2);
+
+      const user_email = faker.internet.email();
+
+      query_mock.mockResolvedValueOnce({ rows: [] });
+
+      const result = await repository.getUserByEmail(user_email);
+
+      expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE email = $1', [user_email]);
+      expect(result).toBeNull();
+    });
+  });
 })

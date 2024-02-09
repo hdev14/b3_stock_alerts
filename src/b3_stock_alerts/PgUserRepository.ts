@@ -62,4 +62,17 @@ export default class PgUserRepository implements UserRepository {
   async deleteUser(user_id: string): Promise<void> {
     await this.client.query('DELETE FROM users WHERE id = $1', [user_id]);
   }
+
+  async getUserByEmail(email: string): Promise<User | null> {
+    const result = await this.client.query(
+      'SELECT id, email, name, password, phone_number FROM users WHERE email = $1',
+      [email]
+    );
+
+    if (result.rows[0] === undefined) {
+      return null;
+    }
+
+    return result.rows[0];
+  }
 }

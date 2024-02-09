@@ -16,7 +16,8 @@ describe('AlertService', () => {
     deleteUser: jest.fn(),
     getUser: jest.fn(),
     getUsers: jest.fn(),
-    updateUser: jest.fn()
+    updateUser: jest.fn(),
+    getUserByEmail: jest.fn(),
   };
 
   const service = new AlertService(alert_repository_mock, user_repository_mock);
