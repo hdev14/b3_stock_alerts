@@ -40,7 +40,7 @@ router.post(
       const remote_address = request.socket.remoteAddress ? request.socket.remoteAddress.split(':') : [];
       const user_id = remote_address[remote_address.length - 1];
 
-      if (process.env.NODE_ENV === 'test') { // for e2e tests
+      if (process.env.NODE_ENV === 'e2e_test') { // for e2e tests
         return response.sendStatus(204);
       }
 

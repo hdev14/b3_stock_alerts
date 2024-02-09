@@ -1,5 +1,5 @@
 function removeChildsFromParent(parent) {
   while (parent.lastChild) {
-    parent.removeChild();
+    parent.removeChild(parent.lastChild);
   }
 }

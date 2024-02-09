@@ -3,7 +3,11 @@ import { Request, Response, Router } from 'express';
 const router = Router();
 
 router.post('/login', (request: Request, response: Response) => {
-  console.log(request.body);
+  console.log('form', request.body);
+  if (request.body.email !== 'ne.hermerson@gmail.com') {
+    return response.redirect('/pages/login');
+  }
+
   response.redirect('/');
 });
 

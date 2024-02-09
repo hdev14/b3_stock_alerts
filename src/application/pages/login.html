@@ -2,14 +2,14 @@
 <main>
   <h1>{{title}}</h1>
 
-  <form id="login-form" method="post" action="/pages/login">
-    <input type="email" name="email" id="email" data-testid="login-email" onblur="validateEmail()" />
+  <form id="login-form" data-testid="login-form" method="post" action="/forms/login">
+    <input id="email" type="email" name="email" data-testid="login-email" onblur="validateEmail()" />
     <ul id="email-error-messages" data-testid="email-error-messages"></ul>
 
     <input type="password" name="password" id="password" data-testid="login-password" onblur="validatePassword()" />
     <ul id="password-error-messages" data-testid="password-error-messages"></ul>
 
-    <button type="submit">
+    <button type="submit" data-testid="login-submit">
       Login
     </button>
   </form>
@@ -82,12 +82,9 @@
         }
       });
 
-      if (response.status === 200) {
-        login_form.submit();
-        return;
+      if (response.status === 204) {
+        login_form.submit()
       }
-
-      console.log('Não passou no recaptcha');
     });
   });
 </script>
