@@ -24,7 +24,7 @@ export default class Server {
   }
 
   private setupTopMiddlewares() {
-    this._application.use(cors());
+    this._application.use(cors({}));
     this._application.use(express.json());
     this._application.use(express.urlencoded({ extended: true }));
     this._application.use(express.static(join(__dirname, 'public')));

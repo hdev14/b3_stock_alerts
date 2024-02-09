@@ -25,6 +25,8 @@ router.post(
       if (result.data) {
         return response.status(201).json(result.data);
       }
+
+      return response.status(200).json({ mesasge: 'asdfas' })
     } catch (e) {
       return next(e);
     }
