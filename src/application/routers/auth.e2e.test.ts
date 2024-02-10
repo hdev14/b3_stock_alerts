@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import { authenticator } from 'src/bootstrap';
+import { auth_service } from 'src/bootstrap';
 
 const fetch_spy = jest.spyOn(global, 'fetch');
-const verify_captcha_spy = jest.spyOn(authenticator, 'verifyCaptcha');
+const verify_captcha_spy = jest.spyOn(auth_service, 'verifyCaptcha');
 
 describe('Auth endpoints', () => {
   describe('POST: /auth/captcha', () => {

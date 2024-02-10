@@ -3,7 +3,7 @@ import {
   NextFunction, Request, Response, Router,
 } from 'express';
 import { body } from 'express-validator';
-import { authenticator } from 'src/bootstrap';
+import { auth_service } from 'src/bootstrap';
 
 // TODO
 const router = Router();
@@ -39,19 +39,19 @@ router.post(
     try {
       const { token } = request.body;
       const remote_address = request.socket.remoteAddress ? request.socket.remoteAddress.split(':') : [];
-      const user_id = remote_address[remote_address.length - 1];
+      const user_ip = remote_address[remote_address.length - 1];
 
       if (process.env.NODE_ENV === 'e2e_test') { // for e2e tests
         return response.sendStatus(204);
       }
 
-      const result = await authenticator.verifyCaptcha(user_id, token);
+      const result = await auth_service.verifyCaptcha(user_ip, token);
 
-      if (!result) {
-        return response.status(403).json({ message: 'captcha failed' });
+      if (result.data) {
+        return response.sendStatus(204);
       }
 
-      return response.sendStatus(204);
+      return response.status(403).json({ message: 'captcha failed' });
     } catch (e) {
       return next(e);
     }
