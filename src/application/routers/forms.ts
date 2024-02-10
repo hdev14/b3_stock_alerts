@@ -28,9 +28,9 @@ router.post('/logout', (_request: Request, response: Response) => {
   response.redirect('/pages/login');
 });
 
-router.post('/register', (request: Request, response: Response) => {
+router.post('/signup', (request: Request, response: Response) => {
   console.log(request.body);
-  response.redirect('/');
+  response.redirect('/pages/confirm-code');
 });
 
 router.post('/forgot-password', (request: Request, response: Response) => {

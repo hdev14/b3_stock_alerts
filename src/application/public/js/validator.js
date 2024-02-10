@@ -4,6 +4,8 @@ class Validator {
 
   #EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/;
 
+  #PHONE_REGEX = /\([0-9]{2}\)[0-9]{5}-[0-9]{4}/;
+
   #RULE_FUNCTIONS = {
     required: (value) => {
       switch (typeof value) {
@@ -50,7 +52,10 @@ class Validator {
       return false;
     },
     url: (value) => (value !== undefined && typeof value === 'string' && !this.#URL_REGEX.test(value)),
-    string: (value) => (value !== undefined && typeof value !== 'string'),
+    string: (value) => (
+      (value !== undefined && typeof value !== 'string')
+      || !(Number.isNaN(parseInt(value, 10)) && Number.isNaN(parseFloat(value)))
+    ),
     number: (value) => (value !== undefined && typeof value !== 'number'),
     integer: (value) => (value !== undefined && typeof value === 'number' && !Number.isInteger(value)),
     float: (value) => (value !== undefined && typeof value === 'number' && Number.isInteger(value)),
@@ -73,6 +78,7 @@ class Validator {
         || value.includes('+')
       )
     ),
+    phone: (value) => (typeof value === 'string' && !this.#PHONE_REGEX.test(value)),
   };
 
   #RULE_MESSAGES = {
@@ -91,13 +97,14 @@ class Validator {
       return `O campo preicsa maior ou igual à ${min}.`;
     },
     url: () => 'O campo precisa ser uma URL.',
-    string: () => 'O campo precisa ser um texto.',
-    number: () => 'O campo precisa ser um número.',
+    string: () => 'O campo precisa ser um texto válido.',
+    number: () => 'O campo precisa ser um número válido.',
     integer: () => 'O campo precisa ser um inteiro.',
     float: () => 'O campo precisa ser um decimal.',
     date: () => 'O campo precisa ser uma data válida.',
     email: () => 'O campo precisa ser um e-mail válido.',
     password: () => 'O campo precisa ter letras, números e algum caracter especial.',
+    phone: () => 'O campo precisa ser um telefone válido.',
   };
 
   #data;

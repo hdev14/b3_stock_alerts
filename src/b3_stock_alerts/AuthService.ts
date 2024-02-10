@@ -39,4 +39,8 @@ export default class AuthService {
       },
     };
   }
+
+  async verifyCaptcha(user_ip: string, token: string): Promise<Result<boolean>> {
+    return { data: await this.authenticator.verifyCaptcha(user_ip, token) };
+  }
 }

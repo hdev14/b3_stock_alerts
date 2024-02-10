@@ -21,7 +21,7 @@ schedule_handler.on('uncaughtException', (error) => {
   console.error('uncaughtException:', error.stack);
 });
 const encryptor = new BcryptEncryptor();
-export const authenticator = new CoreAuthenticator();
+const authenticator = new CoreAuthenticator();
 export const user_service = new UserService(user_repository, encryptor);
 export const alert_service = new AlertService(alert_repository, user_repository);
 export const auth_service = new AuthService(user_repository, encryptor, authenticator);
