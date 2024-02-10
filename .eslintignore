@@ -1,5 +1,3 @@
 jest.*
 global.d.ts
 src/application/public/
-tests-results
-tests-example
