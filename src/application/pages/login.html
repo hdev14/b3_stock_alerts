@@ -3,7 +3,7 @@
   <h1>{{title}}</h1>
 
   <form id="login-form" data-testid="login-form" method="post" action="/forms/login">
-    <input id="email" type="email" name="email" data-testid="login-email" onblur="validateEmail()" />
+    <input id="email" type="email" name="email" data-testid="login-email" />
     <ul id="email-error-messages" data-testid="email-error-messages"></ul>
 
     <input type="password" name="password" id="password" data-testid="login-password" onblur="validatePassword()" />
@@ -13,8 +13,6 @@
       Login
     </button>
   </form>
-
-  {{> components/test}}
 </main>
 
 <script>
@@ -61,6 +59,8 @@
     removeChildsFromParent(password_error_messages_ul);
   };
 
+  email_input.addEventListener('blur', validateEmail);
+  password_input.addEventListener('blur', validatePassword);
   login_form.addEventListener('submit', (e) => {
     e.preventDefault();
 

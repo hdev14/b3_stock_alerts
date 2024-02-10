@@ -23,6 +23,11 @@ router.post('/login', async (request: Request, response: Response) => {
   return response.render('/pages/login');
 });
 
+router.post('/logout', (_request: Request, response: Response) => {
+  response.clearCookie('AT');
+  response.redirect('/pages/login');
+});
+
 router.post('/register', (request: Request, response: Response) => {
   console.log(request.body);
   response.redirect('/');
