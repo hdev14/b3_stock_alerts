@@ -16,6 +16,20 @@
 </main>
 
 <script>
-  new LoginForm().init();
+  new LoginForm(
+    document.getElementById('login-form'),
+    [
+      {
+        input_element: document.getElementById('email'),
+        error_message_element: document.getElementById('email-error-messages'),
+        rules: ['required', 'string', 'email']
+      },
+      {
+        input_element: document.getElementById('password'),
+        error_message_element: document.getElementById('password-error-messages'),
+        rules: ['required', 'string', 'min:8', 'password']
+      }
+    ]
+  ).init();
 </script>
 {{> _footer}}

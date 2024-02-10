@@ -56,7 +56,6 @@ const RULE_FUNCTIONS = {
   password: (value) => (
     value !== undefined
     && typeof value === 'string'
-    && value.length <= 8
     && !(
       value.includes('!')
       || value.includes('@')
@@ -110,15 +109,30 @@ class Validator {
     this.#data = data;
   }
 
+  /**
+   *
+   * @param {Object} data
+   * @returns {Validator}
+   */
   static setData(data) {
     return new Validator(data);
   }
 
+  /**
+   *
+   * @param {string} field
+   * @param {string[]} rule
+   * @returns {Validator}
+   */
   setRule(field, rule) {
     this.#rule_map.set(field, rule);
     return this;
   }
 
+  /**
+   *
+   * @returns {Object[]}
+   */
   validate() {
     const entries = this.#rule_map.entries();
 
@@ -131,18 +145,24 @@ class Validator {
           messages.push(`O campo ${fieldName} não é válido.`);
         }
       } else {
-        messages.push(...this.validateByArray(rule, field));
+        messages.push(...this.#validateByArray(rule, field));
       }
 
       if (messages.length > 0) {
-        this.addError({ field: fieldName, messages });
+        this.#addError({ field: fieldName, messages });
       }
     }
 
     return this.#errors;
   }
 
-  validateByArray(rule, field) {
+  /**
+   *
+   * @param {*} rule
+   * @param {*} field
+   * @returns {string[]}
+   */
+  #validateByArray(rule, field) {
     const messages = [];
 
     for (let i = 0, len = rule.length; i < len; i += 1) {
@@ -159,7 +179,7 @@ class Validator {
     return messages;
   }
 
-  addError(error) {
+  #addError(error) {
     const index = this.#errors.findIndex((e) => e.field === error.field);
 
     if (index !== -1) {
