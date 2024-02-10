@@ -1,3 +1,4 @@
+import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import NotFoundError from '@shared/NotFoundError';
 import { Result } from '@shared/generic_types';
 import { randomUUID } from 'crypto';
@@ -42,6 +43,10 @@ export default class UserService {
   }
 
   async createUser(params: CreateUserParams): Promise<Result<User>> {
+    if (await this.repository.getUserByEmail(params.email)) {
+      return { error: new EmailAlreadyRegisteredError() };
+    }
+
     const password_hash = this.encryptor.createHash(params.password);
 
     const user: User = {

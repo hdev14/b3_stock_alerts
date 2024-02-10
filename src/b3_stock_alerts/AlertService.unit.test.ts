@@ -119,10 +119,8 @@ describe('AlertService', () => {
 
       const result = await service.removeAlert(alert_id);
 
-      if (result) {
-        expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
-        expect(result.error).toBeInstanceOf(NotFoundError);
-      }
+      expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
+      expect(result.error).toBeInstanceOf(NotFoundError);
     });
 
     it('removes an alert', async () => {
@@ -140,7 +138,7 @@ describe('AlertService', () => {
       const result = await service.removeAlert(alert_id);
 
       expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
-      expect(result).toBeUndefined();
+      expect(result).toEqual({});
     });
   });
 

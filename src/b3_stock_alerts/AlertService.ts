@@ -55,7 +55,7 @@ export default class AlertService {
     return { data: alert };
   }
 
-  async removeAlert(alert_id: string): Promise<Result | void> {
+  async removeAlert(alert_id: string): Promise<Result<void>> {
     const alert = await this.alert_repository.getAlert(alert_id);
 
     if (!alert) {

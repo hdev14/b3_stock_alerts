@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
+import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import NotFoundError from '@shared/NotFoundError';
 import { User } from './User';
 import UserService from './UserService';
@@ -15,6 +16,7 @@ describe("UserService's unit tests", () => {
 
   const encryptor_mock = {
     createHash: jest.fn(),
+    compareHash: jest.fn(),
   };
 
   const service = new UserService(repository_mock, encryptor_mock);
@@ -135,6 +137,31 @@ describe("UserService's unit tests", () => {
         expect(result.data.password).toEqual('test');
         expect(result.data.phone_number).toEqual(params.phone_number);
       }
+    });
+
+    it('returns result with EmailAlreadyRegisteredError if email already exists', async () => {
+      expect.assertions(2);
+
+      const params = {
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.string.alphanumeric(10),
+        phone_number: faker.string.numeric(11),
+      };
+
+      repository_mock.getUserByEmail.mockResolvedValueOnce({
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.string.alphanumeric(),
+        phone_number: faker.string.numeric(11),
+      });
+      encryptor_mock.createHash.mockReturnValueOnce('test');
+
+      const result = await service.createUser(params);
+
+      expect(repository_mock.getUserByEmail).toHaveBeenCalledWith(params.email);
+      expect(result.error).toBeInstanceOf(EmailAlreadyRegisteredError);
     });
   });
 
