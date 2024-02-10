@@ -1,6 +1,7 @@
-
 import validator from '@app/middlewares/validator';
-import { NextFunction, Request, Response, Router } from 'express';
+import {
+  NextFunction, Request, Response, Router,
+} from 'express';
 import { body } from 'express-validator';
 import { authenticator } from 'src/bootstrap';
 
@@ -14,9 +15,9 @@ router.get(
     try {
       return response.status(204).json();
     } catch (e) {
-      return next(e)
+      return next(e);
     }
-  }
+  },
 );
 
 router.post(
@@ -25,9 +26,9 @@ router.post(
     try {
       return response.status(204).json();
     } catch (e) {
-      return next(e)
+      return next(e);
     }
-  }
+  },
 );
 
 router.post(
@@ -54,7 +55,7 @@ router.post(
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 export default router;

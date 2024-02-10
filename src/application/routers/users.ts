@@ -1,5 +1,7 @@
 import NotFoundError from '@shared/NotFoundError';
-import { NextFunction, Request, Response, Router } from 'express';
+import {
+  NextFunction, Request, Response, Router,
+} from 'express';
 import { checkSchema, param } from 'express-validator';
 import validator from 'src/application/middlewares/validator';
 import { user_service } from '../../bootstrap';
@@ -17,20 +19,22 @@ router.post(
         name,
         email,
         phone_number,
-        password
+        password,
       } = request.body;
 
-      const result = await user_service.createUser({ name, email, phone_number, password });
+      const result = await user_service.createUser({
+        name, email, phone_number, password,
+      });
 
       if (result.data) {
         return response.status(201).json(result.data);
       }
 
-      return response.status(200).json({ mesasge: 'asdfas' })
+      return response.status(200).json({ mesasge: 'asdfas' });
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 router.get(
@@ -48,7 +52,7 @@ router.get(
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 router.get('/users', async (_: Request, response: Response, next: NextFunction) => {
@@ -80,7 +84,7 @@ router.put(
         name,
         email,
         phone_number,
-        password
+        password,
       });
 
       if (result.error instanceof NotFoundError) {
@@ -91,7 +95,7 @@ router.put(
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 router.delete(
@@ -110,7 +114,7 @@ router.delete(
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 export default router;

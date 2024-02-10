@@ -1,7 +1,7 @@
-import Server from "@app/Server";
-import Postgres from "@shared/Postgres";
+import Server from '@app/Server';
+import Postgres from '@shared/Postgres';
 import cron from 'node-cron';
-import { schedule_handler } from "./bootstrap";
+import { schedule_handler } from './bootstrap';
 
 const THIRTY_MIN = '30 * * * *';
 
@@ -14,21 +14,21 @@ const THIRTY_MIN = '30 * * * *';
     await db_client.connect();
 
     task = cron.schedule(THIRTY_MIN, schedule_handler.handle.bind(schedule_handler), {
-      timezone: 'America/Sao_Paulo'
+      timezone: 'America/Sao_Paulo',
     });
 
     task.start();
 
     server.application.listen(process.env.SERVER_PORT, () => {
       if (process.env.NODE_ENV === 'development') {
-        console.info(`Server is running on http://localhost:${process.env.SERVER_PORT}/`)
+        console.info(`Server is running on http://localhost:${process.env.SERVER_PORT}/`);
       } else {
         console.info('Server is running!');
       }
     });
   } catch (e: any) {
     console.error(e.stack, e.message);
-    await db_client.end()
+    await db_client.end();
 
     if (task) {
       task.stop();
@@ -36,4 +36,4 @@ const THIRTY_MIN = '30 * * * *';
 
     process.exit(1);
   }
-})();
+}());

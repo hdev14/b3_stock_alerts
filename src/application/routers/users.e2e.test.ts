@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 
 describe('Users endpoints', () => {
   afterEach(async () => {
@@ -55,7 +55,13 @@ describe('Users endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
     });
 
@@ -91,12 +97,24 @@ describe('Users endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [faker.string.uuid(), faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          faker.string.uuid(),
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
 
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [faker.string.uuid(), faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          faker.string.uuid(),
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
     });
 
@@ -119,11 +137,17 @@ describe('Users endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
     });
 
-    it("deletes an user by id", async () => {
+    it('deletes an user by id', async () => {
       expect.assertions(1);
 
       const response = await globalThis.request
@@ -153,7 +177,13 @@ describe('Users endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
     });
 
@@ -171,7 +201,7 @@ describe('Users endpoints', () => {
         .set('Content-Type', 'application/json')
         .send(body);
 
-      expect(response.status).toEqual(200)
+      expect(response.status).toEqual(200);
       expect(response.body.name).toEqual(body.name);
       expect(response.body.email).toEqual(body.email);
       expect(response.body.phone_number).toEqual(body.phone_number);

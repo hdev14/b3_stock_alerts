@@ -1,7 +1,7 @@
-import Postgres from "@shared/Postgres";
-import { Client } from "pg";
-import { User } from "./User";
-import UserRepository from "./UserRepository";
+import Postgres from '@shared/Postgres';
+import { Client } from 'pg';
+import { User } from './User';
+import UserRepository from './UserRepository';
 
 export default class PgUserRepository implements UserRepository {
   private readonly client: Client;
@@ -19,7 +19,7 @@ export default class PgUserRepository implements UserRepository {
   async getUser(user_id: string): Promise<User | null> {
     const result = await this.client.query(
       'SELECT id, email, name, password, phone_number FROM users WHERE id = $1',
-      [user_id]
+      [user_id],
     );
 
     if (result.rows[0] === undefined) {
@@ -32,7 +32,7 @@ export default class PgUserRepository implements UserRepository {
   async createUser(user: User): Promise<void> {
     await this.client.query(
       'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-      [user.id, user.email, user.name, user.password, user.phone_number]
+      [user.id, user.email, user.name, user.password, user.phone_number],
     );
   }
 
@@ -55,7 +55,7 @@ export default class PgUserRepository implements UserRepository {
 
     await this.client.query(
       `UPDATE users SET ${set} WHERE id = $1`,
-      [user.id, ...values]
+      [user.id, ...values],
     );
   }
 
@@ -66,7 +66,7 @@ export default class PgUserRepository implements UserRepository {
   async getUserByEmail(email: string): Promise<User | null> {
     const result = await this.client.query(
       'SELECT id, email, name, password, phone_number FROM users WHERE email = $1',
-      [email]
+      [email],
     );
 
     if (result.rows[0] === undefined) {

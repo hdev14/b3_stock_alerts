@@ -1,9 +1,9 @@
-import CredentialError from "@shared/CredentialError";
-import { Result } from "@shared/generic_types";
-import Authenticator from "./Authenticator";
-import Encryptor from "./Encryptor";
-import { User } from "./User";
-import UserRepository from "./UserRepository";
+import CredentialError from '@shared/CredentialError';
+import { Result } from '@shared/generic_types';
+import Authenticator from './Authenticator';
+import Encryptor from './Encryptor';
+import { User } from './User';
+import UserRepository from './UserRepository';
 
 type LoginResult = {
   user: User;
@@ -36,7 +36,7 @@ export default class AuthService {
         user,
         token: auth_data.token,
         expired_at: auth_data.expired_at,
-      }
+      },
     };
   }
 }

@@ -5,14 +5,14 @@ test.describe('Login Page', () => {
   const user = {
     name: faker.person.fullName(),
     email: faker.internet.email(),
-    password: faker.string.alphanumeric(10) + '!@#$',
+    password: `${faker.string.alphanumeric(10)}!@#$`,
     phone_number: faker.string.numeric(11),
   };
 
   test.beforeAll(async ({ request }) => {
     await request.post('/api/users', {
       data: user,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   });
 
@@ -61,10 +61,10 @@ test.describe('Login Page', () => {
     });
 
     const email_input = page.getByTestId('login-email');
-    await email_input.fill(faker.internet.email())
+    await email_input.fill(faker.internet.email());
 
     const password_input = page.getByTestId('login-password');
-    await password_input.fill(faker.string.alphanumeric() + '!@#$%');
+    await password_input.fill(`${faker.string.alphanumeric()}!@#$%`);
 
     const submit_button = page.getByTestId('login-submit');
     await submit_button.click();
@@ -74,7 +74,7 @@ test.describe('Login Page', () => {
 
   test('should allow the user to go to /pages/index if captcha succeed', async ({ page }) => {
     const email_input = page.getByTestId('login-email');
-    await email_input.fill(user.email)
+    await email_input.fill(user.email);
 
     const password_input = page.getByTestId('login-password');
     await password_input.fill(user.password);
@@ -83,12 +83,12 @@ test.describe('Login Page', () => {
     await submit_button.click();
     await page.waitForURL('**/pages/index');
 
-    expect(page).toHaveURL('/pages/index')
+    expect(page).toHaveURL('/pages/index');
   });
 
   test('should login user successfully', async ({ page, context }) => {
     const email_input = page.getByTestId('login-email');
-    await email_input.fill(user.email)
+    await email_input.fill(user.email);
 
     const password_input = page.getByTestId('login-password');
     await password_input.fill(user.password);

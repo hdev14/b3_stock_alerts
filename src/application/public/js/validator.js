@@ -1,5 +1,4 @@
 const URL_REGEX = /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www\.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w\-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[.!/\\\w]*))?)/;
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*/;
 
 const RULE_FUNCTIONS = {
@@ -71,11 +70,11 @@ const RULE_FUNCTIONS = {
       || value.includes('_')
       || value.includes('+')
     )
-  )
+  ),
 };
 
 const RULE_MESSAGES = {
-  required: () => `O campo é obrigatório.`,
+  required: () => 'O campo é obrigatório.',
   max: (max, isString) => {
     if (isString) {
       return `O texto precisa ter até ${max} caracteres.`;
@@ -96,12 +95,15 @@ const RULE_MESSAGES = {
   float: () => 'O campo precisa ser um decimal.',
   date: () => 'O campo precisa ser uma data válida.',
   email: () => 'O campo precisa ser um e-mail válido.',
-  password: () => 'O campo precisa ter letras, números e algum caracter especial.'
+  password: () => 'O campo precisa ter letras, números e algum caracter especial.',
 };
 
+// eslint-disable-next-line no-unused-vars
 class Validator {
   #data;
+
   #rule_map = new Map();
+
   #errors = [];
 
   constructor(data) {
@@ -126,7 +128,7 @@ class Validator {
 
       if (typeof rule === 'function') {
         if (!rule(field)) {
-          messages.push(`O campo ${fieldName} is not valid.`);
+          messages.push(`O campo ${fieldName} não é válido.`);
         }
       } else {
         messages.push(...this.validateByArray(rule, field));

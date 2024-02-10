@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 import jwt from 'jsonwebtoken';
-import CoreAuthenticator from "./CoreAuthenticator";
-import { User } from "./User";
+import CoreAuthenticator from './CoreAuthenticator';
+import { User } from './User';
 
 jest.mock('jsonwebtoken');
 
@@ -27,8 +27,8 @@ describe("CoreAuthenticator's unit tests", () => {
           success: true,
           challenge_ts: new Date().getTime(),
           hostname: faker.internet.url(),
-          "error-codes": [],
-        })
+          'error-codes': [],
+        }),
       } as any);
 
       const user_ip = faker.internet.ipv4();
@@ -41,8 +41,8 @@ describe("CoreAuthenticator's unit tests", () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
     });
 
@@ -55,8 +55,8 @@ describe("CoreAuthenticator's unit tests", () => {
           success: false,
           challenge_ts: new Date().getTime(),
           hostname: faker.internet.url(),
-          "error-codes": [],
-        })
+          'error-codes': [],
+        }),
       } as any);
 
       const user_ip = faker.internet.ipv4();
@@ -69,8 +69,8 @@ describe("CoreAuthenticator's unit tests", () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
     });
 
@@ -81,15 +81,15 @@ describe("CoreAuthenticator's unit tests", () => {
         status: 200,
         json: jest.fn().mockResolvedValueOnce({
           success: false,
-          "error-codes": [
+          'error-codes': [
             'missing-input-secret',
             'invalid-input-secret',
             'missing-input-response',
             'invalid-input-response',
             'bad-request',
-            'timeout-or-duplicate'
+            'timeout-or-duplicate',
           ],
-        })
+        }),
       } as any);
 
       const user_ip = faker.internet.ipv4();
@@ -98,7 +98,7 @@ describe("CoreAuthenticator's unit tests", () => {
       try {
         await authenticator.verifyCaptcha(user_ip, token);
       } catch (e: any) {
-        expect(e.message).toEqual("Google recaptcha bad request: [missing-input-secret,invalid-input-secret,missing-input-response,invalid-input-response,bad-request,timeout-or-duplicate]");
+        expect(e.message).toEqual('Google recaptcha bad request: [missing-input-secret,invalid-input-secret,missing-input-response,invalid-input-response,bad-request,timeout-or-duplicate]');
       }
     });
   });
@@ -126,4 +126,4 @@ describe("CoreAuthenticator's unit tests", () => {
       expect(data.expired_at).toBeInstanceOf(Date);
     });
   });
-})
+});

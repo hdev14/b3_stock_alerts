@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import { StockEvent } from "@shared/generic_types";
-import { AlertNotificationTypes } from "./AlertNotification";
-import StockEventHandler from "./StockEventHandler";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import { StockEvent } from '@shared/generic_types';
+import { AlertNotificationTypes } from './AlertNotification';
+import StockEventHandler from './StockEventHandler';
 
 describe("StockEventHandler's unit tests", () => {
   const alert_notification_mock = {
@@ -78,4 +78,4 @@ describe("StockEventHandler's unit tests", () => {
       user,
     });
   });
-})
+});

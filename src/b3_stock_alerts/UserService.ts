@@ -1,9 +1,9 @@
-import NotFoundError from "@shared/NotFoundError";
-import { Result } from "@shared/generic_types";
-import { randomUUID } from "crypto";
-import Encryptor from "./Encryptor";
-import { User } from "./User";
-import UserRepository from "./UserRepository";
+import NotFoundError from '@shared/NotFoundError';
+import { Result } from '@shared/generic_types';
+import { randomUUID } from 'crypto';
+import Encryptor from './Encryptor';
+import { User } from './User';
+import UserRepository from './UserRepository';
 
 export type CreateUserParams = {
   name: string;
@@ -68,7 +68,7 @@ export default class UserService {
       user.password = this.encryptor.createHash(rest.password);
     }
 
-    const new_data = Object.assign({}, user, rest);
+    const new_data = { ...user, ...rest };
 
     await this.repository.updateUser(new_data);
 
@@ -81,5 +81,7 @@ export default class UserService {
     }
 
     await this.repository.deleteUser(user_id);
+
+    return {};
   }
 }

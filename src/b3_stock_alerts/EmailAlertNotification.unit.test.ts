@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { faker } from "@faker-js/faker/locale/pt_BR";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 import nodemailer from 'nodemailer';
-import { AlertNotificationTypes, NotificationData } from "./AlertNotification";
-import EmailAlertNotification from "./EmailAlertNotification";
+import { AlertNotificationTypes, NotificationData } from './AlertNotification';
+import EmailAlertNotification from './EmailAlertNotification';
 
 jest.mock('nodemailer');
 
@@ -49,14 +49,12 @@ describe('EmailAlertNotification', () => {
         type: AlertNotificationTypes.MAX,
       };
 
-
-
       await alert_notification.notify(data);
 
       expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
         to: data.user.email,
-        subject: "Alerta de aumento no valor da ação!",
+        subject: 'Alerta de aumento no valor da ação!',
         text: `A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}.`,
         html: `<p>A ação com sigla ${data.stock} ultrapassou o valor de R$ ${data.amount}</p>`,
       });
@@ -78,16 +76,15 @@ describe('EmailAlertNotification', () => {
         type: AlertNotificationTypes.MIN,
       };
 
-
       await alert_notification.notify(data);
 
       expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
         to: data.user.email,
-        subject: "Alerta de baixa no valor de ação!",
+        subject: 'Alerta de baixa no valor de ação!',
         text: `A ação com sigla ${data.stock} está abaixo do valor de R$ ${data.amount}.`,
         html: `<p>A ação com sigla ${data.stock} está abaixo o valor de R$ ${data.amount}</p>`,
       });
     });
   });
-})
+});

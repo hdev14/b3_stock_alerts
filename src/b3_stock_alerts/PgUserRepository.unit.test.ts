@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import Postgres from "@shared/Postgres";
+import Postgres from '@shared/Postgres';
 import PgUserRepository from './PgUserRepository';
-import { User } from "./User";
+import { User } from './User';
 
 const get_client_spy = jest.spyOn(Postgres, 'getClient');
 
@@ -111,7 +111,7 @@ describe('PgUserRepository', () => {
           name: faker.person.fullName(),
           password: faker.string.alphanumeric(10),
           phone_number: faker.string.numeric(11),
-        }
+        },
       ];
 
       query_mock.mockResolvedValueOnce({ rows: users });
@@ -168,4 +168,4 @@ describe('PgUserRepository', () => {
       expect(result).toBeNull();
     });
   });
-})
+});

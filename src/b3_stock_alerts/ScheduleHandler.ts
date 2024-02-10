@@ -1,9 +1,9 @@
-import AlertRepository from "@b3_stock_alerts/AlertRepository";
-import StockSearcher, { StockInfo } from "@b3_stock_alerts/SockSearcher";
-import StockNotFoundError from "@shared/StockNotFound";
-import { StockEvent } from "@shared/generic_types";
-import { EventEmitter } from "stream";
-import { Alert } from "./Alert";
+import AlertRepository from '@b3_stock_alerts/AlertRepository';
+import StockSearcher, { StockInfo } from '@b3_stock_alerts/SockSearcher';
+import StockNotFoundError from '@shared/StockNotFound';
+import { StockEvent } from '@shared/generic_types';
+import { EventEmitter } from 'stream';
+import { Alert } from './Alert';
 
 export default class ScheduleHandler extends EventEmitter {
   constructor(
@@ -69,4 +69,3 @@ export default class ScheduleHandler extends EventEmitter {
     }
   }
 }
-

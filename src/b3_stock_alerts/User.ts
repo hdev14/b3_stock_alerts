@@ -5,4 +5,3 @@ export type User = {
   phone_number: string;
   password: string;
 }
-

@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import NotFoundError from "@shared/NotFoundError";
-import { User } from "./User";
-import UserService from "./UserService";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import NotFoundError from '@shared/NotFoundError';
+import { User } from './User';
+import UserService from './UserService';
 
 describe("UserService's unit tests", () => {
   const repository_mock = {
@@ -15,7 +15,7 @@ describe("UserService's unit tests", () => {
 
   const encryptor_mock = {
     createHash: jest.fn(),
-  }
+  };
 
   const service = new UserService(repository_mock, encryptor_mock);
 
@@ -77,7 +77,7 @@ describe("UserService's unit tests", () => {
           name: faker.person.fullName(),
           password: faker.string.alphanumeric(),
           phone_number: faker.string.numeric(11),
-        }
+        },
       ];
 
       repository_mock.getUsers.mockResolvedValueOnce(users);
@@ -180,7 +180,7 @@ describe("UserService's unit tests", () => {
       expect(encryptor_mock.createHash).toHaveBeenCalledWith(params.password);
     });
 
-    it("updates an user", async () => {
+    it('updates an user', async () => {
       expect.assertions(7);
 
       const params = {
@@ -212,7 +212,7 @@ describe("UserService's unit tests", () => {
         expect(result.error).toBeUndefined();
       }
     });
-  })
+  });
 
   describe('UserService.removeUser', () => {
     afterEach(() => {
@@ -233,7 +233,7 @@ describe("UserService's unit tests", () => {
       }
     });
 
-    it("deletes an user", async () => {
+    it('deletes an user', async () => {
       expect.assertions(1);
 
       repository_mock.getUser.mockResolvedValueOnce({

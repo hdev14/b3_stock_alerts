@@ -1,8 +1,13 @@
+// eslint-disable-next-line no-unused-vars
 class LoginForm {
-  #login_form = document.getElementById("login-form");
+  #login_form = document.getElementById('login-form');
+
   #email_input = document.getElementById('email');
+
   #email_error_messages_ul = document.getElementById('email-error-messages');
+
   #password_input = document.getElementById('password');
+
   #password_error_messages_ul = document.getElementById('password-error-messages');
 
   init() {
@@ -11,7 +16,7 @@ class LoginForm {
     this.#login_form.addEventListener('submit', this.#submit.bind(this));
   }
 
-  #appendErrorMessages(error_messages, element) {
+  static #appendErrorMessages(error_messages, element) {
     error_messages.forEach((message) => {
       const li = document.createElement('li');
       const text = document.createTextNode(message);
@@ -28,8 +33,7 @@ class LoginForm {
       .validate();
 
     if (errors.length) {
-      this.#appendErrorMessages(errors[0].messages, this.#email_error_messages_ul);
-      return;
+      LoginForm.#appendErrorMessages(errors[0].messages, this.#email_error_messages_ul);
     }
   }
 
@@ -41,8 +45,7 @@ class LoginForm {
       .validate();
 
     if (errors.length) {
-      this.#appendErrorMessages(errors[0].messages, this.#password_error_messages_ul);
-      return;
+      LoginForm.#appendErrorMessages(errors[0].messages, this.#password_error_messages_ul);
     }
   }
 
@@ -56,19 +59,19 @@ class LoginForm {
     grecaptcha.ready(async () => {
       const token = await grecaptcha.execute(
         '6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
-        { action: 'submit' }
+        { action: 'submit' },
       );
 
       const response = await fetch('/api/auth/captcha', {
         method: 'POST',
         body: JSON.stringify({ token }),
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.status === 204) {
-        this.#login_form.submit()
+        this.#login_form.submit();
       }
     });
   }

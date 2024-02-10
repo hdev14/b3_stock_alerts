@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
+import { faker } from '@faker-js/faker/locale/pt_BR';
 
 describe('Alerts endpoints', () => {
   afterAll(async () => {
@@ -12,7 +12,13 @@ describe('Alerts endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
     });
 
@@ -29,7 +35,7 @@ describe('Alerts endpoints', () => {
       const response = await globalThis.request
         .post('/api/alerts')
         .set('Content-Type', 'application/json')
-        .send(invalid_body)
+        .send(invalid_body);
 
       expect(response.status).toEqual(400);
       expect(response.body.errors).toHaveLength(4);
@@ -48,13 +54,13 @@ describe('Alerts endpoints', () => {
       const response = await globalThis.request
         .post('/api/alerts')
         .set('Content-Type', 'application/json')
-        .send(body)
+        .send(body);
 
       expect(response.status).toEqual(422);
       expect(response.body.message).toEqual('User not found');
     });
 
-    it("creates a new alert", async () => {
+    it('creates a new alert', async () => {
       expect.assertions(5);
 
       const body = {
@@ -67,7 +73,7 @@ describe('Alerts endpoints', () => {
       const response = await globalThis.request
         .post('/api/alerts')
         .set('Content-Type', 'application/json')
-        .send(body)
+        .send(body);
 
       expect(response.status).toEqual(201);
       expect(response.body.id).toBeDefined();
@@ -91,12 +97,24 @@ describe('Alerts endpoints', () => {
 
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
 
       await globalThis.db_client.query(
         'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
-        [alert_id, faker.string.alphanumeric(6), user_id, faker.number.float(), faker.number.float()]
+        [
+          alert_id,
+          faker.string.alphanumeric(6),
+          user_id,
+          faker.number.float(),
+          faker.number.float(),
+        ],
       );
     });
 
@@ -130,17 +148,35 @@ describe('Alerts endpoints', () => {
     beforeAll(async () => {
       await globalThis.db_client.query(
         'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-        [user_id, faker.internet.email(), faker.person.fullName(), faker.string.alphanumeric(10), faker.string.numeric(11)]
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
       );
 
       await globalThis.db_client.query(
         'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
-        [faker.string.uuid(), faker.string.alphanumeric(6), user_id, faker.number.float(), faker.number.float()]
+        [
+          faker.string.uuid(),
+          faker.string.alphanumeric(6),
+          user_id,
+          faker.number.float(),
+          faker.number.float(),
+        ],
       );
 
       await globalThis.db_client.query(
         'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
-        [faker.string.uuid(), faker.string.alphanumeric(6), user_id, faker.number.float(), faker.number.float()]
+        [
+          faker.string.uuid(),
+          faker.string.alphanumeric(6),
+          user_id,
+          faker.number.float(),
+          faker.number.float(),
+        ],
       );
     });
 

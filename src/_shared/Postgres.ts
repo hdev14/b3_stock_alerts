@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import { Client } from 'pg';
 
 export default class Postgres {
   private static client?: Client;
@@ -20,6 +20,7 @@ export default class Postgres {
 
   static getClient() {
     if (Postgres.client === undefined) {
+      // eslint-disable-next-line no-new
       new Postgres();
     }
 

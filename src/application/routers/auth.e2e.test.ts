@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import { authenticator } from "src/bootstrap";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import { authenticator } from 'src/bootstrap';
 
 const fetch_spy = jest.spyOn(global, 'fetch');
 const verify_captcha_spy = jest.spyOn(authenticator, 'verifyCaptcha');
@@ -20,8 +20,8 @@ describe('Auth endpoints', () => {
           success: true,
           challenge_ts: new Date().getTime(),
           hostname: faker.internet.url(),
-          "error-codes": [],
-        })
+          'error-codes': [],
+        }),
       } as any);
 
       const token = faker.string.alphanumeric(15);
@@ -44,8 +44,8 @@ describe('Auth endpoints', () => {
           success: false,
           challenge_ts: new Date().getTime(),
           hostname: faker.internet.url(),
-          "error-codes": [],
-        })
+          'error-codes': [],
+        }),
       } as any);
 
       const token = faker.string.alphanumeric(15);
@@ -69,7 +69,7 @@ describe('Auth endpoints', () => {
         .send({});
 
       expect(response.status).toEqual(400);
-      expect(response.body.errors).toBeDefined()
+      expect(response.body.errors).toBeDefined();
     });
   });
-})
+});

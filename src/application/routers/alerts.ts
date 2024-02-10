@@ -1,5 +1,7 @@
 import NotFoundError from '@shared/NotFoundError';
-import { NextFunction, Request, Response, Router } from 'express';
+import {
+  NextFunction, Request, Response, Router,
+} from 'express';
 import { checkSchema, param } from 'express-validator';
 import validator from 'src/application/middlewares/validator';
 import { alert_service } from '../../bootstrap';
@@ -13,7 +15,9 @@ router.post(
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { isMax, user_id, stock, amount } = request.body;
+      const {
+        isMax, user_id, stock, amount,
+      } = request.body;
 
       let result;
 
@@ -23,7 +27,7 @@ router.post(
         });
       } else {
         result = await alert_service.createMinAlert({
-          user_id, amount, stock
+          user_id, amount, stock,
         });
       }
 
@@ -33,9 +37,9 @@ router.post(
 
       return response.status(201).json(result.data);
     } catch (e) {
-      return next(e)
+      return next(e);
     }
-  }
+  },
 );
 
 router.delete(
@@ -47,14 +51,14 @@ router.delete(
       const result = await alert_service.removeAlert(request.params.id);
 
       if (result && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message })
+        return response.status(404).json({ message: result.error.message });
       }
 
       return response.sendStatus(204);
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 router.get(
@@ -66,14 +70,14 @@ router.get(
       const result = await alert_service.listUserAlerts(request.params.id);
 
       if (result && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message })
+        return response.status(404).json({ message: result.error.message });
       }
 
       return response.status(200).json(result.data);
     } catch (e) {
       return next(e);
     }
-  }
+  },
 );
 
 export default router;

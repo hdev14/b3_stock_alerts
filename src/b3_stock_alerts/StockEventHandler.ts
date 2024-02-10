@@ -1,6 +1,6 @@
-import { StockEvent } from "@shared/generic_types";
-import AlertNotification, { AlertNotificationTypes } from "./AlertNotification";
-import UserRepository from "./UserRepository";
+import { StockEvent } from '@shared/generic_types';
+import AlertNotification, { AlertNotificationTypes } from './AlertNotification';
+import UserRepository from './UserRepository';
 
 export default class StockEventHandler {
   constructor(

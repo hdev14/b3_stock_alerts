@@ -1,9 +1,9 @@
-import NotFoundError from "@shared/NotFoundError";
-import { Result } from "@shared/generic_types";
-import { randomUUID } from "crypto";
-import { Alert } from "./Alert";
-import AlertRepository from "./AlertRepository";
-import UserRepository from "./UserRepository";
+import NotFoundError from '@shared/NotFoundError';
+import { Result } from '@shared/generic_types';
+import { randomUUID } from 'crypto';
+import { Alert } from './Alert';
+import AlertRepository from './AlertRepository';
+import UserRepository from './UserRepository';
 
 export type CreateAlertParams = {
   user_id: string;
@@ -14,7 +14,7 @@ export type CreateAlertParams = {
 export default class AlertService {
   constructor(
     private readonly alert_repository: AlertRepository,
-    private readonly user_repository: UserRepository
+    private readonly user_repository: UserRepository,
   ) { }
 
   async createMaxAlert(params: CreateAlertParams): Promise<Result<Alert>> {
@@ -63,6 +63,8 @@ export default class AlertService {
     }
 
     await this.alert_repository.deleteAlert(alert_id);
+
+    return {};
   }
 
   async listUserAlerts(user_id: string): Promise<Result<Alert[]>> {

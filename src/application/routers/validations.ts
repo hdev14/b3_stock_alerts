@@ -1,17 +1,17 @@
-import { Schema } from "express-validator";
+import { Schema } from 'express-validator';
 
 export const create_user: Schema = {
   name: {
-    isString: true
+    isString: true,
   },
   email: {
-    isEmail: true
+    isEmail: true,
   },
   phone_number: {
     isString: true,
     isLength: {
-      options: { max: 11 }
-    }
+      options: { max: 11 },
+    },
   },
   password: {
     isString: true,
@@ -34,8 +34,8 @@ export const update_user: Schema = {
     optional: true,
     isString: true,
     isLength: {
-      options: { max: 11 }
-    }
+      options: { max: 11 },
+    },
   },
   password: {
     optional: true,
@@ -44,7 +44,7 @@ export const update_user: Schema = {
       options: { min: 8 },
     },
   },
-}
+};
 
 export const create_alert: Schema = {
   isMax: {
@@ -57,10 +57,10 @@ export const create_alert: Schema = {
   stock: {
     isString: true,
     isLength: {
-      options: { min: 5, max: 6 }
+      options: { min: 5, max: 6 },
     },
   },
   amount: {
     isFloat: true,
-  }
-}
+  },
+};

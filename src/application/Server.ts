@@ -37,7 +37,7 @@ export default class Server {
   private setupRouters() {
     this._application.use('/api', users, alerts, auth);
     this._application.use('/pages', pages);
-    this._application.use('/forms', forms)
+    this._application.use('/forms', forms);
     this._application.get('/', (_, response) => {
       response.redirect('/pages/index');
     });
@@ -47,4 +47,3 @@ export default class Server {
     this._application.use(error_handler);
   }
 }
-

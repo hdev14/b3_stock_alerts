@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import NotFoundError from "@shared/NotFoundError";
-import AlertService from "./AlertService";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import NotFoundError from '@shared/NotFoundError';
+import AlertService from './AlertService';
 
 describe('AlertService', () => {
   const alert_repository_mock = {
@@ -125,7 +125,7 @@ describe('AlertService', () => {
       }
     });
 
-    it("removes an alert", async () => {
+    it('removes an alert', async () => {
       expect.assertions(2);
 
       const alert_id = faker.string.uuid();
@@ -156,7 +156,7 @@ describe('AlertService', () => {
       expect(result.data).toBeUndefined();
     });
 
-    it("returns a result with an array of alerts", async () => {
+    it('returns a result with an array of alerts', async () => {
       expect.assertions(2);
 
       user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
@@ -174,12 +174,12 @@ describe('AlertService', () => {
           user_id: faker.string.uuid(),
           max_amount: faker.number.float(),
           min_amount: faker.number.float(),
-        }
+        },
       ]);
 
       const result = await service.listUserAlerts(faker.string.uuid());
 
-      expect(result.error).toBeUndefined()
+      expect(result.error).toBeUndefined();
       expect(result.data).toHaveLength(2);
     });
   });

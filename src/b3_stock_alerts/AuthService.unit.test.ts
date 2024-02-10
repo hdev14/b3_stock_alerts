@@ -1,7 +1,7 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import CredentialError from "@shared/CredentialError";
-import AuthService from "./AuthService";
-import { User } from "./User";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import CredentialError from '@shared/CredentialError';
+import AuthService from './AuthService';
+import { User } from './User';
 
 describe("AuthService's unit tests", () => {
   const user_repository_mock = {
@@ -45,7 +45,7 @@ describe("AuthService's unit tests", () => {
       expect(result.error).toBeInstanceOf(CredentialError);
     });
 
-    it("returns a result with CredentialError if password is wrong", async () => {
+    it('returns a result with CredentialError if password is wrong', async () => {
       expect.assertions(1);
 
       const user: User = {
@@ -67,7 +67,7 @@ describe("AuthService's unit tests", () => {
       expect(result.error).toBeInstanceOf(CredentialError);
     });
 
-    it("returns a result with user and auth data if credentials are correct", async () => {
+    it('returns a result with user and auth data if credentials are correct', async () => {
       expect.assertions(3);
 
       const user: User = {

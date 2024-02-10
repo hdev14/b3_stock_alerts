@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import Postgres from "@shared/Postgres";
-import { Alert } from "./Alert";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import Postgres from '@shared/Postgres';
+import { Alert } from './Alert';
 import PgAlertRepository from './PgAlertRepository';
 
 const get_client_spy = jest.spyOn(Postgres, 'getClient');
@@ -35,7 +35,7 @@ describe('PgAlertRepository', () => {
 
       expect(query_mock).toHaveBeenCalledWith(
         'INSERT INTO alerts (id, stock, user_id, max_amount, min_amount) VALUES ($1, $2, $3, $4, $5)',
-        [alert.id, alert.stock, alert.user_id, alert.max_amount, alert.min_amount]
+        [alert.id, alert.stock, alert.user_id, alert.max_amount, alert.min_amount],
       );
     });
   });
@@ -50,7 +50,7 @@ describe('PgAlertRepository', () => {
 
       expect(query_mock).toHaveBeenCalledWith('DELETE FROM alerts WHERE id = $1', [alert_id]);
     });
-  })
+  });
 
   describe('PgAlertRepository.getAlert', () => {
     it('returns an alert by id', async () => {
@@ -107,8 +107,8 @@ describe('PgAlertRepository', () => {
             user_id,
             max_amount: faker.number.float(),
             min_amount: faker.number.float(),
-          }
-        ]
+          },
+        ],
       });
 
       const alerts = await repository.listAlertsByUserId(user_id);
@@ -137,14 +137,14 @@ describe('PgAlertRepository', () => {
             user_id: faker.string.uuid(),
             max_amount: faker.number.float(),
             min_amount: faker.number.float(),
-          }
-        ]
+          },
+        ],
       });
 
       const limit = faker.number.int();
       const skip = faker.number.int();
 
-      const alerts = await repository.listAlerts({ limit, skip })
+      const alerts = await repository.listAlerts({ limit, skip });
 
       expect(query_mock).toHaveBeenCalledWith('SELECT id, stock, user_id, max_amount, min_amount FROM alerts LIMIT $1 OFFSET $2', [limit, skip]);
       expect(alerts).toHaveLength(2);

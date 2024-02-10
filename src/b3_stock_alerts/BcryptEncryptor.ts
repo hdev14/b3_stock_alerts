@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import Encryptor from "./Encryptor";
+import Encryptor from './Encryptor';
 
 export default class BcryptEncryptor implements Encryptor {
   private readonly SALT = 10;

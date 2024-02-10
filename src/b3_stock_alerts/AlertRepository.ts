@@ -1,4 +1,4 @@
-import { Alert } from "./Alert";
+import { Alert } from './Alert';
 
 export type ListAlertParams = {
   skip: number;

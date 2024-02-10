@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import jwt from 'jsonwebtoken';
-import Authenticator, { AuthData } from "./Authenticator";
-import { User } from "./User";
+import Authenticator, { AuthData } from './Authenticator';
+import { User } from './User';
 
 export default class CoreAuthenticator implements Authenticator {
   generateAuthToken(user: User): AuthData {
@@ -18,11 +18,11 @@ export default class CoreAuthenticator implements Authenticator {
   }
 
   verifyAuthToken(token: string): true {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   resetAuthToken(user: User, token: string): string {
-    throw new Error("Method not implemented.");
+    throw new Error('Method not implemented.');
   }
 
   async verifyCaptcha(user_ip: string, token: string): Promise<boolean> {
@@ -36,8 +36,8 @@ export default class CoreAuthenticator implements Authenticator {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
+        Accept: 'application/json',
+      },
     });
 
     const data = await response.json();

@@ -1,5 +1,5 @@
-import auth from "@app/middlewares/auth";
-import { Request, Response, Router } from "express";
+import auth from '@app/middlewares/auth';
+import { Request, Response, Router } from 'express';
 
 const router = Router();
 
@@ -17,12 +17,12 @@ router.get('/login', (request: Request, response: Response) => {
     }
   }
 
-  response.render('login', {
+  return response.render('login', {
     title: 'Login!',
     scripts: [
       { url: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA' },
       { url: '/js/validator.js' },
-      { url: '/js/login_form.js' }
+      { url: '/js/login_form.js' },
     ],
   });
 });
@@ -38,6 +38,5 @@ router.get('/forgot-password', (_request: Request, response: Response) => {
     title: 'Login!',
   });
 });
-
 
 export default router;

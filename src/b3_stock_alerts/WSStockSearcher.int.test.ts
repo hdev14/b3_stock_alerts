@@ -29,4 +29,3 @@ describe('WSStockSearcher int tests', () => {
     }
   });
 });
-

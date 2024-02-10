@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker/locale/pt_BR";
-import StockNotFoundError from "@shared/StockNotFound";
-import ScheduleHandler from "./ScheduleHandler";
+import { faker } from '@faker-js/faker/locale/pt_BR';
+import StockNotFoundError from '@shared/StockNotFound';
+import ScheduleHandler from './ScheduleHandler';
 
 describe('ScheduleHandler unit tests', () => {
   const alert_repository_mock = {
@@ -39,7 +39,7 @@ describe('ScheduleHandler unit tests', () => {
         user_id: faker.string.uuid(),
         max_amount: 0,
         min_amount: 10,
-      }
+      },
     ];
 
     alert_repository_mock.listAlerts
@@ -51,7 +51,7 @@ describe('ScheduleHandler unit tests', () => {
       .mockResolvedValueOnce({ amount: 101 });
 
     await expect(handler.handle()).resolves.not.toThrow();
-  })
+  });
 
   it('sends a stock event for each confirmed stock amount', async () => {
     expect.assertions(11);
@@ -70,13 +70,12 @@ describe('ScheduleHandler unit tests', () => {
         user_id: faker.string.uuid(),
         max_amount: 0,
         min_amount: 10,
-      }
+      },
     ];
 
     alert_repository_mock.listAlerts
       .mockResolvedValueOnce(alerts)
       .mockResolvedValueOnce([]);
-
 
     stock_searcher_mock.search
       .mockResolvedValueOnce({ amount: 101 })
@@ -85,7 +84,6 @@ describe('ScheduleHandler unit tests', () => {
     const emit_spy = jest.spyOn(handler, 'emit');
 
     await handler.handle();
-
 
     expect(emit_spy).toHaveBeenCalledTimes(2);
 
@@ -119,7 +117,7 @@ describe('ScheduleHandler unit tests', () => {
         user_id: faker.string.uuid(),
         max_amount: 0,
         min_amount: 10,
-      }
+      },
     ];
 
     alert_repository_mock.listAlerts
