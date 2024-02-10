@@ -11,7 +11,7 @@ class Form {
   /**
    * @property {Element} form
    */
-  form;
+  form_element;
 
   /**
    * @param {Element} form
@@ -20,7 +20,7 @@ class Form {
    * @param {Element} fields[].error_message_element
    */
   constructor(form, fields) {
-    this.form = form;
+    this.form_element = form;
     this.fields = fields;
   }
 
@@ -33,7 +33,7 @@ class Form {
       ).bind(this));
     });
 
-    this.form.addEventListener('submit', this.submit.bind(this));
+    this.form_element.addEventListener('submit', this.submit.bind(this));
   }
 
   /**

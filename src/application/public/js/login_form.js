@@ -22,7 +22,7 @@ class LoginForm extends Form {
       });
 
       if (response.status === 204) {
-        this.form.submit();
+        this.form_element.submit();
       }
     });
   }
