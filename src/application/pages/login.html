@@ -6,7 +6,7 @@
     <input id="email" type="email" name="email" data-testid="login-email" />
     <ul id="email-error-messages" data-testid="email-error-messages"></ul>
 
-    <input type="password" name="password" id="password" data-testid="login-password" onblur="validatePassword()" />
+    <input type="password" name="password" id="password" data-testid="login-password" />
     <ul id="password-error-messages" data-testid="password-error-messages"></ul>
 
     <button type="submit" data-testid="login-submit">
@@ -16,76 +16,6 @@
 </main>
 
 <script>
-  const login_form = document.getElementById("login-form");
-  const email_input = document.getElementById('email');
-  const email_error_messages_ul = document.getElementById('email-error-messages');
-  const password_input = document.getElementById('password');
-  const password_error_messages_ul = document.getElementById('password-error-messages');
-
-  let has_validation_errors = false;
-
-  function appendErrorMessages(error_messages, element) {
-    error_messages.forEach((message) => {
-      const li = document.createElement('li');
-      const text = document.createTextNode(message);
-      li.appendChild(text);
-      element.appendChild(li);
-    });
-  }
-
-  function validateEmail() {
-    const errors = Validator.setData({ email: email_input.value })
-      .setRule('email', ['required', 'string', 'email'])
-      .validate();
-
-    if (errors.length) {
-      appendErrorMessages(errors[0].messages, email_error_messages_ul);
-      return;
-    }
-
-    removeChildsFromParent(email_error_messages_ul);
-  }
-
-  function validatePassword() {
-    const errors = Validator.setData({ password: password_input.value })
-      .setRule('password', ['required', 'string', 'min:8', 'password'])
-      .validate();
-
-    if (errors.length) {
-      appendErrorMessages(errors[0].messages, password_error_messages_ul);
-      return;
-    }
-
-    removeChildsFromParent(password_error_messages_ul);
-  };
-
-  email_input.addEventListener('blur', validateEmail);
-  password_input.addEventListener('blur', validatePassword);
-  login_form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if (email_error_messages_ul.firstChild && password_error_messages_ul.firstChild) {
-      return;
-    }
-
-    grecaptcha.ready(async () => {
-      const token = await grecaptcha.execute(
-        '6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
-        { action: 'submit' }
-      );
-
-      const response = await fetch('/api/auth/captcha', {
-        method: 'POST',
-        body: JSON.stringify({ token }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-
-      if (response.status === 204) {
-        login_form.submit()
-      }
-    });
-  });
+  new LoginForm().init();
 </script>
 {{> _footer}}

@@ -21,7 +21,8 @@ router.get('/login', (request: Request, response: Response) => {
     title: 'Login!',
     scripts: [
       { url: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA' },
-      { url: '/js/validator.js' }
+      { url: '/js/validator.js' },
+      { url: '/js/login_form.js' }
     ],
   });
 });

@@ -57,7 +57,7 @@ const RULE_FUNCTIONS = {
   password: (value) => (
     value !== undefined
     && typeof value === 'string'
-    && value.length >= 8
+    && value.length <= 8
     && !(
       value.includes('!')
       || value.includes('@')
