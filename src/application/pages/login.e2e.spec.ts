@@ -72,7 +72,21 @@ test.describe('Login Page', () => {
     expect(page).toHaveURL('/pages/login');
   });
 
-  test('should allow the user to go to /pages/index if captcha succeed', async ({ page, context }) => {
+  test('should allow the user to go to /pages/index if captcha succeed', async ({ page }) => {
+    const email_input = page.getByTestId('login-email');
+    await email_input.fill(user.email)
+
+    const password_input = page.getByTestId('login-password');
+    await password_input.fill(user.password);
+
+    const submit_button = page.getByTestId('login-submit');
+    await submit_button.click();
+    await page.waitForURL('**/pages/index');
+
+    expect(page).toHaveURL('/pages/index')
+  });
+
+  test('should login user successfully', async ({ page, context }) => {
     const email_input = page.getByTestId('login-email');
     await email_input.fill(user.email)
 
@@ -86,6 +100,5 @@ test.describe('Login Page', () => {
     const cookies = await context.cookies();
 
     expect(cookies.some((cookie) => cookie.name === 'AT')).toBeTruthy();
-    expect(page).toHaveURL('/pages/index')
   });
 });
