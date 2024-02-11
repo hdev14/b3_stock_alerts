@@ -1,9 +1,29 @@
 {{> _head}}
 <main>
   <h1>{{title}}</h1>
+
+  <form id="confirm-code-form" data-testid="confirm-code-form" method="post" action="/forms/confirm-code">
+    <input id="code" type="text" name="code" data-testid="code" />
+    <ul id="code-error-messages" data-testid="code-error-messages"></ul>
+
+    <input hidden="email" type="email" name="email" data-testid="email" value="{{email}}" />
+
+    <button type="submit" data-testid="confirm-code-submit">
+      Confirm code
+    </button>
+  </form>
 </main>
 
 <script>
-
+  new Form(
+    document.getElementById('confirm-code-form'),
+    [
+      {
+        input_element: document.getElementById('code'),
+        error_message_element: document.getElementById('code-error-messages'),
+        rules: ['required', 'min:4']
+      },
+    ]
+  ).init(true);
 </script>
 {{> _footer}}

@@ -1,5 +1,6 @@
 import auth from '@app/middlewares/auth';
 import { Request, Response, Router } from 'express';
+import QueryString from 'qs';
 
 const router = Router();
 
@@ -8,8 +9,7 @@ const LINKS: Record<string, string> = {};
 const SCRIPTS: Record<string, string> = {
   captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
   validator: '/js/validator.js',
-  login_form: '/js/login_form.js',
-  signup_form: '/js/signup_form.js',
+  form: '/js/form.js',
   imask: 'https://unpkg.com/imask',
 };
 
@@ -23,13 +23,21 @@ function getScriptUrls(script_names: string[]) {
   return script_keys.map((key) => ({ url: SCRIPTS[key] }));
 }
 
+function getAlerts(query: QueryString.ParsedQs) {
+  const { error_message } = query;
+  const alerts = [];
+
+  if (error_message) {
+    alerts.push({ message: error_message });
+  }
+  return alerts;
+}
+
 router.get('/index', auth, (_request: Request, response: Response) => {
   response.render('index', { title: 'Hellow Mustache!' });
 });
 
 router.get('/login', (request: Request, response: Response) => {
-  const { error_message } = request.query;
-
   if (request.headers.cookie) {
     const cookies = request.headers.cookie.split(';');
     const has_access_token = cookies.find((cookie) => cookie.split('=')[0] === 'AT');
@@ -39,37 +47,31 @@ router.get('/login', (request: Request, response: Response) => {
     }
   }
 
-  const alerts = [];
-
-  if (error_message) {
-    alerts.push({ message: error_message });
-  }
-
   return response.render('login', {
     title: 'Login!',
-    scripts: getScriptUrls(['captcha', 'validator', 'login_form']),
-    alerts,
+    scripts: getScriptUrls(['captcha', 'validator', 'form']),
+    alerts: getAlerts(request.query),
   });
 });
 
 router.get('/signup', (request: Request, response: Response) => {
-  const { error_message } = request.query;
-  const alerts = [];
-
-  if (error_message) {
-    alerts.push({ message: error_message });
-  }
-
   response.render('signup', {
     title: 'Sign up!',
-    scripts: getScriptUrls(['captcha', 'validator', 'signup_form', 'imask']),
-    alerts,
+    scripts: getScriptUrls(['captcha', 'validator', 'form', 'imask']),
+    alerts: getAlerts(request.query),
   });
 });
 
-router.get('/confirm-code', (_request: Request, response: Response) => {
-  response.render('confirm-code', {
+router.get('/confirm-code', (request: Request, response: Response) => {
+  if (!request.query.email) {
+    return response.redirect('/pages/login');
+  }
+
+  return response.render('confirm-code', {
     title: 'Confirmar código!',
+    email: request.query.email,
+    scripts: getScriptUrls(['captcha', 'validator', 'form']),
+    alerts: getAlerts(request.query),
   });
 });
 

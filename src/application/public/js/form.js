@@ -9,22 +9,26 @@ class Form {
   fields = [];
 
   /**
-   * @property {Element} form
+   * @property {Element} form_element
    */
   form_element;
 
   /**
-   * @param {Element} form
+   * @param {Element} form_element
    * @param {Object[]} fields
    * @param {Element} fields[].input_element
    * @param {Element} fields[].error_message_element
    */
-  constructor(form, fields) {
-    this.form_element = form;
+  constructor(form_element, fields) {
+    this.form_element = form_element;
     this.fields = fields;
   }
 
-  init() {
+  /**
+   *
+   * @param {boolean} captcha
+   */
+  init(captcha = false) {
     this.fields.forEach(({ input_element, error_message_element, rules }) => {
       input_element.addEventListener('blur', this.validateInput(
         error_message_element,
@@ -33,6 +37,10 @@ class Form {
       ).bind(this));
     });
 
+    if (captcha) {
+      this.form_element.addEventListener('submit', this.submitCaptcha.bind(this));
+      return;
+    }
     this.form_element.addEventListener('submit', this.submit.bind(this));
   }
 
@@ -49,8 +57,44 @@ class Form {
    * @param {Event} event
    */
   submit(event) {
-    console.log(event);
-    throw new Error('Not implemented');
+    event.preventDefault();
+
+    if (this.hasErrors()) {
+      return;
+    }
+
+    this.form_element.submit();
+  }
+
+  /**
+   *
+   * @param {Event} event
+   */
+  submitCaptcha(event) {
+    event.preventDefault();
+
+    if (this.hasErrors()) {
+      return;
+    }
+
+    grecaptcha.ready(async () => {
+      const token = await grecaptcha.execute(
+        '6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
+        { action: 'submit' },
+      );
+
+      const response = await fetch('/api/auth/captcha', {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 204) {
+        this.form_element.submit();
+      }
+    });
   }
 
   /**

@@ -87,8 +87,8 @@ export default class PgUserRepository implements UserRepository {
 
   async getConfirmationCode(email: string, code: string): Promise<ConfirmationCode | null> {
     const result = await this.client.query(
-      'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
-      [code, email],
+      'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc JOIN users ON users.email = $1 WHERE code = $2',
+      [email, code],
     );
 
     if (result.rows[0] === undefined) {

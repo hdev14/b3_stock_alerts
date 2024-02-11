@@ -9,7 +9,7 @@ export default class EmailGateway implements AlertNotification, ConfirmationCode
     this.transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: parseInt(process.env.EMAIL_PORT!, 10),
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
@@ -45,7 +45,7 @@ export default class EmailGateway implements AlertNotification, ConfirmationCode
       to: params.email,
       subject: 'Código de confirmação',
       text: `Segue o código de confirmação ${params.code}. Acesse o link ${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}.`,
-      html: `<p>Segue o código de confirmação ${params.code}.</p><br/><p>Acesse o link ${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}.</p>`,
+      html: `<p>Segue o código de confirmação ${params.code}.</p><br/><p>Acesse o <a href="${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}">link.</a></p>`,
     };
 
     await this.transporter.sendMail(message);

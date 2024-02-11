@@ -16,3 +16,11 @@ CREATE TABLE alerts (
   	CONSTRAINT alerts_pk PRIMARY KEY (id),
   	FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE user_confirmation_codes (
+	id VARCHAR(36) NOT NULL,
+	user_id VARCHAR(36) NOT NULL,
+  	code VARCHAR(4) NOT NULL,
+  	CONSTRAINT user_confirmation_codes_pk PRIMARY KEY (id),
+  	FOREIGN KEY (user_id) REFERENCES users(id)
+);

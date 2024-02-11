@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
 
 test.describe('Signup Page', () => {
-  let user_id = '';
   const user = {
     name: faker.person.fullName(),
     email: faker.internet.email(),
@@ -11,18 +10,10 @@ test.describe('Signup Page', () => {
   };
 
   test.beforeAll(async ({ request }) => {
-    const response = await request.post('/api/users', {
+    await request.post('/api/users', {
       data: user,
       headers: { 'Content-Type': 'application/json' },
     });
-
-    const data = await response.json();
-
-    user_id = data.id;
-  });
-
-  test.afterAll(async ({ request }) => {
-    await request.delete(`/api/users/${user_id}`);
   });
 
   test.beforeEach(async ({ page }) => {
@@ -88,7 +79,7 @@ test.describe('Signup Page', () => {
     await expect(phone_number_error_message).toContainText('O campo precisa ser um telefone válido.');
   });
 
-  test('should not allow the user to go to /pages/index if captcha failed', async ({ page }) => {
+  test('should not allow the user to go to /pages/confirm-code if captcha failed', async ({ page }) => {
     await page.route('*/**/api/auth/captcha', async (route) => {
       await route.fulfill({ status: 403 });
     });
@@ -111,7 +102,7 @@ test.describe('Signup Page', () => {
     expect(page).toHaveURL('/pages/signup');
   });
 
-  test('should redirect the user to /pages/login if captcha succeed', async ({ page }) => {
+  test('should redirect the user to /pages/confirm-code if captcha succeed', async ({ page }) => {
     const name_input = page.getByTestId('signup-name');
     await name_input.fill(faker.person.fullName());
 
@@ -126,9 +117,9 @@ test.describe('Signup Page', () => {
 
     const submit_button = page.getByTestId('signup-submit');
     await submit_button.click();
-    await page.waitForURL('**/pages/confirm-code');
+    await page.waitForTimeout(3000);
 
-    expect(page).toHaveURL('/pages/confirm-code');
+    expect(page).toHaveTitle('Confirmar código!');
   });
 
   test('should not register the same email twice', async ({ page, baseURL }) => {

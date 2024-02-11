@@ -16,7 +16,7 @@
 </main>
 
 <script>
-  new LoginForm(
+  new Form(
     document.getElementById('login-form'),
     [
       {
@@ -30,6 +30,6 @@
         rules: ['required', 'min:8', 'password']
       }
     ]
-  ).init();
+  ).init(true);
 </script>
 {{> _footer}}

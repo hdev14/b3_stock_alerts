@@ -206,8 +206,8 @@ describe('PgUserRepository', () => {
       const result = await repository.getConfirmationCode(email, code);
 
       expect(query_mock).toHaveBeenCalledWith(
-        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
-        [code, email],
+        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc JOIN users ON users.email = $1 WHERE code = $2',
+        [email, code],
       );
       expect(result).toEqual(confirmation_code);
     });
@@ -223,8 +223,8 @@ describe('PgUserRepository', () => {
       const result = await repository.getConfirmationCode(email, code);
 
       expect(query_mock).toHaveBeenCalledWith(
-        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
-        [code, email],
+        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc JOIN users ON users.email = $1 WHERE code = $2',
+        [email, code],
       );
 
       expect(result).toBeNull();
