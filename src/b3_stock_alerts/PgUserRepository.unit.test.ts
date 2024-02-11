@@ -187,4 +187,47 @@ describe('PgUserRepository', () => {
       ]);
     });
   });
+
+  describe('PgUserRepository.getConfirmationCode', () => {
+    it('returns a confirmation code', async () => {
+      expect.assertions(2);
+
+      const email = faker.internet.email();
+      const code = faker.string.numeric(4);
+
+      const confirmation_code = {
+        id: faker.string.uuid(),
+        user_id: faker.string.uuid(),
+        code,
+      }
+
+      query_mock.mockResolvedValueOnce({ rows: [confirmation_code] });
+
+      const result = await repository.getConfirmationCode(email, code);
+
+      expect(query_mock).toHaveBeenCalledWith(
+        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
+        [code, email],
+      );
+      expect(result).toEqual(confirmation_code);
+    });
+
+    it("returns NULL if confirmation code doesn't exit", async () => {
+      expect.assertions(2);
+
+      const email = faker.internet.email();
+      const code = faker.string.numeric(4);
+
+      query_mock.mockResolvedValueOnce({ rows: [] });
+
+      const result = await repository.getConfirmationCode(email, code);
+
+      expect(query_mock).toHaveBeenCalledWith(
+        'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
+        [code, email],
+      );
+
+      expect(result).toBeNull();
+    });
+  });
 });

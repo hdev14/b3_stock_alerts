@@ -14,6 +14,7 @@ describe("AuthService's unit tests", () => {
     getUsers: jest.fn(),
     getUserByEmail: jest.fn(),
     createConfirmationCode: jest.fn(),
+    getConfirmationCode: jest.fn(),
   };
 
   const encryptor_mock = {
@@ -174,6 +175,38 @@ describe("AuthService's unit tests", () => {
       expect(params.id).toBeDefined();
       expect(params.user_id).toBe(user.id);
       expect(params.code).toBe('1234');
+    });
+  });
+
+  describe('AuthService.confirmCode', () => {
+    afterEach(() => {
+      user_repository_mock.getConfirmationCode.mockClear();
+    });
+
+    it("returns a result with false if code doesn't exist", async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+      const code = faker.string.numeric(4);
+
+      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(false);
+
+      const result = await auth_service.confirmCode(email, code);
+
+      expect(result.data).toEqual(false);
+    });
+
+    it('returns a result with true if code exists', async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+      const code = faker.string.numeric(4);
+
+      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(true);
+
+      const result = await auth_service.confirmCode(email, code);
+
+      expect(result.data).toEqual(true);
     });
   });
 });

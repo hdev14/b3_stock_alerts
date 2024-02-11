@@ -1,5 +1,6 @@
 import Postgres from '@shared/Postgres';
 import { Client } from 'pg';
+import ConfirmationCode from './ConfirmationCode';
 import { User } from './User';
 import { UserConfirmationCode } from './UserConfirmationCode';
 import UserRepository from './UserRepository';
@@ -82,5 +83,18 @@ export default class PgUserRepository implements UserRepository {
       'INSERT INTO user_confirmation_codes (id, user_id, code) VALUES ($1, $2, $3)',
       [confirmation_code.id, confirmation_code.user_id, confirmation_code.code],
     );
+  }
+
+  async getConfirmationCode(email: string, code: string): Promise<ConfirmationCode | null> {
+    const result = await this.client.query(
+      'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc WHERE code = $1 JOIN users ON users.email = $2',
+      [code, email],
+    );
+
+    if (result.rows[0] === undefined) {
+      return null;
+    }
+
+    return result.rows[0];
   }
 }

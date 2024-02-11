@@ -67,4 +67,10 @@ export default class AuthService {
 
     return {};
   }
+
+  async confirmCode(email: string, code: string): Promise<Result<boolean>> {
+    const confirmation_code = await this.user_repository.getConfirmationCode(email, code);
+
+    return { data: !!confirmation_code };
+  }
 }
