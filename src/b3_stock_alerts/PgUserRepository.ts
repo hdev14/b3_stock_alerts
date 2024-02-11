@@ -1,6 +1,7 @@
 import Postgres from '@shared/Postgres';
 import { Client } from 'pg';
 import { User } from './User';
+import { UserConfirmationCode } from './UserConfirmationCode';
 import UserRepository from './UserRepository';
 
 export default class PgUserRepository implements UserRepository {
@@ -74,5 +75,12 @@ export default class PgUserRepository implements UserRepository {
     }
 
     return result.rows[0];
+  }
+
+  async createConfirmationCode(confirmation_code: UserConfirmationCode): Promise<void> {
+    await this.client.query(
+      'INSERT INTO user_confirmation_codes (id, user_id, code) VALUES ($1, $2, $3)',
+      [confirmation_code.id, confirmation_code.user_id, confirmation_code.code],
+    );
   }
 }

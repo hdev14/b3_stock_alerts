@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import Postgres from '@shared/Postgres';
 import PgUserRepository from './PgUserRepository';
 import { User } from './User';
+import { UserConfirmationCode } from './UserConfirmationCode';
 
 const get_client_spy = jest.spyOn(Postgres, 'getClient');
 
@@ -166,6 +167,24 @@ describe('PgUserRepository', () => {
 
       expect(query_mock).toHaveBeenCalledWith('SELECT id, email, name, password, phone_number FROM users WHERE email = $1', [user_email]);
       expect(result).toBeNull();
+    });
+  });
+
+  describe('PgUserRepository.createConfirmationCode', () => {
+    it('inserts a new confirmation code', async () => {
+      expect.assertions(1);
+
+      const confirmation_code: UserConfirmationCode = {
+        id: faker.string.uuid(),
+        user_id: faker.string.uuid(),
+        code: faker.string.numeric(4),
+      };
+
+      await repository.createConfirmationCode(confirmation_code);
+
+      expect(query_mock).toHaveBeenCalledWith('INSERT INTO user_confirmation_codes (id, user_id, code) VALUES ($1, $2, $3)', [
+        confirmation_code.id, confirmation_code.user_id, confirmation_code.code,
+      ]);
     });
   });
 });

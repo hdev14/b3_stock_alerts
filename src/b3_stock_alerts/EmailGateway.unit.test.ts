@@ -2,13 +2,21 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import nodemailer from 'nodemailer';
 import { AlertNotificationTypes, NotificationData } from './AlertNotification';
-import EmailAlertNotification from './EmailAlertNotification';
+import EmailGateway from './EmailGateway';
 
 jest.mock('nodemailer');
 
 const nodemailer_mock = jest.mocked(nodemailer);
-describe('EmailAlertNotification', () => {
+
+describe("EmailGateway's unit tests", () => {
   const OLD_ENV = process.env;
+  const transport_mock = { sendMail: jest.fn() } as any;
+  nodemailer_mock.createTransport.mockReturnValue(transport_mock);
+  const email_gateway = new EmailGateway();
+
+  afterEach(() => {
+    transport_mock.sendMail.mockClear();
+  });
 
   beforeAll(() => {
     process.env = {
@@ -17,6 +25,7 @@ describe('EmailAlertNotification', () => {
       EMAIL_PORT: '123',
       EMAIL_USER: 'test',
       EMAIL_PASSWORD: 'test',
+      SERVER_URL: 'http://localhost:5000',
     };
   });
 
@@ -24,15 +33,7 @@ describe('EmailAlertNotification', () => {
     process.env = OLD_ENV;
   });
 
-  describe('EmailAlertNotification.notify', () => {
-    const transport_mock = { sendMail: jest.fn() } as any;
-    nodemailer_mock.createTransport.mockReturnValue(transport_mock);
-    const alert_notification = new EmailAlertNotification();
-
-    afterEach(() => {
-      transport_mock.sendMail.mockClear();
-    });
-
+  describe('EmailGateway.notify', () => {
     it('sends an email notification for MAX stock alert', async () => {
       expect.assertions(1);
 
@@ -49,7 +50,7 @@ describe('EmailAlertNotification', () => {
         type: AlertNotificationTypes.MAX,
       };
 
-      await alert_notification.notify(data);
+      await email_gateway.notify(data);
 
       expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
@@ -76,7 +77,7 @@ describe('EmailAlertNotification', () => {
         type: AlertNotificationTypes.MIN,
       };
 
-      await alert_notification.notify(data);
+      await email_gateway.notify(data);
 
       expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
@@ -84,6 +85,25 @@ describe('EmailAlertNotification', () => {
         subject: 'Alerta de baixa no valor de ação!',
         text: `A ação com sigla ${data.stock} está abaixo do valor de R$ ${data.amount}.`,
         html: `<p>A ação com sigla ${data.stock} está abaixo o valor de R$ ${data.amount}</p>`,
+      });
+    });
+  });
+
+  describe('EmailGateway.notify', () => {
+    it('sends an email for code confirmation', async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+      const code = faker.string.alphanumeric()
+
+      await email_gateway.sendCode({ email, code });
+
+      expect(transport_mock.sendMail).toHaveBeenCalledWith({
+        from: 'test@server.com',
+        to: email,
+        subject: 'Código de confirmação',
+        text: `Segue o código de confirmação ${code}. Acesse o link http://localhost:5000/pages/confirm-code?email=${email}.`,
+        html: `<p>Segue o código de confirmação ${code}.</p><br/><p>Acesse o link http://localhost:5000/pages/confirm-code?email=${email}.</p>`,
       });
     });
   });

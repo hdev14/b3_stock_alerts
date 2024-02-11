@@ -1,4 +1,5 @@
 import { User } from './User';
+import { UserConfirmationCode } from './UserConfirmationCode';
 
 export default interface UserRepository {
   getUsers(): Promise<Array<User>>;
@@ -7,4 +8,5 @@ export default interface UserRepository {
   updateUser(user: User): Promise<void>;
   deleteUser(user_id: string): Promise<void>;
   getUserByEmail(email: string): Promise<User | null>;
+  createConfirmationCode(confirmation_code: UserConfirmationCode): Promise<void>;
 }
