@@ -1,5 +1,6 @@
+import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import { Request, Response, Router } from 'express';
-import { auth_service } from 'src/bootstrap';
+import { auth_service, user_service } from 'src/bootstrap';
 
 const router = Router();
 
@@ -28,9 +29,28 @@ router.post('/logout', (_request: Request, response: Response) => {
   response.redirect('/pages/login');
 });
 
-router.post('/signup', (request: Request, response: Response) => {
+router.post('/signup', async (request: Request, response: Response) => {
+  const {
+    email,
+    name,
+    password,
+    phone_number,
+  } = request.body;
+
   console.log(request.body);
-  response.redirect('/pages/confirm-code');
+
+  const result = await user_service.createUser({
+    email,
+    name,
+    password,
+    phone_number,
+  });
+
+  if (result.error instanceof EmailAlreadyRegisteredError) {
+    return response.redirect(`/pages/signup?error_message=${result.error.message}`);
+  }
+
+  return response.redirect('/pages/confirm-code');
 });
 
 router.post('/forgot-password', (request: Request, response: Response) => {

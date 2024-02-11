@@ -43,10 +43,19 @@ router.get('/login', (request: Request, response: Response) => {
   });
 });
 
-router.get('/signup', (_request: Request, response: Response) => {
+router.get('/signup', (request: Request, response: Response) => {
+  const { error_message } = request.query;
+  const alerts = [];
+
+  console.log('QUERY', error_message);
+  if (error_message) {
+    alerts.push({ message: error_message });
+  }
+
   response.render('signup', {
     title: 'Sign up!',
     scripts: getScriptUrls(['captcha', 'validator', 'signup_form', 'imask']),
+    alerts,
   });
 });
 

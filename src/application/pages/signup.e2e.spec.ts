@@ -121,4 +121,28 @@ test.describe('Signup Page', () => {
 
     expect(page).toHaveURL('/pages/confirm-code');
   });
+
+  test('should not register the same email twice', async ({ page, baseURL }) => {
+    const name_input = page.getByTestId('signup-name');
+    await name_input.fill(user.name);
+
+    const email_input = page.getByTestId('signup-email');
+    await email_input.fill(user.email);
+
+    const phone_input = page.getByTestId('signup-phone-number');
+    await phone_input.fill(user.phone_number);
+
+    const password_input = page.getByTestId('signup-password');
+    await password_input.fill(user.password);
+
+    const submit_button = page.getByTestId('signup-submit');
+    await submit_button.click();
+
+    await page.waitForResponse(`${baseURL}/forms/signup`);
+
+    const alert_message = page.getByTestId('alert-message');
+
+    const text = await alert_message.innerText();
+    expect(text).toBe('Endereço de e-mail já cadastrado.');
+  });
 });

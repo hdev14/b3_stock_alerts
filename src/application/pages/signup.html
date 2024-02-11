@@ -9,7 +9,7 @@
     <input id="email" type="email" name="email" data-testid="signup-email" />
     <ul id="email-error-messages" data-testid="email-error-messages"></ul>
 
-    <input id="phone-number" type="text" name="phone-number" data-testid="signup-phone-number" />
+    <input id="phone-number" type="text" name="phone_number" data-testid="signup-phone-number" />
     <ul id="phone-number-error-messages" data-testid="phone-number-error-messages"></ul>
 
     <input id="password" type="password" name="password" data-testid="signup-password" />
@@ -46,7 +46,7 @@
       {
         input_element: document.getElementById('password'),
         error_message_element: document.getElementById('password-error-messages'),
-        rules: ['required', 'string', 'min:8', 'password']
+        rules: ['required', 'min:8', 'password']
       }
     ]
   ).init();
