@@ -2,6 +2,7 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
 
 test.describe('Signup Page', () => {
+  let user_id = '';
   const user = {
     name: faker.person.fullName(),
     email: faker.internet.email(),
@@ -10,10 +11,18 @@ test.describe('Signup Page', () => {
   };
 
   test.beforeAll(async ({ request }) => {
-    await request.post('/api/users', {
+    const response = await request.post('/api/users', {
       data: user,
       headers: { 'Content-Type': 'application/json' },
     });
+
+    const data = await response.json();
+
+    user_id = data.id;
+  });
+
+  test.afterAll(async ({ request }) => {
+    await request.delete(`/api/users/${user_id}`);
   });
 
   test.beforeEach(async ({ page }) => {

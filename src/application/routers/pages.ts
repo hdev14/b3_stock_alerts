@@ -28,6 +28,8 @@ router.get('/index', auth, (_request: Request, response: Response) => {
 });
 
 router.get('/login', (request: Request, response: Response) => {
+  const { error_message } = request.query;
+
   if (request.headers.cookie) {
     const cookies = request.headers.cookie.split(';');
     const has_access_token = cookies.find((cookie) => cookie.split('=')[0] === 'AT');
@@ -37,9 +39,16 @@ router.get('/login', (request: Request, response: Response) => {
     }
   }
 
+  const alerts = [];
+
+  if (error_message) {
+    alerts.push({ message: error_message });
+  }
+
   return response.render('login', {
     title: 'Login!',
     scripts: getScriptUrls(['captcha', 'validator', 'login_form']),
+    alerts,
   });
 });
 
@@ -47,7 +56,6 @@ router.get('/signup', (request: Request, response: Response) => {
   const { error_message } = request.query;
   const alerts = [];
 
-  console.log('QUERY', error_message);
   if (error_message) {
     alerts.push({ message: error_message });
   }

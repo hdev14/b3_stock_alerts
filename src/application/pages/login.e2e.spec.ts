@@ -2,6 +2,8 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
 
 test.describe('Login Page', () => {
+  let user_id = '';
+
   const user = {
     name: faker.person.fullName(),
     email: faker.internet.email(),
@@ -10,10 +12,18 @@ test.describe('Login Page', () => {
   };
 
   test.beforeAll(async ({ request }) => {
-    await request.post('/api/users', {
+    const response = await request.post('/api/users', {
       data: user,
       headers: { 'Content-Type': 'application/json' },
     });
+
+    const data = await response.json();
+
+    user_id = data.id;
+  });
+
+  test.afterAll(async ({ request }) => {
+    await request.delete(`/api/users/${user_id}`);
   });
 
   test.beforeEach(async ({ page }) => {
@@ -100,5 +110,23 @@ test.describe('Login Page', () => {
     const cookies = await context.cookies();
 
     expect(cookies.some((cookie) => cookie.name === 'AT')).toBeTruthy();
+  });
+
+  test('should inform the user if credentials are wrong', async ({ page, baseURL }) => {
+    const email_input = page.getByTestId('login-email');
+    await email_input.fill(user.email);
+
+    const password_input = page.getByTestId('login-password');
+    await password_input.fill(`${faker.string.alphanumeric(10)}!@#!$`);
+
+    const submit_button = page.getByTestId('login-submit');
+    await submit_button.click();
+
+    await page.waitForResponse(`${baseURL}/forms/login`);
+
+    const alert_message = page.getByTestId('alert-message');
+
+    const text = await alert_message.innerText();
+    expect(text).toBe('E-mail ou senha inválido.');
   });
 });

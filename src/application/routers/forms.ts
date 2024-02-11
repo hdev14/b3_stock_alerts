@@ -1,3 +1,4 @@
+import CredentialError from '@shared/CredentialError';
 import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import { Request, Response, Router } from 'express';
 import { auth_service, user_service } from 'src/bootstrap';
@@ -19,6 +20,10 @@ router.post('/login', async (request: Request, response: Response) => {
     });
 
     return response.redirect('/');
+  }
+
+  if (result.error instanceof CredentialError) {
+    return response.redirect(`/pages/login?error_message=${result.error.message}`);
   }
 
   return response.render('/pages/login');
