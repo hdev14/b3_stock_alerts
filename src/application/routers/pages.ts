@@ -81,4 +81,10 @@ router.get('/forgot-password', (_request: Request, response: Response) => {
   });
 });
 
+router.get('/500', (_request: Request, response: Response) => {
+  response.render('500', {
+    title: 'Internal Server Error!',
+  });
+});
+
 export default router;
