@@ -153,7 +153,7 @@ describe("AuthService's unit tests", () => {
     });
 
     it('saves the code after send it for user email', async () => {
-      expect.assertions(3);
+      expect.assertions(4);
 
       const email = faker.internet.email();
 
@@ -175,6 +175,7 @@ describe("AuthService's unit tests", () => {
       expect(params.id).toBeDefined();
       expect(params.user_id).toBe(user.id);
       expect(params.code).toBe('1234');
+      expect(params.expired_at).toBeInstanceOf(Date);
     });
   });
 

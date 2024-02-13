@@ -56,6 +56,8 @@ export default class AuthService {
     }
 
     const code = randomInt(1000, 9999).toString();
+    const expired_at = new Date();
+    expired_at.setMinutes(expired_at.getMinutes() + 10);
 
     await this.confirmation_code.sendCode({ email, code });
 
@@ -63,6 +65,7 @@ export default class AuthService {
       id: randomUUID(),
       user_id: user.id,
       code,
+      expired_at,
     });
 
     return {};

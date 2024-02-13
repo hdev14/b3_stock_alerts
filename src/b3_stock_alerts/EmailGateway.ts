@@ -44,8 +44,8 @@ export default class EmailGateway implements AlertNotification, ConfirmationCode
       from: process.env.APPLICATION_EMAIL,
       to: params.email,
       subject: 'Código de confirmação',
-      text: `Segue o código de confirmação ${params.code}. Acesse o link ${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}.`,
-      html: `<p>Segue o código de confirmação ${params.code}.</p><br/><p>Acesse o <a href="${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}">link.</a></p>`,
+      text: `Segue o código de confirmação ${params.code}. Acesse o link ${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}. O código expira em 10 minutos.`,
+      html: `<p>Segue o código de confirmação ${params.code}.</p><p>Acesse o <a href="${process.env.SERVER_URL}/pages/confirm-code?email=${params.email}">link.</a></p><p>O código expira em 10 minutos.</p>`,
     };
 
     await this.transporter.sendMail(message);

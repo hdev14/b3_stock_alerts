@@ -94,7 +94,7 @@ describe("EmailGateway's unit tests", () => {
       expect.assertions(1);
 
       const email = faker.internet.email();
-      const code = faker.string.alphanumeric()
+      const code = faker.string.alphanumeric();
 
       await email_gateway.sendCode({ email, code });
 
@@ -102,8 +102,8 @@ describe("EmailGateway's unit tests", () => {
         from: 'test@server.com',
         to: email,
         subject: 'Código de confirmação',
-        text: `Segue o código de confirmação ${code}. Acesse o link http://localhost:5000/pages/confirm-code?email=${email}.`,
-        html: `<p>Segue o código de confirmação ${code}.</p><br/><p>Acesse o link http://localhost:5000/pages/confirm-code?email=${email}.</p>`,
+        text: `Segue o código de confirmação ${code}. Acesse o link http://localhost:5000/pages/confirm-code?email=${email}. O código expira em 10 minutos.`,
+        html: `<p>Segue o código de confirmação ${code}.</p><p>Acesse o <a href="http://localhost:5000/pages/confirm-code?email=${email}">link.</a></p><p>O código expira em 10 minutos.</p>`,
       });
     });
   });

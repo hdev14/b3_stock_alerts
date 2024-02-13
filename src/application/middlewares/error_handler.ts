@@ -7,7 +7,7 @@ export default function errorHandler(
   response: Response,
   _next: NextFunction,
 ) {
-  console.log(error);
+  console.error(error);
 
   if (request.originalUrl.startsWith('/forms') || request.originalUrl.startsWith('/pages')) {
     return response.redirect('/pages/500');

@@ -1,6 +1,5 @@
 import Postgres from '@shared/Postgres';
 import { Client } from 'pg';
-import ConfirmationCode from './ConfirmationCode';
 import { User } from './User';
 import { UserConfirmationCode } from './UserConfirmationCode';
 import UserRepository from './UserRepository';
@@ -79,22 +78,34 @@ export default class PgUserRepository implements UserRepository {
   }
 
   async createConfirmationCode(confirmation_code: UserConfirmationCode): Promise<void> {
+    const {
+      id, user_id, code, expired_at,
+    } = confirmation_code;
     await this.client.query(
-      'INSERT INTO user_confirmation_codes (id, user_id, code) VALUES ($1, $2, $3)',
-      [confirmation_code.id, confirmation_code.user_id, confirmation_code.code],
+      'INSERT INTO user_confirmation_codes (id, user_id, code, expired_at) VALUES ($1, $2, $3, $4)',
+      [
+        id,
+        user_id,
+        code,
+        `${expired_at.getFullYear()}-${expired_at.getMonth() + 1}-${expired_at.getDate()} ${expired_at.getHours()}:${expired_at.getMinutes()}:${expired_at.getSeconds()}`,
+      ],
     );
   }
 
-  async getConfirmationCode(email: string, code: string): Promise<ConfirmationCode | null> {
+  async getConfirmationCode(email: string, code: string): Promise<UserConfirmationCode | null> {
     const result = await this.client.query(
-      'SELECT ucc.id, user_id, code FROM user_confirmation_codes ucc JOIN users ON users.email = $1 WHERE code = $2',
+      'SELECT ucc.id, user_id, code, expired_at FROM user_confirmation_codes ucc JOIN users ON users.email = $1 WHERE code = $2',
       [email, code],
     );
 
-    if (result.rows[0] === undefined) {
+    const confirmation_code = result.rows[0];
+
+    if (confirmation_code === undefined) {
       return null;
     }
 
-    return result.rows[0];
+    confirmation_code.expired_at = new Date(confirmation_code.expired_at);
+
+    return confirmation_code;
   }
 }
