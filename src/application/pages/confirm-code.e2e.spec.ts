@@ -81,6 +81,30 @@ test.describe('Confirm Code Page', () => {
     expect(text).toBe('Código não encontrado.');
   });
 
+  // TODO: insert confirmation code into database first
+  test.skip('should alert the user if code has expired', async ({ page, baseURL }) => {
+    await page.goto(`/pages/confirm-code?email=${user.email}`);
+
+    const code = faker.string.numeric(4);
+
+    const code_input = page.getByTestId('code');
+    await code_input.fill(code);
+
+    const email_input = page.getByTestId('email');
+    const email_value = await email_input.inputValue();
+
+    const submit_button = page.getByTestId('confirm-code-submit');
+    await submit_button.click();
+
+    await page.waitForResponse(`${baseURL}/forms/confirm-code`);
+
+    const alert_message = page.getByTestId('alert-message');
+    const text = await alert_message.innerText();
+
+    expect(email_value).toEqual(user.email);
+    expect(text).toBe(`Este código ${code} está expirado.`);
+  });
+
   test("should redirect user to /pages/login if query param doesn't have email", async ({ page }) => {
     await page.goto('/pages/confirm-code');
 
