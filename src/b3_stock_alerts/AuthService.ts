@@ -1,4 +1,5 @@
 import CredentialError from '@shared/CredentialError';
+import ExpiredCodeError from '@shared/ExpiredCodeError';
 import NotFoundError from '@shared/NotFoundError';
 import { Result } from '@shared/generic_types';
 import { randomInt, randomUUID } from 'crypto';
@@ -74,6 +75,14 @@ export default class AuthService {
   async confirmCode(email: string, code: string): Promise<Result<boolean>> {
     const confirmation_code = await this.user_repository.getConfirmationCode(email, code);
 
-    return { data: !!confirmation_code };
+    if (!confirmation_code) {
+      return { data: false };
+    }
+
+    if (confirmation_code?.expired_at < new Date()) {
+      return { error: new ExpiredCodeError(confirmation_code.code) };
+    }
+
+    return { data: true };
   }
 }

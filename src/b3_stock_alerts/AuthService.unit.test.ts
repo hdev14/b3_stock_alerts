@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import CredentialError from '@shared/CredentialError';
+import ExpiredCodeError from '@shared/ExpiredCodeError';
 import NotFoundError from '@shared/NotFoundError';
 import crypto from 'crypto';
 import AuthService from './AuthService';
@@ -190,7 +191,7 @@ describe("AuthService's unit tests", () => {
       const email = faker.internet.email();
       const code = faker.string.numeric(4);
 
-      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(false);
+      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(null);
 
       const result = await auth_service.confirmCode(email, code);
 
@@ -203,11 +204,38 @@ describe("AuthService's unit tests", () => {
       const email = faker.internet.email();
       const code = faker.string.numeric(4);
 
-      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(true);
+      const confirmation_code = {
+        id: faker.string.uuid(),
+        user_id: faker.string.uuid(),
+        code: faker.string.numeric(4),
+        expired_at: faker.date.future(),
+      };
+
+      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(confirmation_code);
 
       const result = await auth_service.confirmCode(email, code);
 
       expect(result.data).toEqual(true);
+    });
+
+    it('returns a result with ExpiredCodeError if code expired', async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+      const code = faker.string.numeric(4);
+
+      const confirmation_code = {
+        id: faker.string.uuid(),
+        user_id: faker.string.uuid(),
+        code: faker.string.numeric(4),
+        expired_at: faker.date.past(),
+      };
+
+      user_repository_mock.getConfirmationCode.mockResolvedValueOnce(confirmation_code);
+
+      const result = await auth_service.confirmCode(email, code);
+
+      expect(result.error).toBeInstanceOf(ExpiredCodeError);
     });
   });
 });
