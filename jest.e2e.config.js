@@ -9,7 +9,7 @@ module.exports = {
       "src/application/views"
     ],
     clearMocks: true,
-    setupFilesAfterEnv: ["<rootDir>/src/application/e2e_setup.ts"],
+    setupFilesAfterEnv: ["<rootDir>/src/application/setup_e2e_api.ts"],
     testMatch: [
       "<rootDir>src/application/routers/*.e2e.(spec|test).[jt]s?(x)"
     ]
