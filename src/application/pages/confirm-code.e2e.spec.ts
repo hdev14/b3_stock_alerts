@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
+import Postgres from '@shared/Postgres';
 
 test.describe('Confirm Code Page', () => {
+  const db_client = Postgres.getClient();
   let user_id = '';
+  const confirmation_code = faker.string.numeric(4);
 
   const user = {
     name: faker.person.fullName(),
@@ -20,10 +23,26 @@ test.describe('Confirm Code Page', () => {
     const data = await response.json();
 
     user_id = data.id;
+
+    await db_client.connect();
+
+    const expired_at = new Date();
+    expired_at.setHours(expired_at.getHours() - 1);
+
+    await db_client.query(
+      'INSERT INTO user_confirmation_codes (id, user_id, code, expired_at) VALUES ($1, $2, $3, $4)',
+      [
+        faker.string.uuid(),
+        user_id,
+        confirmation_code,
+        `${expired_at.getFullYear()}-${expired_at.getMonth() + 1}-${expired_at.getDate()} ${expired_at.getHours()}:${expired_at.getMinutes()}:${expired_at.getSeconds()}`,
+      ],
+    );
   });
 
-  test.afterAll(async ({ request }) => {
-    await request.delete(`/api/users/${user_id}`);
+  test.afterAll(async () => {
+    await db_client.query('DELETE FROM user_confirmation_codes');
+    await db_client.query('DELETE FROM users');
   });
 
   test('should validate the code field', async ({ page }) => {
@@ -81,14 +100,11 @@ test.describe('Confirm Code Page', () => {
     expect(text).toBe('Código não encontrado.');
   });
 
-  // TODO: insert confirmation code into database first
-  test.skip('should alert the user if code has expired', async ({ page, baseURL }) => {
+  test('should alert the user if code has expired', async ({ page, baseURL }) => {
     await page.goto(`/pages/confirm-code?email=${user.email}`);
 
-    const code = faker.string.numeric(4);
-
     const code_input = page.getByTestId('code');
-    await code_input.fill(code);
+    await code_input.fill(confirmation_code);
 
     const email_input = page.getByTestId('email');
     const email_value = await email_input.inputValue();
@@ -102,7 +118,7 @@ test.describe('Confirm Code Page', () => {
     const text = await alert_message.innerText();
 
     expect(email_value).toEqual(user.email);
-    expect(text).toBe(`Este código ${code} está expirado.`);
+    expect(text).toBe(`Este código ${confirmation_code} está expirado.`);
   });
 
   test("should redirect user to /pages/login if query param doesn't have email", async ({ page }) => {

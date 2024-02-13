@@ -1,5 +1,6 @@
 import CredentialError from '@shared/CredentialError';
 import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
+import ExpiredCodeError from '@shared/ExpiredCodeError';
 import {
   NextFunction, Request, Response, Router,
 } from 'express';
@@ -75,6 +76,14 @@ router.post('/confirm-code', async (request: Request, response: Response, next: 
     console.log(email, code);
 
     const result = await auth_service.confirmCode(email, code);
+
+    if (result.error instanceof ExpiredCodeError) {
+      const query_params = new URLSearchParams({
+        email,
+        error_message: result.error.message,
+      }).toString();
+      return response.redirect(`/pages/confirm-code?${query_params}`);
+    }
 
     if (!result.data) {
       const query_params = new URLSearchParams({
