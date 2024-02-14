@@ -18,19 +18,19 @@ function createFilenameObject(path: 'css' | 'js') {
   }
 }
 
-const scripts = js_filenames.reduce(createFilenameObject('js'), {
+const _scripts = js_filenames.reduce(createFilenameObject('js'), {
   captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
   imask: 'https://unpkg.com/imask',
 });
 
-const styles = css_filenames.reduce(createFilenameObject('css'), {});
+const _styles = css_filenames.reduce(createFilenameObject('css'), {});
 
 export function getStyles(link_names: string[]) {
-  const link_keys = Object.keys(styles).filter((key) => link_names.includes(key));
-  return link_keys.map((key) => ({ url: styles[key] }));
+  const link_keys = Object.keys(_styles).filter((key) => link_names.includes(key));
+  return link_keys.map((key) => ({ url: _styles[key] }));
 }
 
 export function getScripts(script_names: string[]) {
-  const script_keys = Object.keys(scripts).filter((key) => script_names.includes(key));
-  return script_keys.map((key) => ({ url: scripts[key] }));
+  const script_keys = Object.keys(_scripts).filter((key) => script_names.includes(key));
+  return script_keys.map((key) => ({ url: _scripts[key] }));
 }
