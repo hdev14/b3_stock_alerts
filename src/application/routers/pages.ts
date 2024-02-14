@@ -4,9 +4,20 @@ import QueryString from 'qs';
 
 const router = Router();
 
-const LINKS: Record<string, string> = {};
+const is_production = process.env.NODE_ENV === 'production';
 
-const SCRIPTS: Record<string, string> = {
+const LINKS: Record<string, string> = is_production ? {
+  login: '/css/login.min.css',
+} : {
+  login: '/css/login.css',
+};
+
+const SCRIPTS: Record<string, string> = is_production ? {
+  captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
+  validator: '/js/validator.min.js',
+  form: '/js/form.min.js',
+  imask: 'https://unpkg.com/imask',
+} : {
   captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
   validator: '/js/validator.js',
   form: '/js/form.js',
@@ -50,6 +61,7 @@ router.get('/login', (request: Request, response: Response) => {
   return response.render('login', {
     title: 'Login!',
     scripts: getScriptUrls(['captcha', 'validator', 'form']),
+    links: getLinkUrls(['login']),
     alerts: getAlerts(request.query),
   });
 });
