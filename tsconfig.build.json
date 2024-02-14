@@ -3,7 +3,7 @@
     "target": "es2016",
     "module": "commonjs",
     "baseUrl": ".",
-    "outDir": "./build",
+    "outDir": "./build/src",
     "allowJs": true,
     "paths": {
       "@app/*": [
@@ -28,6 +28,18 @@
     "skipLibCheck": true
   },
   "exclude": [
-    "node_modules",
+    "./playwright-report",
+    "./test-results",
+    "./**/*.unit.test.ts",
+    "./**/*.int.test.ts",
+    "./**/*.e2e.test.ts",
+    "./**/*.e2e.spec.ts",
+    "./jest.config.js",
+    "./jest.unit.config.js",
+    "./jest.int.config.js",
+    "./jest.e2e.config.js",
+    "./playwright.config.ts",
+    "./src/application/setup_e2e_api.ts",
+    "./tsconfig-paths-bootstrap.js"
   ]
 }

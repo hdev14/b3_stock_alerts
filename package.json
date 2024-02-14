@@ -6,8 +6,8 @@
   "scripts": {
     "start:dev": "dotenv -e .env -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
     "start:e2e": "dotenv -e .env.e2e -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
-    "start:prod": "",
-    "build": "",
+    "start:prod": "dotenv -e .env -- node -r ./tsconfig-paths-bootstrap.js ./build/src/index.js",
+    "build": "tsc --project tsconfig.build.json",
     "test:unit": "dotenv -e .env.test -- npx jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js",
     "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --silent=false --detectOpenHandles --config=jest.int.config.js",
     "test:e2e:api": "dotenv -e .env.test -- npx jest e2e --passWithNoTests --watch --silent=false --detectOpenHandles --runInBand --config=jest.e2e.config.js",

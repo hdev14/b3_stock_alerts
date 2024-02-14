@@ -135,3 +135,4 @@ dist
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/build
