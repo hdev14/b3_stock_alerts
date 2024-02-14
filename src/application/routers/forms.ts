@@ -73,8 +73,6 @@ router.post('/confirm-code', async (request: Request, response: Response, next: 
   try {
     const { email, code } = request.body;
 
-    console.log(email, code);
-
     const result = await auth_service.confirmCode(email, code);
 
     if (result.error instanceof ExpiredCodeError) {

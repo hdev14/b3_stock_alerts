@@ -1,38 +1,9 @@
 import auth from '@app/middlewares/auth';
 import { Request, Response, Router } from 'express';
 import QueryString from 'qs';
+import { getScripts, getStyles } from './scripts_and_styles';
 
 const router = Router();
-
-const is_production = process.env.NODE_ENV === 'production';
-
-const LINKS: Record<string, string> = is_production ? {
-  login: '/css/login.min.css',
-} : {
-  login: '/css/login.css',
-};
-
-const SCRIPTS: Record<string, string> = is_production ? {
-  captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
-  validator: '/js/validator.min.js',
-  form: '/js/form.min.js',
-  imask: 'https://unpkg.com/imask',
-} : {
-  captcha: 'https://www.google.com/recaptcha/api.js?render=6LdAc2UpAAAAAObuHow9pOS5dy0coRW11AKKiWJA',
-  validator: '/js/validator.js',
-  form: '/js/form.js',
-  imask: 'https://unpkg.com/imask',
-};
-
-function getLinkUrls(link_names: string[]) {
-  const link_keys = Object.keys(LINKS).filter((key) => link_names.includes(key));
-  return link_keys.map((key) => ({ url: LINKS[key] }));
-}
-
-function getScriptUrls(script_names: string[]) {
-  const script_keys = Object.keys(SCRIPTS).filter((key) => script_names.includes(key));
-  return script_keys.map((key) => ({ url: SCRIPTS[key] }));
-}
 
 function getAlerts(query: QueryString.ParsedQs) {
   const { error_message } = query;
@@ -60,8 +31,8 @@ router.get('/login', (request: Request, response: Response) => {
 
   return response.render('login', {
     title: 'Login!',
-    scripts: getScriptUrls(['captcha', 'validator', 'form']),
-    links: getLinkUrls(['login']),
+    scripts: getScripts(['captcha', 'validator', 'form']),
+    links: getStyles(['form', 'login']),
     alerts: getAlerts(request.query),
   });
 });
@@ -69,7 +40,8 @@ router.get('/login', (request: Request, response: Response) => {
 router.get('/signup', (request: Request, response: Response) => {
   response.render('signup', {
     title: 'Sign up!',
-    scripts: getScriptUrls(['captcha', 'validator', 'form', 'imask']),
+    scripts: getScripts(['captcha', 'validator', 'form', 'imask']),
+    links: getStyles(['form', 'signup']),
     alerts: getAlerts(request.query),
   });
 });
@@ -79,10 +51,11 @@ router.get('/confirm-code', (request: Request, response: Response) => {
     return response.redirect('/pages/login');
   }
 
-  return response.render('confirm-code', {
+  return response.render('confirm_code', {
     title: 'Confirmar código!',
     email: request.query.email,
-    scripts: getScriptUrls(['captcha', 'validator', 'form']),
+    scripts: getScripts(['captcha', 'validator', 'form']),
+    links: getStyles(['form', 'confirm_code']),
     alerts: getAlerts(request.query),
   });
 });
@@ -96,6 +69,7 @@ router.get('/forgot-password', (_request: Request, response: Response) => {
 router.get('/500', (_request: Request, response: Response) => {
   response.render('500', {
     title: 'Internal Server Error!',
+    links: getStyles(['500']),
   });
 });
 
