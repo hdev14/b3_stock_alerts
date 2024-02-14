@@ -1,5 +1,6 @@
 import { readdirSync } from 'fs';
 import { resolve } from 'path';
+import QueryString from 'qs';
 
 const is_production = process.env.NODE_ENV === 'production';
 
@@ -33,4 +34,24 @@ export function getStyles(link_names: string[]) {
 export function getScripts(script_names: string[]) {
   const script_keys = Object.keys(_scripts).filter((key) => script_names.includes(key));
   return script_keys.map((key) => ({ url: _scripts[key] }));
+}
+
+type Alerts = Array<{
+  type: 'alert_error' | 'alert_info';
+  message: string;
+}>;
+
+export function getAlerts(query: QueryString.ParsedQs): Alerts {
+  const { message, error_message } = query;
+  const alerts: Alerts = [];
+
+  if (error_message && typeof error_message === 'string') {
+    alerts.push({ type: 'alert_error', message: error_message });
+  }
+
+  if (message && typeof message === 'string') {
+    alerts.push({ type: 'alert_info', message });
+  }
+
+  return alerts;
 }

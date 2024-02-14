@@ -1,19 +1,8 @@
 import auth from '@app/middlewares/auth';
 import { Request, Response, Router } from 'express';
-import QueryString from 'qs';
-import { getScripts, getStyles } from './scripts_and_styles';
+import { getAlerts, getScripts, getStyles } from './page_utils';
 
 const router = Router();
-
-function getAlerts(query: QueryString.ParsedQs) {
-  const { error_message } = query;
-  const alerts = [];
-
-  if (error_message) {
-    alerts.push({ message: error_message });
-  }
-  return alerts;
-}
 
 router.get('/index', auth, (_request: Request, response: Response) => {
   response.render('index', { title: 'Hellow Mustache!' });
@@ -32,7 +21,7 @@ router.get('/login', (request: Request, response: Response) => {
   return response.render('login', {
     title: 'Login!',
     scripts: getScripts(['captcha', 'validator', 'form']),
-    links: getStyles(['form', 'login']),
+    styles: getStyles(['form', 'login']),
     alerts: getAlerts(request.query),
   });
 });
@@ -41,7 +30,7 @@ router.get('/signup', (request: Request, response: Response) => {
   response.render('signup', {
     title: 'Sign up!',
     scripts: getScripts(['captcha', 'validator', 'form', 'imask']),
-    links: getStyles(['form', 'signup']),
+    styles: getStyles(['form', 'signup']),
     alerts: getAlerts(request.query),
   });
 });
@@ -55,21 +44,24 @@ router.get('/confirm-code', (request: Request, response: Response) => {
     title: 'Confirmar código!',
     email: request.query.email,
     scripts: getScripts(['captcha', 'validator', 'form']),
-    links: getStyles(['form', 'confirm_code']),
+    styles: getStyles(['form', 'confirm_code']),
     alerts: getAlerts(request.query),
   });
 });
 
-router.get('/forgot-password', (_request: Request, response: Response) => {
-  response.render('login', {
-    title: 'Login!',
+router.get('/forgot-password', (request: Request, response: Response) => {
+  response.render('forgot_password', {
+    title: 'Esqueceu a senha?',
+    scripts: getScripts(['captcha', 'validator', 'form']),
+    styles: getStyles(['form', 'forgot_password']),
+    alerts: getAlerts(request.query),
   });
 });
 
 router.get('/500', (_request: Request, response: Response) => {
   response.render('500', {
     title: 'Internal Server Error!',
-    links: getStyles(['500']),
+    styles: getStyles(['500']),
   });
 });
 
