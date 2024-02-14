@@ -89,7 +89,7 @@ describe("EmailGateway's unit tests", () => {
     });
   });
 
-  describe('EmailGateway.notify', () => {
+  describe('EmailGateway.sendCode', () => {
     it('sends an email for code confirmation', async () => {
       expect.assertions(1);
 
@@ -104,6 +104,25 @@ describe("EmailGateway's unit tests", () => {
         subject: 'Código de confirmação',
         text: `Segue o código de confirmação ${code}. Acesse o link http://localhost:5000/pages/confirm-code?email=${email}. O código expira em 10 minutos.`,
         html: `<p>Segue o código de confirmação ${code}.</p><p>Acesse o <a href="http://localhost:5000/pages/confirm-code?email=${email}">link.</a></p><p>O código expira em 10 minutos.</p>`,
+      });
+    });
+  });
+
+  describe('EmailGateway.sendForgotPasswordLink', () => {
+    it('sends an email with forgot password link', async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+      const user_id = faker.string.uuid();
+
+      await email_gateway.sendForgotPasswordLink({ email, user_id });
+
+      expect(transport_mock.sendMail).toHaveBeenCalledWith({
+        from: 'test@server.com',
+        to: email,
+        subject: 'Esqueceu a senha?',
+        text: `Acesse o link http://localhost:5000/pages/forgot-password?user_id=${user_id} para redefinir sua senha.`,
+        html: `<p>Acesse o <a href="http://localhost:5000/pages/forgot-password?user_id=${user_id}">link</a> para redefinir sua senha.</p>`,
       });
     });
   });

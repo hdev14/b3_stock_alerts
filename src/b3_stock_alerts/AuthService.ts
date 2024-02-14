@@ -85,4 +85,8 @@ export default class AuthService {
 
     return { data: true };
   }
+
+  async forgotPassword(email: string): Promise<Result<void>> {
+    return {};
+  }
 }
