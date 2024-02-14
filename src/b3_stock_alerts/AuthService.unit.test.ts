@@ -32,13 +32,18 @@ describe("AuthService's unit tests", () => {
 
   const confirmation_code_mock = {
     sendCode: jest.fn(),
-  }
+  };
+
+  const forgot_password = {
+    sendForgotPasswordLink: jest.fn(),
+  };
 
   const auth_service = new AuthService(
     user_repository_mock,
     encryptor_mock,
     authenticator_mock,
     confirmation_code_mock,
+    forgot_password,
   );
 
   describe('AuthService.login', () => {
@@ -236,6 +241,47 @@ describe("AuthService's unit tests", () => {
       const result = await auth_service.confirmCode(email, code);
 
       expect(result.error).toBeInstanceOf(ExpiredCodeError);
+    });
+  });
+
+  describe('AuthService.forgotPassword', () => {
+    afterEach(() => {
+      user_repository_mock.getUserByEmail.mockClear();
+    });
+
+    it("returns a result with NotFoundError if user doesn't exist", async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+
+      user_repository_mock.getUserByEmail.mockResolvedValueOnce(null);
+
+      const result = await auth_service.forgotPassword(email);
+
+      expect(result.error).toBeInstanceOf(NotFoundError);
+    });
+
+    it('sends a forgot password link if user exists', async () => {
+      expect.assertions(1);
+
+      const email = faker.internet.email();
+
+      const user: User = {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.string.alphanumeric(10),
+        phone_number: faker.string.numeric(11),
+      };
+
+      user_repository_mock.getUserByEmail.mockResolvedValueOnce(user);
+
+      await auth_service.forgotPassword(email);
+
+      expect(forgot_password.sendForgotPasswordLink).toHaveBeenCalledWith({
+        email: user.email,
+        user_id: user.id,
+      });
     });
   });
 });
