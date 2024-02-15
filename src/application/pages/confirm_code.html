@@ -6,7 +6,7 @@
     <input id="code" type="text" name="code" data-testid="code" />
     <ul id="code-error-messages" data-testid="code-error-messages"></ul>
 
-    <input hidden="email" type="email" name="email" data-testid="email" value="{{email}}" />
+    <input type="hidden" name="email" data-testid="email" value="{{email}}" />
 
     <button type="submit" data-testid="confirm-code-submit">
       Confirm code
@@ -24,6 +24,6 @@
         rules: ['required', 'min:4']
       },
     ]
-  ).init(true);
+  ).init();
 </script>
 {{> _footer}}

@@ -9,3 +9,7 @@ p.alert_info {
 p.alert_error {
   color: red;
 }
+
+p.alert_success {
+  color: green;
+}

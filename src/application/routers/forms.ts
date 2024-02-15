@@ -1,6 +1,7 @@
 import CredentialError from '@shared/CredentialError';
 import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import ExpiredCodeError from '@shared/ExpiredCodeError';
+import NotFoundError from '@shared/NotFoundError';
 import {
   NextFunction, Request, Response, Router,
 } from 'express';
@@ -75,20 +76,16 @@ router.post('/confirm-code', async (request: Request, response: Response, next: 
 
     const result = await auth_service.confirmCode(email, code);
 
+    const query_params = new URLSearchParams({ email });
+
     if (result.error instanceof ExpiredCodeError) {
-      const query_params = new URLSearchParams({
-        email,
-        error_message: result.error.message,
-      }).toString();
-      return response.redirect(`/pages/confirm-code?${query_params}`);
+      query_params.append('error_message', result.error.message);
+      return response.redirect(`/pages/confirm-code?${query_params.toString()}`);
     }
 
     if (!result.data) {
-      const query_params = new URLSearchParams({
-        email,
-        error_message: 'Código não encontrado.',
-      }).toString();
-      return response.redirect(`/pages/confirm-code?${query_params}`);
+      query_params.append('error_message', 'Código não encontrado.');
+      return response.redirect(`/pages/confirm-code?${query_params.toString()}`);
     }
 
     return response.redirect('/pages/login');
@@ -97,9 +94,24 @@ router.post('/confirm-code', async (request: Request, response: Response, next: 
   }
 });
 
-router.post('/forgot-password', (request: Request, response: Response) => {
-  console.log(request.body);
-  response.redirect('/');
+router.post('/forgot-password', async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const { email } = request.body;
+
+    const result = await auth_service.forgotPassword(email)
+
+    const query_params = new URLSearchParams();
+
+    if (result.error && result.error instanceof NotFoundError) {
+      query_params.append('error_message', 'Não foi encontrado nenhum usuário com esse endereço de e-mail.');
+    } else {
+      query_params.append('info_message', 'Por favor verifique seu e-mail. Caso não tenha recebido tente novamente.');
+    }
+
+    return response.redirect(`/pages/forgot-password?${query_params.toString()}`);
+  } catch (e) {
+    return next(e);
+  }
 });
 
 export default router;

@@ -14,6 +14,11 @@ class Form {
   form_element;
 
   /**
+   * @property {function} custom_submit
+   */
+  custom_submit;
+
+  /**
    * @param {Element} form_element
    * @param {Object[]} fields
    * @param {Element} fields[].input_element
@@ -37,11 +42,27 @@ class Form {
       ).bind(this));
     });
 
-    if (captcha) {
+    if (this.custom_submit) {
+      this.form_element.addEventListener('submit', this.custom_submit.bind(this));
+      return;
+    }
+
+    if (captcha && grecaptcha !== undefined) {
       this.form_element.addEventListener('submit', this.submitCaptcha.bind(this));
       return;
     }
+
     this.form_element.addEventListener('submit', this.submit.bind(this));
+  }
+
+  /**
+   *
+   * @param {function} callback
+   * @returns {Form}
+   */
+  setCustomSubmit(callback) {
+    this.custom_submit = callback;
+    return this;
   }
 
   /**

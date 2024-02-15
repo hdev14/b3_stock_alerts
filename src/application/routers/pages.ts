@@ -43,7 +43,7 @@ router.get('/confirm-code', (request: Request, response: Response) => {
   return response.render('confirm_code', {
     title: 'Confirmar código!',
     email: request.query.email,
-    scripts: getScripts(['captcha', 'validator', 'form']),
+    scripts: getScripts(['validator', 'form']),
     styles: getStyles(['form', 'confirm_code']),
     alerts: getAlerts(request.query),
   });
@@ -54,6 +54,20 @@ router.get('/forgot-password', (request: Request, response: Response) => {
     title: 'Esqueceu a senha?',
     scripts: getScripts(['captcha', 'validator', 'form']),
     styles: getStyles(['form', 'forgot_password']),
+    alerts: getAlerts(request.query),
+  });
+});
+
+router.get('/reset-password', (request: Request, response: Response) => {
+  if (!request.query.user_id) {
+    return response.redirect('/pages/login');
+  }
+
+  return response.render('reset_password', {
+    title: 'Resetar senha',
+    user_id: request.query.user_id,
+    scripts: getScripts(['validator', 'form']),
+    styles: getStyles(['form', 'reset_password']),
     alerts: getAlerts(request.query),
   });
 });

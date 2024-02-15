@@ -37,20 +37,24 @@ export function getScripts(script_names: string[]) {
 }
 
 type Alerts = Array<{
-  type: 'alert_error' | 'alert_info';
+  type: 'alert_error' | 'alert_success' | 'alert_info';
   message: string;
 }>;
 
 export function getAlerts(query: QueryString.ParsedQs): Alerts {
-  const { message, error_message } = query;
+  const { success_message, info_message, error_message } = query;
   const alerts: Alerts = [];
 
   if (error_message && typeof error_message === 'string') {
     alerts.push({ type: 'alert_error', message: error_message });
   }
 
-  if (message && typeof message === 'string') {
-    alerts.push({ type: 'alert_info', message });
+  if (info_message && typeof info_message === 'string') {
+    alerts.push({ type: 'alert_info', message: info_message });
+  }
+
+  if (success_message && typeof success_message === 'string') {
+    alerts.push({ type: 'alert_success', message: success_message });
   }
 
   return alerts;

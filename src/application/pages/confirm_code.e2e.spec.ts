@@ -59,26 +59,6 @@ test.describe('Confirm Code Page', () => {
     await expect(code_error_message).toContainText('O texto precisa ter pelo menos 4 caracteres.');
   });
 
-  test('should not allow the user to go to /pages/confirm-code if captcha failed', async ({ page }) => {
-    await page.goto(`/pages/confirm-code?email=${user.email}`);
-
-    await page.route('*/**/api/auth/captcha', async (route) => {
-      await route.fulfill({ status: 403 });
-    });
-
-    const code_input = page.getByTestId('code');
-    await code_input.fill(faker.string.numeric(4));
-
-    const email_input = page.getByTestId('email');
-    const email_value = await email_input.inputValue();
-
-    const submit_button = page.getByTestId('confirm-code-submit');
-    await submit_button.click();
-
-    expect(email_value).toEqual(user.email);
-    expect(page).toHaveURL(`/pages/confirm-code?email=${user.email}`);
-  });
-
   test("should alert the user if code doesn't exist", async ({ page, baseURL }) => {
     await page.goto(`/pages/confirm-code?email=${user.email}`);
 

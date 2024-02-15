@@ -79,6 +79,7 @@ class Validator {
       )
     ),
     phone: (value) => (typeof value === 'string' && !this.#PHONE_REGEX.test(value)),
+    equal: (value, target_value) => value !== this.#data[target_value],
   };
 
   #RULE_MESSAGES = {
@@ -105,6 +106,7 @@ class Validator {
     email: () => 'O campo precisa ser um e-mail válido.',
     password: () => 'O campo precisa ter letras, números e algum caracter especial.',
     phone: () => 'O campo precisa ser um telefone válido.',
+    equal: () => 'O campo não é igual a outro.',
   };
 
   #data;
