@@ -102,4 +102,18 @@ export default class AuthService {
 
     return {};
   }
+
+  async resetPassword(user_id: string, new_password: string): Promise<Result<void>> {
+    const user = await this.user_repository.getUser(user_id);
+
+    if (!user) {
+      return { error: new NotFoundError('Usuário não encontrado.') };
+    }
+
+    user.password = this.encryptor.createHash(new_password);
+
+    await this.user_repository.updateUser(user);
+
+    return {}
+  }
 }

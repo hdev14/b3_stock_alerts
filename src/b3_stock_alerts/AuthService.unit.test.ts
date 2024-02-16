@@ -284,4 +284,50 @@ describe("AuthService's unit tests", () => {
       });
     });
   });
+
+  describe('AuthService.resetPassword', () => {
+    afterEach(() => {
+      user_repository_mock.getUser.mockClear();
+      user_repository_mock.updateUser.mockClear();
+      encryptor_mock.createHash.mockClear();
+    });
+
+    it("returns a result with NotFoundError if user doesn't exist", async () => {
+      expect.assertions(1);
+
+      const user_id = faker.string.uuid();
+      const new_password = faker.string.alphanumeric(10);
+
+      user_repository_mock.getUser.mockResolvedValueOnce(null);
+
+      const result = await auth_service.resetPassword(user_id, new_password);
+
+      expect(result.error).toBeInstanceOf(NotFoundError);
+    });
+
+    it('updates the user password', async () => {
+      expect.assertions(1);
+
+      const user_id = faker.string.uuid();
+      const new_password = faker.string.alphanumeric(10);
+
+      const user: User = {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.string.alphanumeric(10),
+        phone_number: faker.string.numeric(11),
+      };
+
+      user_repository_mock.getUser.mockResolvedValueOnce(user);
+      encryptor_mock.createHash.mockReturnValueOnce('fake_hash');
+
+      await auth_service.resetPassword(user_id, new_password);
+
+      expect(user_repository_mock.updateUser).toHaveBeenCalledWith({
+        ...user,
+        password: 'fake_hash',
+      });
+    });
+  });
 });
