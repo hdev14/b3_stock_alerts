@@ -8,6 +8,11 @@ beforeAll(async () => {
     globalThis.request = supertest(new Server().application);
     globalThis.db_client = Postgres.getClient();
     await globalThis.db_client.connect();
+
+    // Purge database
+    await globalThis.db_client.query('DELETE FROM user_confirmation_codes');
+    await globalThis.db_client.query('DELETE FROM alerts');
+    await globalThis.db_client.query('DELETE FROM users');
   } catch (e: any) {
     console.error(e.stack);
   }

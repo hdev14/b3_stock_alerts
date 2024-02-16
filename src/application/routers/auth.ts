@@ -1,9 +1,11 @@
 import validator from '@app/middlewares/validator';
+import NotFoundError from '@shared/NotFoundError';
 import {
   NextFunction, Request, Response, Router,
 } from 'express';
-import { body } from 'express-validator';
+import { body, checkSchema, param } from 'express-validator';
 import { auth_service } from 'src/bootstrap';
+import { reset_password } from './validations';
 
 // TODO
 const router = Router();
@@ -52,6 +54,29 @@ router.post(
       }
 
       return response.status(403).json({ message: 'captcha failed' });
+    } catch (e) {
+      return next(e);
+    }
+  },
+);
+
+router.patch(
+  '/auth/passwords/:user_id',
+  param('user_id').isUUID(),
+  checkSchema(reset_password),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const { user_id } = request.params;
+      const { password } = request.body;
+
+      const result = await auth_service.resetPassword(user_id, password);
+
+      if (result.error && result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message });
+      }
+
+      return response.sendStatus(204);
     } catch (e) {
       return next(e);
     }

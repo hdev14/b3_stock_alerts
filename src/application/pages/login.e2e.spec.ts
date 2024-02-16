@@ -22,10 +22,6 @@ test.describe('Login Page', () => {
     user_id = data.id;
   });
 
-  test.afterAll(async ({ request }) => {
-    await request.delete(`/api/users/${user_id}`);
-  });
-
   test.beforeEach(async ({ page }) => {
     await page.goto('/pages/login');
   });
@@ -42,7 +38,7 @@ test.describe('Login Page', () => {
     await expect(email_error_message).toContainText('O campo precisa ser um e-mail válido.');
   });
 
-  test('should have password length greater than 8 caracters', async ({ page }) => {
+  test('should password has length greater than 8 caracters', async ({ page }) => {
     const invalid_password = faker.string.alphanumeric(6);
 
     const password_input = page.getByTestId('login-password');
@@ -53,7 +49,7 @@ test.describe('Login Page', () => {
     await expect(password_error_message).toContainText('O texto precisa ter pelo menos 8 caracteres.');
   });
 
-  test('should have password with numbers, letters and 1 special caracter', async ({ page }) => {
+  test('should password has numbers, letters and 1 special caracter', async ({ page }) => {
     const invalid_password = faker.string.numeric(10);
     console.log(invalid_password);
 

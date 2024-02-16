@@ -64,3 +64,12 @@ export const create_alert: Schema = {
     isFloat: true,
   },
 };
+
+export const reset_password: Schema = {
+  password: {
+    isString: true,
+    isLength: {
+      options: { min: 8 },
+    },
+  },
+}

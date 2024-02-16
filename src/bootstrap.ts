@@ -29,4 +29,5 @@ export const auth_service = new AuthService(
   encryptor,
   authenticator,
   email_gateway,
+  email_gateway,
 );

@@ -21,16 +21,12 @@ test.describe('Reset Password Page', () => {
     );
   });
 
-  test.afterAll(async () => {
-    db_client.query('DELETE FROM users');
-  });
-
-  test('should have password length greater than 8 caracters', async ({ page }) => {
+  test('should password has length greater than 8 caracters', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
 
     const invalid_password = faker.string.alphanumeric(6);
 
-    const password_input = page.getByTestId('reset-password-passowrd');
+    const password_input = page.getByTestId('reset-password-password');
     await password_input.fill(invalid_password);
     await password_input.blur();
 
@@ -38,12 +34,12 @@ test.describe('Reset Password Page', () => {
     await expect(password_error_message).toContainText('O texto precisa ter pelo menos 8 caracteres.');
   });
 
-  test('should have password with numbers, letters and 1 special caracter', async ({ page }) => {
+  test('should password has numbers, letters and 1 special caracter', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
 
     const invalid_password = faker.string.numeric(10);
 
-    const password_input = page.getByTestId('reset-password-passowrd');
+    const password_input = page.getByTestId('reset-password-password');
     await password_input.fill(invalid_password);
     await password_input.blur();
 
@@ -51,39 +47,41 @@ test.describe('Reset Password Page', () => {
     await expect(password_error_message).toContainText('O campo precisa ter letras, números e algum caracter especial.');
   });
 
-  test('should have confirm_password length greater than 8 caracters', async ({ page }) => {
+  test('should confirm_password has length greater than 8 caracters', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
 
     const invalid_password = faker.string.alphanumeric(6);
 
-    const confirm_password_input = page.getByTestId('reset-password-confirm-passowrd');
+    const confirm_password_input = page.getByTestId('reset-password-confirm-password');
     await confirm_password_input.fill(invalid_password);
     await confirm_password_input.blur();
 
-    const password_error_message = page.getByTestId('confirm-password-error-messages').first();
+    const password_error_message = page.getByTestId('confirm-password-error-messages').last();
     await expect(password_error_message).toContainText('O texto precisa ter pelo menos 8 caracteres.');
   });
 
-  test('should have confirm_password with numbers, letters and 1 special caracter', async ({ page }) => {
+  test('should confirm_password has numbers, letters and 1 special caracter', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
 
     const invalid_password = faker.string.numeric(10);
 
-    const confirm_password_input = page.getByTestId('reset-password-confirm-passowrd');
+    const confirm_password_input = page.getByTestId('reset-password-confirm-password');
     await confirm_password_input.fill(invalid_password);
     await confirm_password_input.blur();
 
-    const password_error_message = page.getByTestId('confirm-password-error-messages').first();
-    await expect(password_error_message).toContainText('O campo precisa ter letras, números e algum caracter especial.');
+    const confirm_password_error_messages = page.locator('ul[data-testid="confirm-password-error-messages"] > li');
+    const text = await confirm_password_error_messages.first().innerText();
+    console.log(text);
+    expect(text).toEqual('O campo precisa ter letras, números e algum caracter especial.');
   });
 
   test('should validate if password and confirm_password are equals', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
 
-    const password_input = page.getByTestId('reset-password-passowrd');
+    const password_input = page.getByTestId('reset-password-password');
     await password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
 
-    const confirm_password_input = page.getByTestId('reset-password-confirm-passowrd');
+    const confirm_password_input = page.getByTestId('reset-password-confirm-password');
     await confirm_password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
     await confirm_password_input.blur();
 
@@ -91,7 +89,7 @@ test.describe('Reset Password Page', () => {
     await expect(password_error_message).toContainText('O campo não é igual ao outro.');
   });
 
-  test("should redirect user to /pages/login if query param doesn't have user_id", async ({ page }) => {
+  test("should redirect user to /pages/login if query param doesn't have user_id", async ({ page, baseURL }) => {
     await page.goto('/pages/reset-password');
 
     expect(page).toHaveURL('/pages/login');
@@ -100,10 +98,10 @@ test.describe('Reset Password Page', () => {
   test('should redirect user to /pages/login if password has been reseted', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${user_id}`);
 
-    const password_input = page.getByTestId('reset-password-passowrd');
+    const password_input = page.getByTestId('reset-password-password');
     await password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
 
-    const confirm_password_input = page.getByTestId('reset-password-confirm-passowrd');
+    const confirm_password_input = page.getByTestId('reset-password-confirm-password');
     await confirm_password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
 
     const submit_button = page.getByTestId('login-submit');

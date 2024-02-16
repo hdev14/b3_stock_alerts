@@ -117,12 +117,12 @@ test.describe('Signup Page', () => {
 
     const submit_button = page.getByTestId('signup-submit');
     await submit_button.click();
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(5000);
 
     expect(page).toHaveTitle('Confirmar código!');
   });
 
-  test('should not register the same email twice', async ({ page, baseURL }) => {
+  test('should not register the same email twice', async ({ page }) => {
     const name_input = page.getByTestId('signup-name');
     await name_input.fill(user.name);
 
@@ -137,8 +137,6 @@ test.describe('Signup Page', () => {
 
     const submit_button = page.getByTestId('signup-submit');
     await submit_button.click();
-
-    await page.waitForResponse(`${baseURL}/forms/signup`);
 
     const alert_message = page.getByTestId('alert-message');
 

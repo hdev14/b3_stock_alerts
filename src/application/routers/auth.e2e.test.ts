@@ -72,4 +72,53 @@ describe('Auth endpoints', () => {
       expect(response.body.errors).toBeDefined();
     });
   });
+
+  describe('PATCH: /auth/password/:user_id', () => {
+    const user_id = faker.string.uuid();
+
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [
+          user_id,
+          faker.internet.email(),
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
+      );
+    });
+
+    afterAll(async () => {
+      await globalThis.db_client.query('DELETE FROM users');
+    });
+
+    it('returns status code 204 if password has changed', async () => {
+      expect.assertions(1);
+
+      const password = faker.string.alphanumeric(10);
+
+      const response = await globalThis.request
+        .patch(`/api/auth/passwords/${user_id}`)
+        .set('Content-Type', 'application/json')
+        .send({ password });
+
+      expect(response.status).toEqual(204);
+    });
+
+    it("returns status code 404 if user doesn't exist", async () => {
+      expect.assertions(2);
+
+      const password = faker.string.alphanumeric(15);
+      const fake_user_id = faker.string.uuid();
+
+      const response = await globalThis.request
+        .patch(`/api/auth/passwords/${fake_user_id}`)
+        .set('Content-Type', 'application/json')
+        .send({ password });
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Usuário não encontrado.');
+    });
+  });
 });

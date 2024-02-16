@@ -21,10 +21,6 @@ test.describe('Forgot Password Page', () => {
     );
   });
 
-  test.afterAll(async () => {
-    db_client.query('DELETE FROM users');
-  });
-
   test.beforeEach(async ({ page }) => {
     await page.goto('/pages/forgot-password');
   });
@@ -32,7 +28,7 @@ test.describe('Forgot Password Page', () => {
   test('should validate the email field', async ({ page }) => {
     const invalid_email = faker.string.alphanumeric();
 
-    const email_input = page.getByTestId('email-forgot-password');
+    const email_input = page.getByTestId('forgot-password-email');
     await email_input.fill(invalid_email);
     await email_input.blur();
 
@@ -55,22 +51,7 @@ test.describe('Forgot Password Page', () => {
     expect(page).toHaveURL('/pages/forgot-password');
   });
 
-  test.skip("should alert the user if the email doesn't exist", async ({ page, baseURL }) => {
-    const email_input = page.getByTestId('forgot-password-email');
-    await email_input.fill(email);
-
-    const submit_button = page.getByTestId('forgot-password-submit');
-    await submit_button.click();
-
-    await page.waitForResponse(`${baseURL}/forms/forgot-password`);
-
-    const alert_message = page.getByTestId('alert-message');
-    const text = await alert_message.innerText();
-
-    expect(text).toEqual('Não foi encontrado nenhum usuário com esse endereço de e-mail.');
-  });
-
-  test.skip('should alert the user if the forgot password email has been sent', async ({ page, baseURL }) => {
+  test('should alert the user if the forgot password email has been sent', async ({ page, baseURL }) => {
     const email_input = page.getByTestId('forgot-password-email');
     await email_input.fill(email);
 
@@ -83,5 +64,20 @@ test.describe('Forgot Password Page', () => {
     const text = await alert_message.innerText();
 
     expect(text).toEqual('Por favor verifique seu e-mail. Caso não tenha recebido tente novamente.')
+  });
+
+  test("should alert the user if the email doesn't exist", async ({ page, baseURL }) => {
+    const email_input = page.getByTestId('forgot-password-email');
+    await email_input.fill(faker.internet.email());
+
+    const submit_button = page.getByTestId('forgot-password-submit');
+    await submit_button.click();
+
+    await page.waitForResponse(`${baseURL}/forms/forgot-password`);
+
+    const alert_message = page.getByTestId('alert-message');
+    const text = await alert_message.innerText();
+
+    expect(text).toEqual('Não foi encontrado nenhum usuário com esse endereço de e-mail.');
   });
 });

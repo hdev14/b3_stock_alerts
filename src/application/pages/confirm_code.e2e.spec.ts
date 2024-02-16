@@ -40,11 +40,6 @@ test.describe('Confirm Code Page', () => {
     );
   });
 
-  test.afterAll(async () => {
-    await db_client.query('DELETE FROM user_confirmation_codes');
-    await db_client.query('DELETE FROM users');
-  });
-
   test('should validate the code field', async ({ page }) => {
     await page.goto(`/pages/confirm-code?email=${user.email}`);
 
@@ -59,7 +54,7 @@ test.describe('Confirm Code Page', () => {
     await expect(code_error_message).toContainText('O texto precisa ter pelo menos 4 caracteres.');
   });
 
-  test("should alert the user if code doesn't exist", async ({ page, baseURL }) => {
+  test("should alert the user if code doesn't exist", async ({ page }) => {
     await page.goto(`/pages/confirm-code?email=${user.email}`);
 
     const code_input = page.getByTestId('code');
@@ -71,8 +66,6 @@ test.describe('Confirm Code Page', () => {
     const submit_button = page.getByTestId('confirm-code-submit');
     await submit_button.click();
 
-    await page.waitForResponse(`${baseURL}/forms/confirm-code`);
-
     const alert_message = page.getByTestId('alert-message');
     const text = await alert_message.innerText();
 
@@ -80,7 +73,7 @@ test.describe('Confirm Code Page', () => {
     expect(text).toBe('Código não encontrado.');
   });
 
-  test('should alert the user if code has expired', async ({ page, baseURL }) => {
+  test('should alert the user if code has expired', async ({ page }) => {
     await page.goto(`/pages/confirm-code?email=${user.email}`);
 
     const code_input = page.getByTestId('code');
@@ -91,8 +84,6 @@ test.describe('Confirm Code Page', () => {
 
     const submit_button = page.getByTestId('confirm-code-submit');
     await submit_button.click();
-
-    await page.waitForResponse(`${baseURL}/forms/confirm-code`);
 
     const alert_message = page.getByTestId('alert-message');
     const text = await alert_message.innerText();
