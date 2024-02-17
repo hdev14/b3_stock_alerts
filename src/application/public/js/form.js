@@ -124,10 +124,22 @@ class Form {
    * @param {string[]} rules
    */
   validateInput(error_message_element, field_name, rules) {
+    const equal_rule = rules.find((rule) => rule.startsWith('equal'));
+
     return function onBlur(e) {
       utils.removeChildsFromParent(error_message_element);
 
-      const errors = Validator.setData({ [field_name]: e.target.value })
+      const data = { [field_name]: e.target.value };
+
+      if (equal_rule) {
+        const [, name] = equal_rule.split(':');
+        const field = this.fields.find((f) => f.input_element.getAttribute('name') === name);
+        if (field) {
+          data[name] = field.input_element.value;
+        }
+      }
+
+      const errors = Validator.setData(data)
         .setRule(field_name, rules)
         .validate();
 

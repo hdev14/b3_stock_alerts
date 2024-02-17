@@ -1,31 +1,12 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
-import Postgres from '@shared/Postgres';
 
 test.describe('Forgot Password Page', () => {
-  const db_client = Postgres.getClient();
-  const email = faker.internet.email()
-
-  test.beforeAll(async () => {
-    await db_client.connect();
-
-    await db_client.query(
-      'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-      [
-        faker.string.uuid(),
-        email,
-        faker.person.fullName(),
-        faker.string.alphanumeric(10),
-        faker.string.numeric(11),
-      ],
-    );
-  });
-
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/pages/forgot-password');
-  });
+  const user = JSON.parse(process.env.USER_TEST || '{}');
 
   test('should validate the email field', async ({ page }) => {
+    await page.goto('/pages/forgot-password');
+
     const invalid_email = faker.string.alphanumeric();
 
     const email_input = page.getByTestId('forgot-password-email');
@@ -38,6 +19,8 @@ test.describe('Forgot Password Page', () => {
   });
 
   test('should not allow the user to continue if captcha failed', async ({ page }) => {
+    await page.goto('/pages/forgot-password');
+
     await page.route('*/**/api/auth/captcha', async (route) => {
       await route.fulfill({ status: 403 });
     });
@@ -52,8 +35,10 @@ test.describe('Forgot Password Page', () => {
   });
 
   test('should alert the user if the forgot password email has been sent', async ({ page, baseURL }) => {
+    await page.goto('/pages/forgot-password');
+
     const email_input = page.getByTestId('forgot-password-email');
-    await email_input.fill(email);
+    await email_input.fill(user.email);
 
     const submit_button = page.getByTestId('forgot-password-submit');
     await submit_button.click();
@@ -67,6 +52,8 @@ test.describe('Forgot Password Page', () => {
   });
 
   test("should alert the user if the email doesn't exist", async ({ page, baseURL }) => {
+    await page.goto('/pages/forgot-password');
+
     const email_input = page.getByTestId('forgot-password-email');
     await email_input.fill(faker.internet.email());
 

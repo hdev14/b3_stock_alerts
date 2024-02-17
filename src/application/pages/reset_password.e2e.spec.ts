@@ -1,25 +1,8 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
-import Postgres from '@shared/Postgres';
 
 test.describe('Reset Password Page', () => {
-  const db_client = Postgres.getClient();
-  const user_id = faker.string.uuid();
-
-  test.beforeAll(async () => {
-    await db_client.connect();
-
-    await db_client.query(
-      'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-      [
-        user_id,
-        faker.internet.email(),
-        faker.person.fullName(),
-        faker.string.alphanumeric(10),
-        faker.string.numeric(11),
-      ],
-    );
-  });
+  const user = JSON.parse(process.env.USER_TEST || '{}');
 
   test('should password has length greater than 8 caracters', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
@@ -96,22 +79,22 @@ test.describe('Reset Password Page', () => {
   });
 
   test('should redirect user to /pages/login if password has been reseted', async ({ page }) => {
-    await page.goto(`/pages/reset-password?user_id=${user_id}`);
+    await page.goto(`/pages/reset-password?user_id=${user.id}`);
+    const password = `${faker.string.alphanumeric(10)}!@#$`;
 
     const password_input = page.getByTestId('reset-password-password');
-    await password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
+    await password_input.fill(password);
 
     const confirm_password_input = page.getByTestId('reset-password-confirm-password');
-    await confirm_password_input.fill(`${faker.string.alphanumeric(10)}!@#$`);
+    await confirm_password_input.fill(password);
 
-    const submit_button = page.getByTestId('login-submit');
+    const submit_button = page.getByTestId('reset-password-submit');
     await submit_button.click();
-    await page.waitForURL('**/pages/login');
 
     const alert_message = page.getByTestId('alert-message');
     const text = await alert_message.innerText();
 
-    expect(page).toHaveURL('/pages/login');
+    expect(page).toHaveTitle('Login!');
     expect(text).toEqual('Senha redefinida com sucesso.');
   });
 });
