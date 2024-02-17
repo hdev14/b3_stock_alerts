@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
+import { UserData } from './Authenticator';
 import CoreAuthenticator from './CoreAuthenticator';
-import { User } from './User';
 
 jest.mock('jsonwebtoken');
 
@@ -107,11 +107,10 @@ describe("CoreAuthenticator's unit tests", () => {
     it('generates a json web token', async () => {
       expect.assertions(3);
 
-      const user: User = {
+      const user: UserData = {
         id: faker.string.uuid(),
         email: faker.internet.email(),
         name: faker.person.fullName(),
-        password: faker.string.alphanumeric(10),
         phone_number: faker.string.numeric(11),
       };
 
@@ -128,7 +127,7 @@ describe("CoreAuthenticator's unit tests", () => {
   });
 
   describe('CoreAuthenticator.verifyAuthToken', () => {
-    it('returns FALSE if token is invalid', async () => {
+    it('returns NULL if token is invalid', async () => {
       expect.assertions(2);
 
       const token = faker.string.alphanumeric();
@@ -140,20 +139,27 @@ describe("CoreAuthenticator's unit tests", () => {
       const result = authenticator.verifyAuthToken(token);
 
       expect(jwt_mocked.verify).toHaveBeenCalledWith(token, 'fake_private_key');
-      expect(result).toBeFalsy()
+      expect(result).toBeNull();
     });
 
-    it('returns TRUE if token is invalid', async () => {
+    it('returns the user data if token is valid', async () => {
       expect.assertions(2);
 
       const token = faker.string.alphanumeric();
 
-      jwt_mocked.verify.mockReturnValueOnce({} as any);
+      const user: UserData = {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        phone_number: faker.string.numeric(11),
+      }
+
+      jwt_mocked.verify.mockReturnValueOnce(user as any);
 
       const result = authenticator.verifyAuthToken(token);
 
       expect(jwt_mocked.verify).toHaveBeenCalledWith(token, 'fake_private_key');
-      expect(result).toBeTruthy()
+      expect(result).toEqual(user);
     });
   });
 });

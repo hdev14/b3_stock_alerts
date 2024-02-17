@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import Authenticator, { AuthData } from './Authenticator';
+import Authenticator, { AuthData, UserData } from './Authenticator';
 import { User } from './User';
 
 export default class CoreAuthenticator implements Authenticator {
-  generateAuthToken(user: User): AuthData {
+  generateAuthToken(user: UserData): AuthData {
     const expires_in = 60 * 60; // 1h
 
     const token = jwt.sign(user, process.env.JWT_PRIVATE_KEY!, {
@@ -17,13 +17,18 @@ export default class CoreAuthenticator implements Authenticator {
     return { token, expired_at };
   }
 
-  verifyAuthToken(token: string): boolean {
+  verifyAuthToken(token: string): UserData | null {
     try {
-      jwt.verify(token, process.env.JWT_PRIVATE_KEY!);
-      return true;
+      const payload = jwt.verify(token, process.env.JWT_PRIVATE_KEY!) as any;
+      return {
+        id: payload.id,
+        name: payload.name,
+        email: payload.email,
+        phone_number: payload.phone_number,
+      }
     } catch (error) {
       if (error instanceof JsonWebTokenError || error instanceof TokenExpiredError) {
-        return false;
+        return null;
       }
 
       throw error;

@@ -13,7 +13,8 @@ export default function auth(request: Request, response: Response, next: NextFun
 
     const result = auth_service.verifyAuthentication(access_token);
 
-    if (result) {
+    if (result.data) {
+      Object.assign(request.headers, { user_id: result.data.id });
       return next();
     }
   }

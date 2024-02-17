@@ -3,7 +3,7 @@ import ExpiredCodeError from '@shared/ExpiredCodeError';
 import NotFoundError from '@shared/NotFoundError';
 import { Result } from '@shared/generic_types';
 import { randomInt, randomUUID } from 'crypto';
-import Authenticator from './Authenticator';
+import Authenticator, { UserData } from './Authenticator';
 import ConfirmationCode from './ConfirmationCode';
 import Encryptor from './Encryptor';
 import ForgotPassword from './ForgotPassword';
@@ -51,7 +51,7 @@ export default class AuthService {
     return { data: await this.authenticator.verifyCaptcha(user_ip, token) };
   }
 
-  verifyAuthentication(token: string): Result<boolean> {
+  verifyAuthentication(token: string): Result<UserData | null> {
     return { data: this.authenticator.verifyAuthToken(token) };
   }
 
