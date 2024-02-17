@@ -1,6 +1,6 @@
 import auth from '@app/middlewares/auth';
 import { Request, Response, Router } from 'express';
-import { getAlerts, getScripts, getStyles } from '../page_utils';
+import { getAlerts, getScripts } from '../page_utils';
 
 const router = Router();
 
@@ -21,7 +21,6 @@ router.get('/login', (request: Request, response: Response) => {
   return response.render('login', {
     title: 'Login!',
     scripts: getScripts(['captcha', 'validator', 'form']),
-    styles: getStyles(['form', 'login']),
     alerts: getAlerts(request.query),
   });
 });
@@ -30,7 +29,6 @@ router.get('/signup', (request: Request, response: Response) => {
   response.render('signup', {
     title: 'Sign up!',
     scripts: getScripts(['captcha', 'validator', 'form', 'imask']),
-    styles: getStyles(['form', 'signup']),
     alerts: getAlerts(request.query),
   });
 });
@@ -44,7 +42,6 @@ router.get('/confirm-code', (request: Request, response: Response) => {
     title: 'Confirmar código!',
     email: request.query.email,
     scripts: getScripts(['validator', 'form']),
-    styles: getStyles(['form', 'confirm_code']),
     alerts: getAlerts(request.query),
   });
 });
@@ -53,7 +50,6 @@ router.get('/forgot-password', (request: Request, response: Response) => {
   response.render('forgot_password', {
     title: 'Esqueceu a senha?',
     scripts: getScripts(['captcha', 'validator', 'form']),
-    styles: getStyles(['form', 'forgot_password']),
     alerts: getAlerts(request.query),
   });
 });
@@ -67,7 +63,6 @@ router.get('/reset-password', (request: Request, response: Response) => {
     title: 'Resetar senha',
     user_id: request.query.user_id,
     scripts: getScripts(['validator', 'form']),
-    styles: getStyles(['form', 'reset_password']),
     alerts: getAlerts(request.query),
   });
 });
@@ -75,7 +70,6 @@ router.get('/reset-password', (request: Request, response: Response) => {
 router.get('/500', (_request: Request, response: Response) => {
   response.render('500', {
     title: 'Internal Server Error!',
-    styles: getStyles(['500']),
   });
 });
 

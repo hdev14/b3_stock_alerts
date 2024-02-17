@@ -128,6 +128,7 @@ class Form {
 
     return function onBlur(e) {
       utils.removeChildsFromParent(error_message_element);
+      utils.changeClass(e.target, 'border-red-400', 'border-gray-400');
 
       const data = { [field_name]: e.target.value };
 
@@ -144,6 +145,8 @@ class Form {
         .validate();
 
       if (errors.length) {
+        utils.changeClass(e.target, 'border-gray-400', 'border-red-400');
+
         this.#appendErrorMessages(errors[0].messages, error_message_element);
       }
     };

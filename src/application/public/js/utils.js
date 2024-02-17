@@ -5,4 +5,8 @@ const utils = {
       parent.removeChild(parent.lastChild);
     }
   },
+  changeClass(element, current_class, target_class) {
+    element.classList.remove(current_class);
+    element.classList.add(target_class);
+  },
 };
