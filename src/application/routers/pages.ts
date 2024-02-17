@@ -1,11 +1,11 @@
 import auth from '@app/middlewares/auth';
 import { Request, Response, Router } from 'express';
-import { getAlerts, getScripts, getStyles } from './page_utils';
+import { getAlerts, getScripts, getStyles } from '../page_utils';
 
 const router = Router();
 
 router.get('/index', auth, (_request: Request, response: Response) => {
-  response.render('index', { title: 'Hellow Mustache!' });
+  response.render('index', { title: 'B3 Stock Alerts!' });
 });
 
 router.get('/login', (request: Request, response: Response) => {

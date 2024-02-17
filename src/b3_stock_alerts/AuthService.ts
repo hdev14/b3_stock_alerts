@@ -51,6 +51,10 @@ export default class AuthService {
     return { data: await this.authenticator.verifyCaptcha(user_ip, token) };
   }
 
+  verifyAuthentication(token: string): Result<boolean> {
+    return { data: this.authenticator.verifyAuthToken(token) };
+  }
+
   async sendConfirmationCode(email: string): Promise<Result<void>> {
     const user = await this.user_repository.getUserByEmail(email);
 

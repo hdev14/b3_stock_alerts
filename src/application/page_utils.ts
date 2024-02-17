@@ -4,8 +4,8 @@ import QueryString from 'qs';
 
 const is_production = process.env.NODE_ENV === 'production';
 
-const js_filenames = readdirSync(resolve(__dirname, '../public/js/'));
-const css_filenames = readdirSync(resolve(__dirname, '../public/css/'));
+const js_filenames = readdirSync(resolve(__dirname, './public/js/'));
+const css_filenames = readdirSync(resolve(__dirname, './public/css/'));
 
 function createFilenameObject(path: 'css' | 'js') {
   return (acc: Record<string, string>, filename: string) => {
@@ -58,4 +58,8 @@ export function getAlerts(query: QueryString.ParsedQs): Alerts {
   }
 
   return alerts;
+}
+
+export default function isPage(original_url: string) {
+  return original_url.startsWith('/forms') || original_url.startsWith('/pages');
 }

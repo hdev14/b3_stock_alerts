@@ -7,7 +7,7 @@ export type AuthData = {
 
 interface Authenticator {
   generateAuthToken(user: User): AuthData;
-  verifyAuthToken(token: string): true;
+  verifyAuthToken(token: string): boolean;
   resetAuthToken(user: User, token: string): string;
   verifyCaptcha(user_ip: string, token: string): Promise<boolean>;
 }

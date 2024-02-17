@@ -1,3 +1,4 @@
+import isPage from '@app/page_utils';
 import { NextFunction, Request, Response } from 'express';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -9,7 +10,7 @@ export default function errorHandler(
 ) {
   console.error(error);
 
-  if (request.originalUrl.startsWith('/forms') || request.originalUrl.startsWith('/pages')) {
+  if (isPage(request.originalUrl)) {
     return response.redirect('/pages/500');
   }
 

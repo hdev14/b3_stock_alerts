@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/locale/pt_BR';
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import CoreAuthenticator from './CoreAuthenticator';
 import { User } from './User';
 
@@ -124,6 +124,36 @@ describe("CoreAuthenticator's unit tests", () => {
       });
       expect(data.token).toEqual('fake_token');
       expect(data.expired_at).toBeInstanceOf(Date);
+    });
+  });
+
+  describe('CoreAuthenticator.verifyAuthToken', () => {
+    it('returns FALSE if token is invalid', async () => {
+      expect.assertions(2);
+
+      const token = faker.string.alphanumeric();
+
+      jwt_mocked.verify.mockImplementationOnce(() => {
+        throw new JsonWebTokenError('test');
+      });
+
+      const result = authenticator.verifyAuthToken(token);
+
+      expect(jwt_mocked.verify).toHaveBeenCalledWith(token, 'fake_private_key');
+      expect(result).toBeFalsy()
+    });
+
+    it('returns TRUE if token is invalid', async () => {
+      expect.assertions(2);
+
+      const token = faker.string.alphanumeric();
+
+      jwt_mocked.verify.mockReturnValueOnce({} as any);
+
+      const result = authenticator.verifyAuthToken(token);
+
+      expect(jwt_mocked.verify).toHaveBeenCalledWith(token, 'fake_private_key');
+      expect(result).toBeTruthy()
     });
   });
 });

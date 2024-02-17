@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import jwt from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import Authenticator, { AuthData } from './Authenticator';
 import { User } from './User';
 
@@ -17,8 +17,17 @@ export default class CoreAuthenticator implements Authenticator {
     return { token, expired_at };
   }
 
-  verifyAuthToken(token: string): true {
-    throw new Error('Method not implemented.');
+  verifyAuthToken(token: string): boolean {
+    try {
+      jwt.verify(token, process.env.JWT_PRIVATE_KEY!);
+      return true;
+    } catch (error) {
+      if (error instanceof JsonWebTokenError || error instanceof TokenExpiredError) {
+        return false;
+      }
+
+      throw error;
+    }
   }
 
   resetAuthToken(user: User, token: string): string {

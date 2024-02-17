@@ -1,11 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { type FullConfig } from '@playwright/test';
-import Postgres from '@shared/Postgres';
 
-async function globalTeardown(_config: FullConfig) {
-  const db_client = Postgres.getClient();
-  await db_client.connect();
-
+async function globalTeardown(config: FullConfig) {
   const user = {
     id: faker.string.uuid(),
     email: faker.internet.email(),
@@ -14,10 +10,15 @@ async function globalTeardown(_config: FullConfig) {
     phone_number: faker.string.numeric(11),
   };
 
-  await db_client.query(
-    'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
-    Object.values(user),
-  );
+  const response = await fetch(`${process.env.SERVER_URL}/api/users`, {
+    method: 'post',
+    body: JSON.stringify(user),
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  if (response.status >= 400) {
+    throw new Error('Usuário não criado.');
+  }
 
   process.env.USER_TEST = JSON.stringify(user);
 }
