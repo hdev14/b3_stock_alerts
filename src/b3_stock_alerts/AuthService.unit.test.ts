@@ -34,8 +34,8 @@ describe("AuthService's unit tests", () => {
     sendCode: jest.fn(),
   };
 
-  const forgot_password = {
-    sendForgotPasswordLink: jest.fn(),
+  const reset_password = {
+    sendResetPasswordLink: jest.fn(),
   };
 
   const auth_service = new AuthService(
@@ -43,7 +43,7 @@ describe("AuthService's unit tests", () => {
     encryptor_mock,
     authenticator_mock,
     confirmation_code_mock,
-    forgot_password,
+    reset_password,
   );
 
   describe('AuthService.login', () => {
@@ -278,7 +278,7 @@ describe("AuthService's unit tests", () => {
 
       await auth_service.forgotPassword(email);
 
-      expect(forgot_password.sendForgotPasswordLink).toHaveBeenCalledWith({
+      expect(reset_password.sendResetPasswordLink).toHaveBeenCalledWith({
         email: user.email,
         user_id: user.id,
       });

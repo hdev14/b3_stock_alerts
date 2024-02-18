@@ -115,14 +115,14 @@ describe("EmailGateway's unit tests", () => {
       const email = faker.internet.email();
       const user_id = faker.string.uuid();
 
-      await email_gateway.sendForgotPasswordLink({ email, user_id });
+      await email_gateway.sendResetPasswordLink({ email, user_id });
 
       expect(transport_mock.sendMail).toHaveBeenCalledWith({
         from: 'test@server.com',
         to: email,
-        subject: 'Esqueceu a senha?',
-        text: `Acesse o link http://localhost:5000/pages/forgot-password?user_id=${user_id} para redefinir sua senha.`,
-        html: `<p>Acesse o <a href="http://localhost:5000/pages/forgot-password?user_id=${user_id}">link</a> para redefinir sua senha.</p>`,
+        subject: 'Instruções para redefinição de senha',
+        text: `Acesse o link http://localhost:5000/pages/reset-password?user_id=${user_id} para redefinir sua senha.`,
+        html: `<p>Acesse o <a href="http://localhost:5000/pages/reset-password?user_id=${user_id}">link</a> para redefinir sua senha.</p>`,
       });
     });
   });

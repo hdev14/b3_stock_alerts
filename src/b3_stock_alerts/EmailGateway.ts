@@ -1,9 +1,9 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import AlertNotification, { AlertNotificationTypes, NotificationData } from './AlertNotification';
 import ConfirmationCode, { SendCodeParams } from './ConfirmationCode';
-import ForgotPassword, { ForgotPasswordParams } from './ForgotPassword';
+import ResetPassword, { ResetPasswordParams } from './ResetPassword';
 
-export default class EmailGateway implements AlertNotification, ConfirmationCode, ForgotPassword {
+export default class EmailGateway implements AlertNotification, ConfirmationCode, ResetPassword {
   private readonly transporter: Transporter;
 
   constructor() {
@@ -52,13 +52,13 @@ export default class EmailGateway implements AlertNotification, ConfirmationCode
     await this.transporter.sendMail(message);
   }
 
-  async sendForgotPasswordLink(params: ForgotPasswordParams): Promise<void> {
+  async sendResetPasswordLink(params: ResetPasswordParams): Promise<void> {
     const message = {
       from: process.env.APPLICATION_EMAIL,
       to: params.email,
-      subject: 'Esqueceu a senha?',
-      text: `Acesse o link ${process.env.SERVER_URL}/pages/forgot-password?user_id=${params.user_id} para redefinir sua senha.`,
-      html: `<p>Acesse o <a href="${process.env.SERVER_URL}/pages/forgot-password?user_id=${params.user_id}">link</a> para redefinir sua senha.</p>`,
+      subject: 'Instruções para redefinição de senha',
+      text: `Acesse o link ${process.env.SERVER_URL}/pages/reset-password?user_id=${params.user_id} para redefinir sua senha.`,
+      html: `<p>Acesse o <a href="${process.env.SERVER_URL}/pages/reset-password?user_id=${params.user_id}">link</a> para redefinir sua senha.</p>`,
     };
 
     await this.transporter.sendMail(message);

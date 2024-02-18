@@ -6,7 +6,7 @@ import { randomInt, randomUUID } from 'crypto';
 import Authenticator, { UserData } from './Authenticator';
 import ConfirmationCode from './ConfirmationCode';
 import Encryptor from './Encryptor';
-import ForgotPassword from './ForgotPassword';
+import ResetPassword from './ResetPassword';
 import { User } from './User';
 import UserRepository from './UserRepository';
 
@@ -22,7 +22,7 @@ export default class AuthService {
     private readonly encryptor: Encryptor,
     private readonly authenticator: Authenticator,
     private readonly confirmation_code: ConfirmationCode,
-    private readonly forgot_password: ForgotPassword,
+    private readonly forgot_password: ResetPassword,
   ) { }
 
   async login(email: string, password: string): Promise<Result<LoginResult>> {
@@ -99,7 +99,7 @@ export default class AuthService {
       return { error: new NotFoundError('Usuário não encontrado.') };
     }
 
-    await this.forgot_password.sendForgotPasswordLink({
+    await this.forgot_password.sendResetPasswordLink({
       email: user.email,
       user_id: user.id,
     });
