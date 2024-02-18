@@ -4,14 +4,16 @@
   "description": "Application to create alerts of B3's stocks",
   "main": "dist/index.js",
   "scripts": {
-    "start:dev": "dotenv -e .env -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
+    "start:dev": "dotenv -e .env -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts ",
     "start:e2e": "dotenv -e .env.e2e -- npx ts-node-dev -r tsconfig-paths/register --watch ./src --inspect --transpile-only ./src/index.ts",
     "start:prod": "dotenv -e .env -- node -r ./tsconfig-paths-bootstrap.js ./build/src/index.js",
     "build": "tsc --project tsconfig.build.json && ./minify.sh ",
     "test:unit": "dotenv -e .env.test -- npx jest unit --passWithNoTests --watch --silent=false --config=jest.unit.config.js",
     "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --silent=false --detectOpenHandles --config=jest.int.config.js",
     "test:e2e:api": "dotenv -e .env.test -- npx jest e2e --passWithNoTests --watch --silent=false --detectOpenHandles --runInBand --config=jest.e2e.config.js",
-    "test:e2e:web": "dotenv -e .env.test -- npx playwright test --ui"
+    "test:e2e:web": "dotenv -e .env.test -- npx playwright test --ui",
+    "css:dev": "tailwindcss -i ./src/application/public/css/tailwindcss.css -o ./src/application/public/css/global.css",
+    "css:prod": "tailwindcss -i ./src/application/public/css/tailwindcss.css -o ./build/src/application/public/css/global.css --minifiy"
   },
   "keywords": [],
   "author": "",
@@ -41,6 +43,7 @@
     "lint-staged": "^15.2.2",
     "nodemon": "^3.0.2",
     "supertest": "^6.3.3",
+    "tailwindcss": "^3.4.1",
     "ts-jest": "^29.1.1",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",

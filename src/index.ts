@@ -1,5 +1,6 @@
 import Server from '@app/Server';
 import Postgres from '@shared/Postgres';
+import { execSync } from 'child_process';
 import cron from 'node-cron';
 import { schedule_handler } from './bootstrap';
 
@@ -18,6 +19,14 @@ const THIRTY_MIN = '30 * * * *';
     });
 
     task.start();
+
+    if (process.env.NODE_ENV !== 'production') {
+      const buffer = execSync('npm run css:dev');
+      console.log(buffer.toString());
+    } else {
+      const buffer = execSync('npm run css:prod');
+      console.log(buffer.toString());
+    }
 
     server.application.listen(process.env.SERVER_PORT, () => {
       if (process.env.NODE_ENV === 'development') {

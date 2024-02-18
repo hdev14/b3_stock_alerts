@@ -1,24 +1,69 @@
 {{> _head}}
-<main>
-  <h1>{{title}}</h1>
+<main class="w-screen h-screen text-gray-900 bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-900">
+  <div class="p-4 mx-auto w-2/5 h-full flex flex-col justify-center items-center gap-10">
 
-  <form id="signup-form" data-testid="signup-form" method="post" action="/forms/signup">
-    <input id="name" type="text" name="name" data-testid="signup-name" />
-    <ul id="name-error-messages" data-testid="name-error-messages"></ul>
+    <form class="flex jusitfy-left flex-col w-2/3 px-10 py-20 rounded-md bg-white shadow-md" id="signup-form"
+      data-testid="signup-form" method="post" action="/forms/signup">
+      <h1 class="text-center text-xl mb-10">Cadastre-se na B3 Alertas</h1>
 
-    <input id="email" type="email" name="email" data-testid="signup-email" />
-    <ul id="email-error-messages" data-testid="email-error-messages"></ul>
+      <div class="flex flex-col mb-2 w-full">
+        <label class="self-start m-1 text-md text-gray-600 font-medium" for="name">
+          Nome
+        </label>
 
-    <input id="phone-number" type="text" name="phone_number" data-testid="signup-phone-number" />
-    <ul id="phone-number-error-messages" data-testid="phone-number-error-messages"></ul>
+        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400" id="name"
+          type="text" name="name" data-testid="signup-name" />
 
-    <input id="password" type="password" name="password" data-testid="signup-password" />
-    <ul id="password-error-messages" data-testid="password-error-messages"></ul>
+        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
+          id="name-error-messages" data-testid="name-error-messages"></ul>
+      </div>
 
-    <button type="submit" data-testid="signup-submit">
-      Signup
-    </button>
-  </form>
+      <div class="flex flex-col mb-2 w-full">
+        <label class="self-start m-1 text-md text-gray-600 font-medium" for="email">
+          E-mail
+        </label>
+
+        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400" id="email"
+          type="email" name="email" data-testid="signup-email" />
+
+        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
+          id="email-error-messages" data-testid="email-error-messages"></ul>
+      </div>
+
+      <div class="flex flex-col mb-2 w-full">
+        <label class="self-start m-1 text-md text-gray-600 font-medium" for="phone-number">
+          Telefone:
+        </label>
+
+        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400"
+          id="phone-number" type="text" name="phone_number" data-testid="signup-phone-number" />
+
+        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
+          id="phone-number-error-messages" data-testid="phone-number-error-messages"></ul>
+      </div>
+
+      <div class="flex flex-col mb-2 w-full">
+        <label class="self-start m-1 text-md text-gray-600 font-medium" for="password">
+          Senha
+        </label>
+
+        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400"
+          id="password" type="password" name="password" data-testid="signup-password" />
+
+        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
+          id="password-error-messages" data-testid="password-error-messages"></ul>
+      </div>
+
+      <button class="btn-primary" type="submit" data-testid="signup-submit">
+        Concluir
+      </button>
+
+      <p class="self-center mt-10">
+        Já possue uma conta?
+        <a class="text-blue-700 hover:text-blue-800" href="/pages/login">Fazer login.</a>
+      </p>
+    </form>
+  </div>
 </main>
 
 <script>
