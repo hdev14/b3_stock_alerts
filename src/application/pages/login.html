@@ -6,43 +6,38 @@
 
       <h1 class="text-center text-xl mb-10">Entrar no B3 Alertas</h1>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="email">
+      <div class="input-control">
+        <label class="input-label" for="email">
           E-mail
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400" id="email"
-          type="email" name="email" data-testid="login-email" />
+        <input class="input" id="email" type="email" name="email" data-testid="login-email" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="email-error-messages" data-testid="email-error-messages">
+        <ul class="input-errors" id="email-error-messages" data-testid="email-error-messages">
         </ul>
       </div>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="password">
+      <div class="input-control">
+        <label class="input-label" for="password">
           Senha
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400"
-          type="password" name="password" id="password" data-testid="login-password" />
+        <input class="input" type="password" name="password" id="password" data-testid="login-password" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="password-error-messages" data-testid="password-error-messages"></ul>
+        <ul class="input-errors" id="password-error-messages" data-testid="password-error-messages"></ul>
       </div>
 
       <div class="flex justify-between">
-        <a class="text-blue-700 hover:text-blue-800" href="/pages/forgot-password">Esqueceu a senha?</a>
+        <a class="link" href="/pages/forgot-password">Esqueceu a senha?</a>
 
-        <button class="my-2 self-end px-8 py-2 rounded-md text-white font-semibold bg-blue-600 hover:bg-blue-700 w-auto"
-          type="submit" data-testid="login-submit">
+        <button class="primary-button my-2 self-end" type="submit" data-testid="login-submit">
           Entrar
         </button>
       </div>
 
       <p class="self-center mt-10">
         Não possue uma conta ainda?
-        <a class="text-blue-700 hover:text-blue-800" href="/pages/signup">Cadastre-se</a>
+        <a class="link" href="/pages/signup">Cadastre-se</a>
       </p>
     </form>
   </div>

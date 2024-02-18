@@ -3,8 +3,32 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-primary {
-    @apply py-2 px-5 bg-violet-500 text-white font-semibold rounded-full shadow-md hover:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-400 focus:ring-opacity-75;
+  .input-control {
+    @apply flex flex-col mb-2 w-full;
+  }
+
+  .input-label {
+    @apply self-start m-1 text-base text-gray-600 font-medium;
+  }
+
+  .input {
+    @apply rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400 focus:border-blue-400;
+  }
+
+  .input-errors {
+    @apply self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm;
+  }
+
+  .link {
+    @apply text-blue-700 hover:text-blue-800;
+  }
+
+  .primary-button {
+    @apply px-8 py-2 rounded-md text-white font-semibold !bg-blue-600 hover:!bg-blue-700 w-auto;
+  }
+
+  .btn-default {
+    @apply px-8 py-2 rounded-md text-white font-semibold !bg-gray-600 hover:!bg-gray-700 w-auto;
   }
 
   .alert_info {

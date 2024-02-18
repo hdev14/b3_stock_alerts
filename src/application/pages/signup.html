@@ -6,61 +6,53 @@
       data-testid="signup-form" method="post" action="/forms/signup">
       <h1 class="text-center text-xl mb-10">Cadastre-se na B3 Alertas</h1>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="name">
+      <div class="input-control">
+        <label class="input-label" for="name">
           Nome
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400" id="name"
-          type="text" name="name" data-testid="signup-name" />
+        <input class="input" id="name" type="text" name="name" data-testid="signup-name" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="name-error-messages" data-testid="name-error-messages"></ul>
+        <ul class="input-errors" id="name-error-messages" data-testid="name-error-messages"></ul>
       </div>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="email">
+      <div class="input-control">
+        <label class="input-label" for="email">
           E-mail
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400" id="email"
-          type="email" name="email" data-testid="signup-email" />
+        <input class="input" id="email" type="email" name="email" data-testid="signup-email" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="email-error-messages" data-testid="email-error-messages"></ul>
+        <ul class="input-errors" id="email-error-messages" data-testid="email-error-messages"></ul>
       </div>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="phone-number">
-          Telefone:
+      <div class="input-control">
+        <label class="input-label" for="phone-number">
+          Telefone
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400"
-          id="phone-number" type="text" name="phone_number" data-testid="signup-phone-number" />
+        <input class="input" id="phone-number" type="text" name="phone_number" data-testid="signup-phone-number" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="phone-number-error-messages" data-testid="phone-number-error-messages"></ul>
+        <ul class="input-errors" id="phone-number-error-messages" data-testid="phone-number-error-messages"></ul>
       </div>
 
-      <div class="flex flex-col mb-2 w-full">
-        <label class="self-start m-1 text-md text-gray-600 font-medium" for="password">
+      <div class="input-control">
+        <label class="input-label" for="password">
           Senha
         </label>
 
-        <input class="rounded h-11 px-2 text-gray-700 text-lg border border-gray-400 hover:border-blue-400"
-          id="password" type="password" name="password" data-testid="signup-password" />
+        <input class="input" id="password" type="password" name="password" data-testid="signup-password" />
 
-        <ul class="self-start flex flex-wrap gap-1 justify-start items-start text-red-500 m-1 text-sm"
-          id="password-error-messages" data-testid="password-error-messages"></ul>
+        <ul class="input-errors" id="password-error-messages" data-testid="password-error-messages"></ul>
       </div>
 
-      <button class="btn-primary" type="submit" data-testid="signup-submit">
-        Concluir
+      <button class="primary-button my-2 self-end" type="submit" data-testid="signup-submit">
+        Cadastrar
       </button>
 
       <p class="self-center mt-10">
         Já possue uma conta?
-        <a class="text-blue-700 hover:text-blue-800" href="/pages/login">Fazer login.</a>
+        <a class="link" href="/pages/login">Fazer login.</a>
       </p>
     </form>
   </div>
