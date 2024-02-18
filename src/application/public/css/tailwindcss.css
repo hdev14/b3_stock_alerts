@@ -27,8 +27,12 @@
     @apply px-8 py-2 rounded-md text-white font-semibold !bg-blue-600 hover:!bg-blue-700 w-auto;
   }
 
-  .btn-default {
+  .default-button {
     @apply px-8 py-2 rounded-md text-white font-semibold !bg-gray-600 hover:!bg-gray-700 w-auto;
+  }
+
+  .container-gradient {
+    @apply w-screen h-screen text-gray-900 bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-900;
   }
 
   .alert_info {

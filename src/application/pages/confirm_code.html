@@ -1,17 +1,32 @@
 {{> _head}}
-<main>
-  <h1>{{title}}</h1>
+<main class="container-gradient">
+  <div class="p-4 mx-auto w-2/5 h-full flex flex-col justify-center items-center gap-10">
+    <form class="flex jusitfy-left flex-col w-2/3 px-10 py-20 rounded-md bg-white shadow-md" id="confirm-code-form"
+      data-testid="confirm-code-form" method="post" action="/forms/confirm-code">
+      <h1 class="text-xl">Confirmar cadastro</h1>
 
-  <form id="confirm-code-form" data-testid="confirm-code-form" method="post" action="/forms/confirm-code">
-    <input id="code" type="text" name="code" data-testid="code" />
-    <ul id="code-error-messages" data-testid="code-error-messages"></ul>
+      <p class="my-5">
+        Por favor, digite seu código que te enviamos por e-mail.
+      </p>
 
-    <input type="hidden" name="email" data-testid="email" value="{{email}}" />
+      <div class="input-control">
+        <label for="code" class="input-label">Código</label>
 
-    <button type="submit" data-testid="confirm-code-submit">
-      Confirm code
-    </button>
-  </form>
+        <input class="input" id="code" type="text" name="code" data-testid="code" />
+
+        <ul class="input-errors" id="code-error-messages" data-testid="code-error-messages"></ul>
+      </div>
+
+
+      <input type="hidden" name="email" data-testid="email" value="{{email}}" />
+
+      <button class="primary-button my-2 self-end" type="submit" data-testid="confirm-code-submit">
+        Confirmar
+      </button>
+
+      <!-- TODO: add code counter -->
+    </form>
+  </div>
 </main>
 
 <script>

@@ -24,6 +24,7 @@ export default class Server {
   }
 
   private setupTopMiddlewares() {
+    this._application.disable('x-powered-by');
     this._application.use(cors({}));
     this._application.use(express.json());
     this._application.use(express.urlencoded({ extended: true }));
