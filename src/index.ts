@@ -20,10 +20,12 @@ const THIRTY_MIN = '30 * * * *';
 
     task.start();
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV === 'development') {
       const buffer = execSync('npm run css:dev');
       console.log(buffer.toString());
-    } else {
+    }
+
+    if (process.env.NODE_ENV === 'production') {
       const buffer = execSync('npm run css:prod');
       console.log(buffer.toString());
     }

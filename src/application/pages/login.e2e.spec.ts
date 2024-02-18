@@ -114,6 +114,7 @@ test.describe('Login Page', () => {
 
     const password_input = page.getByTestId('login-password');
     await password_input.fill(`${faker.string.alphanumeric(10)}!@#!$`);
+    await password_input.blur();
 
     const submit_button = page.getByTestId('login-submit');
     await submit_button.click();
@@ -124,5 +125,18 @@ test.describe('Login Page', () => {
 
     const text = await alert_message.innerText();
     expect(text).toBe('E-mail ou senha inválido.');
+  });
+
+  test('should disable submit button if the form has validation errors', async ({ page }) => {
+    const invalid_email = faker.string.alphanumeric(10);
+
+    const email_input = page.getByTestId('login-email');
+    await email_input.fill(invalid_email);
+    await email_input.blur();
+
+    const submit_button = page.getByTestId('login-submit');
+    const result = await submit_button.isDisabled();
+
+    expect(result).toBeTruthy();
   });
 });

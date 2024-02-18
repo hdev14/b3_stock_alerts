@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker';
 import { type FullConfig } from '@playwright/test';
 
-async function globalTeardown(config: FullConfig) {
+async function globalTeardown(_config: FullConfig) {
   const user = {
     id: faker.string.uuid(),
-    email: faker.internet.email(),
+    email: 'user_test@test.com',
     name: faker.person.fullName(),
     password: faker.string.alphanumeric(100),
     phone_number: faker.string.numeric(11),

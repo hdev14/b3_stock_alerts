@@ -143,4 +143,17 @@ test.describe('Signup Page', () => {
     const text = await alert_message.innerText();
     expect(text).toBe('Endereço de e-mail já cadastrado.');
   });
+
+  test('should disable submit button if the form has validation errors', async ({ page }) => {
+    const invalid_email = faker.string.alphanumeric(10);
+
+    const email_input = page.getByTestId('signup-email');
+    await email_input.fill(invalid_email);
+    await email_input.blur();
+
+    const submit_button = page.getByTestId('signup-submit');
+    const result = await submit_button.isDisabled();
+
+    expect(result).toBeTruthy();
+  });
 });

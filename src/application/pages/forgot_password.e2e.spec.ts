@@ -67,4 +67,19 @@ test.describe('Forgot Password Page', () => {
 
     expect(text).toEqual('Não foi encontrado nenhum usuário com esse endereço de e-mail.');
   });
+
+  test('should disable submit button if the form has validation errors', async ({ page }) => {
+    await page.goto('/pages/forgot-password');
+
+    const invalid_email = faker.string.alphanumeric(10);
+
+    const email_input = page.getByTestId('forgot-password-email');
+    await email_input.fill(invalid_email);
+    await email_input.blur();
+
+    const submit_button = page.getByTestId('forgot-password-submit');
+    const result = await submit_button.isDisabled();
+
+    expect(result).toBeTruthy();
+  });
 });

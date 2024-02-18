@@ -97,4 +97,19 @@ test.describe('Confirm Code Page', () => {
 
     expect(page).toHaveURL('/pages/login');
   });
+
+  test('should disable submit button if the form has validation errors', async ({ page }) => {
+    await page.goto(`/pages/confirm-code?email=${user.email}`);
+
+    const invalid_code = faker.string.numeric(3);
+
+    const code_input = page.getByTestId('code');
+    await code_input.fill(invalid_code);
+    await code_input.blur();
+
+    const submit_button = page.getByTestId('confirm-code-submit');
+    const result = await submit_button.isDisabled();
+
+    expect(result).toBeTruthy();
+  });
 });

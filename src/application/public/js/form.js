@@ -125,10 +125,14 @@ class Form {
    */
   validateInput(error_message_element, field_name, rules) {
     const equal_rule = rules.find((rule) => rule.startsWith('equal'));
+    // eslint-disable-next-line dot-notation
+    const submit_button = Object.values(this.form_element.elements)
+      .find((element) => element.getAttribute('type') === 'submit');
 
     return function onBlur(e) {
       utils.removeChildsFromParent(error_message_element);
       utils.changeClass(e.target, 'border-red-400', 'border-gray-400');
+      this.#setSubmitButtonDisabledAttr(submit_button, false);
 
       const data = { [field_name]: e.target.value };
 
@@ -146,10 +150,22 @@ class Form {
 
       if (errors.length) {
         utils.changeClass(e.target, 'border-gray-400', 'border-red-400');
+        this.#setSubmitButtonDisabledAttr(submit_button, true);
 
         this.#appendErrorMessages(errors[0].messages, error_message_element);
       }
     };
+  }
+
+  /**
+   *
+   * @param {ELement} submit_button
+   * @param {boolean} value
+   */
+  #setSubmitButtonDisabledAttr(submit_button, value = false) {
+    if (submit_button) {
+      submit_button.disabled = value;
+    }
   }
 
   /**
