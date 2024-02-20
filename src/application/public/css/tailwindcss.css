@@ -34,16 +34,4 @@
   .container-gradient {
     @apply w-screen h-screen text-gray-900 bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-900;
   }
-
-  .alert_info {
-    @apply text-blue-500;
-  }
-
-  .alert_error {
-    @apply text-red-500;
-  }
-
-  .alert_success {
-    @apply text-green-500;
-  }
 }

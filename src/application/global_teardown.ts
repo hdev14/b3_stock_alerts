@@ -7,7 +7,7 @@ async function globalTeardown(_config: FullConfig) {
   // Purge database
   await db_client.query('DELETE FROM user_confirmation_codes');
   await db_client.query('DELETE FROM alerts');
-  await db_client.query('DELETE FROM users WHERE email <> $1', ['user_test@test.com']);
+  await db_client.query('DELETE FROM users');
 }
 
 export default globalTeardown;

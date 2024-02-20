@@ -28,7 +28,7 @@ export default class AlertService {
     const user = await this.user_repository.getUser(params.user_id);
 
     if (!user) {
-      return { error: new NotFoundError('User not found') };
+      return { error: new NotFoundError('Usuário não encontrado') };
     }
 
     await this.alert_repository.createAlert(alert);
@@ -47,7 +47,7 @@ export default class AlertService {
     const user = await this.user_repository.getUser(params.user_id);
 
     if (!user) {
-      return { error: new NotFoundError('User not found') };
+      return { error: new NotFoundError('Usuário não encontrado') };
     }
 
     await this.alert_repository.createAlert(alert);
@@ -59,7 +59,7 @@ export default class AlertService {
     const alert = await this.alert_repository.getAlert(alert_id);
 
     if (!alert) {
-      return { error: new NotFoundError('Alert not found') };
+      return { error: new NotFoundError('Alerta não encontrado') };
     }
 
     await this.alert_repository.deleteAlert(alert_id);
@@ -71,7 +71,7 @@ export default class AlertService {
     const user = await this.user_repository.getUser(user_id);
 
     if (!user) {
-      return { error: new NotFoundError('User not found') };
+      return { error: new NotFoundError('Usuário não encontrado') };
     }
 
     const alerts = await this.alert_repository.listAlertsByUserId(user_id);

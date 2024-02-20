@@ -57,7 +57,7 @@ describe('Alerts endpoints', () => {
         .send(body);
 
       expect(response.status).toEqual(422);
-      expect(response.body.message).toEqual('User not found');
+      expect(response.body.message).toEqual('Usuário não encontrado');
     });
 
     it('creates a new alert', async () => {
@@ -127,7 +127,7 @@ describe('Alerts endpoints', () => {
         .send();
 
       expect(response.status).toEqual(404);
-      expect(response.body.message).toEqual('Alert not found');
+      expect(response.body.message).toEqual('Alerta não encontrado');
     });
 
     it('deletes an alert by id', async () => {
@@ -189,7 +189,7 @@ describe('Alerts endpoints', () => {
         .send();
 
       expect(response.status).toEqual(404);
-      expect(response.body.message).toEqual('User not found');
+      expect(response.body.message).toEqual('Usuário não encontrado');
     });
 
     it("returns an array of user's alerts", async () => {

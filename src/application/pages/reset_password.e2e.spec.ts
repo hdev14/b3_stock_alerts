@@ -2,7 +2,23 @@ import { faker } from '@faker-js/faker/locale/pt_BR';
 import { expect, test } from '@playwright/test';
 
 test.describe('Reset Password Page', () => {
-  const user = JSON.parse(process.env.USER_TEST || '{}');
+  let user_id = '';
+
+  test.beforeAll(async ({ request }) => {
+    const response = await request.post('/api/users', {
+      data: {
+        name: faker.person.fullName(),
+        email: faker.internet.email(),
+        password: `${faker.string.alphanumeric(10)}!@#$`,
+        phone_number: faker.string.numeric(11),
+      },
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+
+    user_id = data.id;
+  });
 
   test('should password has length greater than 8 caracters', async ({ page }) => {
     await page.goto(`/pages/reset-password?user_id=${faker.string.uuid()}`);
@@ -78,9 +94,8 @@ test.describe('Reset Password Page', () => {
     expect(page).toHaveURL('/pages/login');
   });
 
-  // TODO: bug not found user
-  test.skip('should redirect user to /pages/login if password has been reseted', async ({ page }) => {
-    await page.goto(`/pages/reset-password?user_id=${user.id}`);
+  test('should redirect user to /pages/login if password has been reseted', async ({ page }) => {
+    await page.goto(`/pages/reset-password?user_id=${user_id}`);
     const password = `${faker.string.alphanumeric(10)}!@#$`;
 
     const password_input = page.getByTestId('reset-password-password');
@@ -100,7 +115,7 @@ test.describe('Reset Password Page', () => {
   });
 
   test('should disable submit button if the form has validation errors', async ({ page }) => {
-    await page.goto(`/pages/reset-password?user_id=${user.id}`);
+    await page.goto(`/pages/reset-password?user_id=${user_id}`);
 
     const invalid_password = faker.string.alphanumeric(10);
 

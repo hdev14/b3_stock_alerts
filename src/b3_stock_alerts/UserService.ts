@@ -29,7 +29,7 @@ export default class UserService {
 
     if (!user) {
       return {
-        error: new NotFoundError('User not found'),
+        error: new NotFoundError('Usuário não encontrado'),
       };
     }
 
@@ -66,7 +66,7 @@ export default class UserService {
     const user = await this.repository.getUser(user_id);
 
     if (!user) {
-      return { error: new NotFoundError('User not found') };
+      return { error: new NotFoundError('Usuário não encontrado') };
     }
 
     if (rest.password) {
@@ -82,7 +82,7 @@ export default class UserService {
 
   async removeUser(user_id: string): Promise<Result | void> {
     if (!await this.repository.getUser(user_id)) {
-      return { error: new NotFoundError('User not found') };
+      return { error: new NotFoundError('Usuário não encontrado') };
     }
 
     await this.repository.deleteUser(user_id);

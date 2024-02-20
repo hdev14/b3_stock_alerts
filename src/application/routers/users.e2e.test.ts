@@ -89,7 +89,7 @@ describe('Users endpoints', () => {
         .send();
 
       expect(response.status).toEqual(404);
-      expect(response.body.message).toEqual('User not found');
+      expect(response.body.message).toEqual('Usuário não encontrado');
     });
   });
 
@@ -167,7 +167,7 @@ describe('Users endpoints', () => {
         .send();
 
       expect(response.status).toEqual(404);
-      expect(response.body.message).toEqual('User not found');
+      expect(response.body.message).toEqual('Usuário não encontrado');
     });
   });
 
@@ -223,7 +223,7 @@ describe('Users endpoints', () => {
         .send(body);
 
       expect(response.status).toEqual(404);
-      expect(response.body.message).toEqual('User not found');
+      expect(response.body.message).toEqual('Usuário não encontrado');
     });
 
     it('returns 400 if data is invalid', async () => {
