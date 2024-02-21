@@ -45,7 +45,7 @@ class Alert {
 
     if (class_names) {
       const alert = document.createElement('div');
-      const text = document.createTextNode(message.replace(/%20/g, ' '));
+      const text = document.createTextNode(message);
       alert.appendChild(text);
       alert.classList.add(...class_names);
       alert.setAttribute('data-testid', 'alert-message');

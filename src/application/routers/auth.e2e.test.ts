@@ -121,4 +121,45 @@ describe('Auth endpoints', () => {
       expect(response.body.message).toEqual('Usuário não encontrado.');
     });
   });
+
+  describe('POST: /auth/codes', () => {
+    const user_email = faker.internet.email();
+
+    beforeAll(async () => {
+      await globalThis.db_client.query(
+        'INSERT INTO users (id, email, name, password, phone_number) VALUES ($1, $2, $3, $4, $5)',
+        [
+          faker.string.uuid(),
+          user_email,
+          faker.person.fullName(),
+          faker.string.alphanumeric(10),
+          faker.string.numeric(11),
+        ],
+      );
+    });
+
+    afterAll(async () => {
+      await globalThis.db_client.query('DELETE FROM user_confirmation_codes');
+      await globalThis.db_client.query('DELETE FROM users');
+    });
+
+    it("returns status code 404 if user doesn't exist", async () => {
+      const response = await globalThis.request
+        .post('/api/auth/codes')
+        .set('Content-Type', 'application/json')
+        .send({ email: faker.internet.email() });
+
+      expect(response.status).toEqual(404);
+      expect(response.body.message).toEqual('Usuário não encontrado.');
+    });
+
+    it('returns status code 204 if code was sent', async () => {
+      const response = await globalThis.request
+        .post('/api/auth/codes')
+        .set('Content-Type', 'application/json')
+        .send({ email: user_email });
+
+      expect(response.status).toEqual(204);
+    });
+  });
 });

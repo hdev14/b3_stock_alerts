@@ -7,7 +7,6 @@ import { body, checkSchema, param } from 'express-validator';
 import { auth_service } from 'src/bootstrap';
 import { reset_password } from './validations';
 
-// TODO
 const router = Router();
 
 router.get(
@@ -71,6 +70,27 @@ router.patch(
       const { password } = request.body;
 
       const result = await auth_service.resetPassword(user_id, password);
+
+      if (result.error && result.error instanceof NotFoundError) {
+        return response.status(404).json({ message: result.error.message });
+      }
+
+      return response.sendStatus(204);
+    } catch (e) {
+      return next(e);
+    }
+  },
+);
+
+router.post(
+  '/auth/codes',
+  body('email').isEmail(),
+  validator,
+  async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const { email } = request.body;
+
+      const result = await auth_service.sendConfirmationCode(email);
 
       if (result.error && result.error instanceof NotFoundError) {
         return response.status(404).json({ message: result.error.message });

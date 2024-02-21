@@ -64,7 +64,8 @@ export default class AuthService {
 
     const code = randomInt(1000, 9999).toString();
     const expired_at = new Date();
-    expired_at.setMinutes(expired_at.getMinutes() + 10);
+    const minutes = 5;
+    expired_at.setMinutes(expired_at.getMinutes() + minutes);
 
     await this.confirmation_code.sendCode({ email, code });
 
