@@ -20,16 +20,54 @@
 
       <input type="hidden" name="email" data-testid="email" value="{{email}}" />
 
-      <button class="primary-button my-2 self-end" type="submit" data-testid="confirm-code-submit">
-        Confirmar
-      </button>
-
+      <div id="buttons" class="flex my-2 justify-between items-center">
+        <button class="primary-button" type="submit" data-testid="confirm-code-submit">
+          Confirmar
+        </button>
+      </div>
       <!-- TODO: add code counter -->
     </form>
   </div>
 </main>
 
 <script>
+  const buttons_div = document.getElementById('buttons');
+
+  const expired_at = new Date();
+  expired_at.setMinutes(expired_at.getMinutes() + 1);
+
+  const counter = document.createElement('div');
+  counter.setAttribute('data-testid', 'confirm-code-counter');
+  counter.classList.add('text-sm', 'text-gray-500');
+  counter.innerHTML = 'O código expira em <b>5:00</b>';
+
+  const resent_button = document.createElement('buttton');
+  resent_button.setAttribute('data-testid', 'confirm-code-resent-button');
+  resent_button.setAttribute('type', 'button');
+  resent_button.classList.add('primary-outline-button');
+  resent_button.addEventListener('click', async (e) => {
+    console.log(e);
+  });
+  resent_button.textContent = 'Reenviar';
+
+  buttons_div.insertBefore(counter, buttons_div.firstChild);
+
+  const formatter = new Intl.DateTimeFormat('pt-BR', { second: 'numeric', minute: 'numeric' });
+
+  const interval_id = setInterval(() => {
+    const current = new Date();
+    if (expired_at < current && buttons_div.contains(counter)) {
+      buttons_div.removeChild(counter);
+      buttons_div.insertBefore(resent_button, buttons_div.firstChild);
+      clearInterval(interval_id);
+      return;
+    }
+
+    const date_time_remaining = expired_at.getTime() - current.getTime();
+
+    counter.innerHTML = `O código expira em <b>${formatter.format(date_time_remaining)}</b>`;
+  }, 1000);
+
   new Form(
     document.getElementById('confirm-code-form'),
     [

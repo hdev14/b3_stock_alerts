@@ -112,4 +112,12 @@ test.describe('Confirm Code Page', () => {
 
     expect(result).toBeTruthy();
   });
+
+  test('should disable a counter', async ({ page }) => {
+    await page.goto(`/pages/confirm-code?email=${user.email}`);
+
+    const counter = page.getByTestId('confirm-code-counter');
+
+    expect(counter).toBeTruthy();
+  });
 });
