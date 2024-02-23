@@ -25,48 +25,70 @@
           Confirmar
         </button>
       </div>
-      <!-- TODO: add code counter -->
     </form>
   </div>
 </main>
 
 <script>
-  const buttons_div = document.getElementById('buttons');
+  class ResentCode {
+    #buttons_div;
+    #counter;
+    #resent_button;
+    static MINUTES = 5;
 
-  const expired_at = new Date();
-  expired_at.setMinutes(expired_at.getMinutes() + 1);
-
-  const counter = document.createElement('div');
-  counter.setAttribute('data-testid', 'confirm-code-counter');
-  counter.classList.add('text-sm', 'text-gray-500');
-  counter.innerHTML = 'O código expira em <b>5:00</b>';
-
-  const resent_button = document.createElement('buttton');
-  resent_button.setAttribute('data-testid', 'confirm-code-resent-button');
-  resent_button.setAttribute('type', 'button');
-  resent_button.classList.add('primary-outline-button');
-  resent_button.addEventListener('click', async (e) => {
-    console.log(e);
-  });
-  resent_button.textContent = 'Reenviar';
-
-  buttons_div.insertBefore(counter, buttons_div.firstChild);
-
-  const formatter = new Intl.DateTimeFormat('pt-BR', { second: 'numeric', minute: 'numeric' });
-
-  const interval_id = setInterval(() => {
-    const current = new Date();
-    if (expired_at < current && buttons_div.contains(counter)) {
-      buttons_div.removeChild(counter);
-      buttons_div.insertBefore(resent_button, buttons_div.firstChild);
-      clearInterval(interval_id);
-      return;
+    constructor(resent_handler) {
+      this.#counter = this.#createCounter();
+      this.#resent_button = this.#createResentButton(resent_handler);
+      this.#buttons_div = document.getElementById('buttons');
     }
 
-    const date_time_remaining = expired_at.getTime() - current.getTime();
+    #createCounter() {
+      const counter = document.createElement('div');
+      counter.setAttribute('data-testid', 'confirm-code-counter');
+      counter.classList.add('text-sm', 'text-gray-500');
+      counter.innerHTML = 'O código expira em <b>5:00</b>';
+      return counter;
+    }
 
-    counter.innerHTML = `O código expira em <b>${formatter.format(date_time_remaining)}</b>`;
-  }, 1000);
+    #createResentButton(resent_handler) {
+      const resent_button = document.createElement('buttton');
+      resent_button.setAttribute('data-testid', 'confirm-code-resent-button');
+      resent_button.setAttribute('type', 'button');
+      resent_button.classList.add('primary-outline-button');
+      resent_button.addEventListener('click', resent_handler.bind(this));
+      resent_button.textContent = 'Reenviar';
+      return resent_button;
+    }
+
+    startCounter() {
+      const expired_at = new Date();
+      expired_at.setMinutes(expired_at.getMinutes() + ResentCode.MINUTES);
+
+      this.#buttons_div.insertBefore(this.#counter, this.#buttons_div.firstChild);
+
+      const datetime_formatter = new Intl.DateTimeFormat('pt-BR', { second: 'numeric', minute: 'numeric' });
+
+      const interval_id = setInterval(() => {
+        const current = new Date();
+
+        if (expired_at < current && this.#buttons_div.contains(this.#counter)) {
+          this.#buttons_div.removeChild(this.#counter);
+          this.#buttons_div.insertBefore(this.#resent_button, this.#buttons_div.firstChild);
+          clearInterval(interval_id);
+          return;
+        }
+
+        const date_time_remaining = expired_at.getTime() - current.getTime();
+
+        this.#counter.innerHTML = `O código expira em <b>${datetime_formatter.format(date_time_remaining)}</b>`;
+      }, 1000);
+    }
+
+    restartCounter() {
+      this.#buttons_div.removeChild(this.#resent_button);
+      this.startCounter();
+    }
+  }
 
   new Form(
     document.getElementById('confirm-code-form'),
@@ -78,5 +100,21 @@
       },
     ]
   ).init();
+
+  new ResentCode(async function (e) {
+    const response = await fetch('/api/auth/codes', {
+      method: 'POST',
+      body: JSON.stringify({ email: '{{email}}' }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status >= 400) {
+      return;
+    }
+
+    this.restartCounter();
+  }).startCounter();
 </script>
 {{> _footer}}
