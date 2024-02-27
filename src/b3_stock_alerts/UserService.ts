@@ -1,6 +1,6 @@
 import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import NotFoundError from '@shared/NotFoundError';
-import { Result } from '@shared/generic_types';
+import { Result, error, success } from '@shared/Result';
 import { randomUUID } from 'crypto';
 import Encryptor from './Encryptor';
 import { User } from './User';
@@ -28,23 +28,21 @@ export default class UserService {
     const user = await this.repository.getUser(user_id);
 
     if (!user) {
-      return {
-        error: new NotFoundError('Usuário não encontrado'),
-      };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
-    return { data: user };
+    return success(user);
   }
 
   async listUsers(): Promise<Result<Array<User>>> {
     const users = await this.repository.getUsers();
 
-    return { data: users };
+    return success(users);
   }
 
   async createUser(params: CreateUserParams): Promise<Result<User>> {
     if (await this.repository.getUserByEmail(params.email)) {
-      return { error: new EmailAlreadyRegisteredError() };
+      return error(new EmailAlreadyRegisteredError());
     }
 
     const password_hash = this.encryptor.createHash(params.password);
@@ -59,14 +57,14 @@ export default class UserService {
 
     await this.repository.createUser(user);
 
-    return { data: user };
+    return success(user);
   }
 
   async updateUser({ user_id, ...rest }: UpdateUserParams): Promise<Result<User>> {
     const user = await this.repository.getUser(user_id);
 
     if (!user) {
-      return { error: new NotFoundError('Usuário não encontrado') };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
     if (rest.password) {
@@ -77,16 +75,16 @@ export default class UserService {
 
     await this.repository.updateUser(new_data);
 
-    return { data: new_data };
+    return success(new_data);
   }
 
-  async removeUser(user_id: string): Promise<Result | void> {
+  async removeUser(user_id: string): Promise<Result<void>> {
     if (!await this.repository.getUser(user_id)) {
-      return { error: new NotFoundError('Usuário não encontrado') };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
     await this.repository.deleteUser(user_id);
 
-    return {};
+    return success();
   }
 }

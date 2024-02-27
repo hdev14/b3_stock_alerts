@@ -55,9 +55,9 @@ describe("AuthService's unit tests", () => {
       const email = faker.internet.email();
       const password = faker.string.alphanumeric(10);
 
-      const result = await auth_service.login(email, password);
+      const [error] = await auth_service.login(email, password);
 
-      expect(result.error).toBeInstanceOf(CredentialError);
+      expect(error).toBeInstanceOf(CredentialError);
     });
 
     it('returns a result with CredentialError if password is wrong', async () => {
@@ -77,9 +77,9 @@ describe("AuthService's unit tests", () => {
       const email = faker.internet.email();
       const password = faker.string.alphanumeric(10);
 
-      const result = await auth_service.login(email, password);
+      const [error] = await auth_service.login(email, password);
 
-      expect(result.error).toBeInstanceOf(CredentialError);
+      expect(error).toBeInstanceOf(CredentialError);
     });
 
     it('returns a result with user and auth data if credentials are correct', async () => {
@@ -103,12 +103,12 @@ describe("AuthService's unit tests", () => {
       const email = faker.internet.email();
       const password = faker.string.alphanumeric(10);
 
-      const result = await auth_service.login(email, password);
+      const [, data] = await auth_service.login(email, password);
 
-      if (result.data) {
-        expect(result.data.user).toBe(user);
-        expect(result.data.token).toBe('fake_token');
-        expect(result.data.expired_at).toBeInstanceOf(Date);
+      if (data) {
+        expect(data.user).toBe(user);
+        expect(data.token).toBe('fake_token');
+        expect(data.expired_at).toBeInstanceOf(Date);
       }
     });
   });
@@ -129,9 +129,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getUserByEmail.mockResolvedValueOnce(null);
 
-      const result = await auth_service.sendConfirmationCode(email);
+      const [error] = await auth_service.sendConfirmationCode(email);
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('calls ConfirmationCode.sendCode with correct code and email', async () => {
@@ -198,9 +198,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getConfirmationCode.mockResolvedValueOnce(null);
 
-      const result = await auth_service.confirmCode(email, code);
+      const [, data] = await auth_service.confirmCode(email, code);
 
-      expect(result.data).toEqual(false);
+      expect(data).toEqual(false);
     });
 
     it('returns a result with true if code exists', async () => {
@@ -218,9 +218,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getConfirmationCode.mockResolvedValueOnce(confirmation_code);
 
-      const result = await auth_service.confirmCode(email, code);
+      const [, data] = await auth_service.confirmCode(email, code);
 
-      expect(result.data).toEqual(true);
+      expect(data).toEqual(true);
     });
 
     it('returns a result with ExpiredCodeError if code expired', async () => {
@@ -238,9 +238,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getConfirmationCode.mockResolvedValueOnce(confirmation_code);
 
-      const result = await auth_service.confirmCode(email, code);
+      const [error] = await auth_service.confirmCode(email, code);
 
-      expect(result.error).toBeInstanceOf(ExpiredCodeError);
+      expect(error).toBeInstanceOf(ExpiredCodeError);
     });
   });
 
@@ -256,9 +256,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getUserByEmail.mockResolvedValueOnce(null);
 
-      const result = await auth_service.forgotPassword(email);
+      const [error] = await auth_service.forgotPassword(email);
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('sends a forgot password link if user exists', async () => {
@@ -300,9 +300,9 @@ describe("AuthService's unit tests", () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await auth_service.resetPassword(user_id, new_password);
+      const [error] = await auth_service.resetPassword(user_id, new_password);
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('updates the user password', async () => {

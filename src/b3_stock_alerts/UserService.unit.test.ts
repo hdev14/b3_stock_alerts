@@ -41,10 +41,10 @@ describe("UserService's unit tests", () => {
 
       repository_mock.getUser.mockResolvedValueOnce(user);
 
-      const result = await service.getUser(faker.string.uuid());
+      const [error, data] = await service.getUser(faker.string.uuid());
 
-      expect(result.data).toEqual(user);
-      expect(result.error).toBeUndefined();
+      expect(data).toEqual(user);
+      expect(error).toBeUndefined();
     });
 
     it("returns a Result with a NotFoundError if user doesn't exist", async () => {
@@ -52,10 +52,10 @@ describe("UserService's unit tests", () => {
 
       repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await service.getUser(faker.string.uuid());
+      const [error, data] = await service.getUser(faker.string.uuid());
 
-      expect(result.data).toBeUndefined();
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(data).toEqual({});
+      expect(error).toBeInstanceOf(NotFoundError);
     });
   });
 
@@ -86,12 +86,12 @@ describe("UserService's unit tests", () => {
 
       repository_mock.getUsers.mockResolvedValueOnce(users);
 
-      const result = await service.listUsers();
+      const [, data] = await service.listUsers();
 
-      if (result.data) {
-        expect(result.data).toHaveLength(2);
-        expect(result.data[0]).toEqual(users[0]);
-        expect(result.data[1]).toEqual(users[1]);
+      if (data) {
+        expect(data).toHaveLength(2);
+        expect(data[0]).toEqual(users[0]);
+        expect(data[1]).toEqual(users[1]);
       }
     });
   });
@@ -129,15 +129,15 @@ describe("UserService's unit tests", () => {
 
       encryptor_mock.createHash.mockReturnValueOnce('test');
 
-      const result = await service.createUser(params);
+      const [, data] = await service.createUser(params);
 
-      if (result.data) {
+      if (data) {
         expect(repository_mock.createUser).toHaveBeenCalled();
-        expect(result.data.id).toBeDefined();
-        expect(result.data.email).toEqual(params.email);
-        expect(result.data.name).toEqual(params.name);
-        expect(result.data.password).toEqual('test');
-        expect(result.data.phone_number).toEqual(params.phone_number);
+        expect(data.id).toBeDefined();
+        expect(data.email).toEqual(params.email);
+        expect(data.name).toEqual(params.name);
+        expect(data.password).toEqual('test');
+        expect(data.phone_number).toEqual(params.phone_number);
       }
     });
 
@@ -160,10 +160,10 @@ describe("UserService's unit tests", () => {
       });
       encryptor_mock.createHash.mockReturnValueOnce('test');
 
-      const result = await service.createUser(params);
+      const [error] = await service.createUser(params);
 
       expect(repository_mock.getUserByEmail).toHaveBeenCalledWith(params.email);
-      expect(result.error).toBeInstanceOf(EmailAlreadyRegisteredError);
+      expect(error).toBeInstanceOf(EmailAlreadyRegisteredError);
     });
   });
 
@@ -180,10 +180,10 @@ describe("UserService's unit tests", () => {
         user_id: faker.string.uuid(),
       };
 
-      const result = await service.updateUser(params);
+      const [error, data] = await service.updateUser(params);
 
-      expect(result.data).toBeUndefined();
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(data).toEqual({});
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('generates a new password hash if the field is passed', async () => {
@@ -229,16 +229,16 @@ describe("UserService's unit tests", () => {
 
       repository_mock.getUser.mockResolvedValueOnce(user);
 
-      const result = await service.updateUser(params);
+      const [error, data] = await service.updateUser(params);
 
-      if (result.data) {
+      if (data) {
         expect(repository_mock.updateUser).toHaveBeenCalled();
-        expect(result.data.id).toBeDefined();
-        expect(result.data.name).toEqual(params.name);
-        expect(result.data.email).toEqual(params.email);
-        expect(result.data.phone_number).toEqual(params.phone_number);
-        expect(result.data.password).toEqual(user.password);
-        expect(result.error).toBeUndefined();
+        expect(data.id).toBeDefined();
+        expect(data.name).toEqual(params.name);
+        expect(data.email).toEqual(params.email);
+        expect(data.phone_number).toEqual(params.phone_number);
+        expect(data.password).toEqual(user.password);
+        expect(error).toBeUndefined();
       }
     });
   });
@@ -254,12 +254,10 @@ describe("UserService's unit tests", () => {
 
       repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await service.removeUser(faker.string.uuid());
+      const [error] = await service.removeUser(faker.string.uuid());
 
-      if (result) {
-        expect(repository_mock.getUser).toHaveBeenCalled();
-        expect(result.error).toBeInstanceOf(NotFoundError);
-      }
+      expect(repository_mock.getUser).toHaveBeenCalled();
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('deletes an user', async () => {

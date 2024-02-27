@@ -36,15 +36,15 @@ describe('AlertService', () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
 
-      const result = await service.createMaxAlert(params);
+      const [, data] = await service.createMaxAlert(params);
 
-      if (result.data) {
+      if (data) {
         expect(alert_repository_mock.createAlert).toHaveBeenCalled();
-        expect(result.data.id).toBeDefined();
-        expect(result.data.max_amount).toEqual(params.amount);
-        expect(result.data.min_amount).toBeUndefined();
-        expect(result.data.user_id).toEqual(params.user_id);
-        expect(result.data.stock).toEqual(params.stock);
+        expect(data.id).toBeDefined();
+        expect(data.max_amount).toEqual(params.amount);
+        expect(data.min_amount).toBeUndefined();
+        expect(data.user_id).toEqual(params.user_id);
+        expect(data.stock).toEqual(params.stock);
       }
     });
 
@@ -59,9 +59,9 @@ describe('AlertService', () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await service.createMaxAlert(params);
+      const [error] = await service.createMaxAlert(params);
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
   });
 
@@ -77,15 +77,15 @@ describe('AlertService', () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce({ id: faker.string.uuid() });
 
-      const result = await service.createMinAlert(params);
+      const [, data] = await service.createMinAlert(params);
 
-      if (result.data) {
+      if (data) {
         expect(alert_repository_mock.createAlert).toHaveBeenCalled();
-        expect(result.data.id).toBeDefined();
-        expect(result.data.max_amount).toBeUndefined();
-        expect(result.data.min_amount).toEqual(params.amount);
-        expect(result.data.user_id).toEqual(params.user_id);
-        expect(result.data.stock).toEqual(params.stock);
+        expect(data.id).toBeDefined();
+        expect(data.max_amount).toBeUndefined();
+        expect(data.min_amount).toEqual(params.amount);
+        expect(data.user_id).toEqual(params.user_id);
+        expect(data.stock).toEqual(params.stock);
       }
     });
 
@@ -100,9 +100,9 @@ describe('AlertService', () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await service.createMinAlert(params);
+      const [error] = await service.createMinAlert(params);
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
   });
 
@@ -119,10 +119,10 @@ describe('AlertService', () => {
 
       alert_repository_mock.getAlert.mockResolvedValueOnce(null);
 
-      const result = await service.removeAlert(alert_id);
+      const [error] = await service.removeAlert(alert_id);
 
       expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
-      expect(result.error).toBeInstanceOf(NotFoundError);
+      expect(error).toBeInstanceOf(NotFoundError);
     });
 
     it('removes an alert', async () => {
@@ -137,10 +137,10 @@ describe('AlertService', () => {
         min_amount: faker.number.float(),
       });
 
-      const result = await service.removeAlert(alert_id);
+      const [, data] = await service.removeAlert(alert_id);
 
       expect(alert_repository_mock.getAlert).toHaveBeenCalledWith(alert_id);
-      expect(result).toEqual({});
+      expect(data).toEqual({});
     });
   });
 
@@ -150,10 +150,10 @@ describe('AlertService', () => {
 
       user_repository_mock.getUser.mockResolvedValueOnce(null);
 
-      const result = await service.listUserAlerts(faker.string.uuid());
+      const [error, data] = await service.listUserAlerts(faker.string.uuid());
 
-      expect(result.error).toBeInstanceOf(NotFoundError);
-      expect(result.data).toBeUndefined();
+      expect(error).toBeInstanceOf(NotFoundError);
+      expect(data).toEqual({});
     });
 
     it('returns a result with an array of alerts', async () => {
@@ -177,10 +177,10 @@ describe('AlertService', () => {
         },
       ]);
 
-      const result = await service.listUserAlerts(faker.string.uuid());
+      const [error, data] = await service.listUserAlerts(faker.string.uuid());
 
-      expect(result.error).toBeUndefined();
-      expect(result.data).toHaveLength(2);
+      expect(error).toBeUndefined();
+      expect(data).toHaveLength(2);
     });
   });
 });

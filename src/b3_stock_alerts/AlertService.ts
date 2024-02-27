@@ -1,5 +1,5 @@
 import NotFoundError from '@shared/NotFoundError';
-import { Result } from '@shared/generic_types';
+import { Result, error, success } from '@shared/Result';
 import { randomUUID } from 'crypto';
 import { Alert } from './Alert';
 import AlertRepository from './AlertRepository';
@@ -28,12 +28,12 @@ export default class AlertService {
     const user = await this.user_repository.getUser(params.user_id);
 
     if (!user) {
-      return { error: new NotFoundError('Usuário não encontrado') };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
     await this.alert_repository.createAlert(alert);
 
-    return { data: alert };
+    return success(alert);
   }
 
   async createMinAlert(params: CreateAlertParams): Promise<Result<Alert>> {
@@ -47,35 +47,35 @@ export default class AlertService {
     const user = await this.user_repository.getUser(params.user_id);
 
     if (!user) {
-      return { error: new NotFoundError('Usuário não encontrado') };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
     await this.alert_repository.createAlert(alert);
 
-    return { data: alert };
+    return success(alert);
   }
 
   async removeAlert(alert_id: string): Promise<Result<void>> {
     const alert = await this.alert_repository.getAlert(alert_id);
 
     if (!alert) {
-      return { error: new NotFoundError('Alerta não encontrado') };
+      return error(new NotFoundError('Alerta não encontrado'));
     }
 
     await this.alert_repository.deleteAlert(alert_id);
 
-    return {};
+    return success();
   }
 
   async listUserAlerts(user_id: string): Promise<Result<Alert[]>> {
     const user = await this.user_repository.getUser(user_id);
 
     if (!user) {
-      return { error: new NotFoundError('Usuário não encontrado') };
+      return error(new NotFoundError('Usuário não encontrado'));
     }
 
     const alerts = await this.alert_repository.listAlertsByUserId(user_id);
 
-    return { data: alerts };
+    return success(alerts);
   }
 }
