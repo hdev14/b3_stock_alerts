@@ -9,10 +9,10 @@ export default function auth(request: Request, response: Response, next: NextFun
     const cookie = request.headers.cookie.split(';').find((cookie) => cookie.split('=')[0] === 'AT');
     const [, access_token] = cookie !== undefined ? cookie.split('=') : [];
 
-    const result = auth_service.verifyAuthentication(access_token);
+    const [, data] = auth_service.verifyAuthentication(access_token);
 
-    if (result.data) {
-      Object.assign(request.headers, { user_id: result.data.id });
+    if (data) {
+      Object.assign(request.headers, { user_id: data.id });
       return next();
     }
   }

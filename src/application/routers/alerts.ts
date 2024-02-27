@@ -19,23 +19,17 @@ router.post(
         isMax, user_id, stock, amount,
       } = request.body;
 
-      let result;
+      const [error, data] = isMax ? await alert_service.createMaxAlert({
+        user_id, amount, stock,
+      }) : await alert_service.createMinAlert({
+        user_id, amount, stock,
+      });
 
-      if (isMax) {
-        result = await alert_service.createMaxAlert({
-          user_id, amount, stock,
-        });
-      } else {
-        result = await alert_service.createMinAlert({
-          user_id, amount, stock,
-        });
+      if (error instanceof NotFoundError) {
+        return response.status(422).json({ message: error.message });
       }
 
-      if (result.error instanceof NotFoundError) {
-        return response.status(422).json({ message: result.error.message });
-      }
-
-      return response.status(201).json(result.data);
+      return response.status(201).json(data);
     } catch (e) {
       return next(e);
     }
@@ -48,10 +42,10 @@ router.delete(
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const result = await alert_service.removeAlert(request.params.id);
+      const [error] = await alert_service.removeAlert(request.params.id);
 
-      if (result && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
       return response.sendStatus(204);
@@ -67,13 +61,13 @@ router.get(
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const result = await alert_service.listUserAlerts(request.params.id);
+      const [error, data] = await alert_service.listUserAlerts(request.params.id);
 
-      if (result && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
-      return response.status(200).json(result.data);
+      return response.status(200).json(data);
     } catch (e) {
       return next(e);
     }

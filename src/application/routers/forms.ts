@@ -12,23 +12,23 @@ const router = Router();
 router.post('/login', async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { email, password } = request.body;
-    const result = await auth_service.login(email, password);
+    const [error, data] = await auth_service.login(email, password);
     const isProd = process.env.NODE_ENV === 'production';
 
-    if (result.data) {
-      response.cookie('AT', result.data.token, {
+    if (data) {
+      response.cookie('AT', data.token, {
         httpOnly: isProd,
         sameSite: isProd,
         secure: true,
         domain: isProd ? process.env.SERVER_DOMAIN : '',
-        expires: result.data.expired_at,
+        expires: data.expired_at,
       });
 
       return response.redirect('/');
     }
 
-    if (result.error instanceof CredentialError) {
-      return response.redirect(`/pages/login?error_message=${result.error.message}`);
+    if (error instanceof CredentialError) {
+      return response.redirect(`/pages/login?error_message=${error.message}`);
     }
 
     return response.render('/pages/login');
@@ -51,20 +51,20 @@ router.post('/signup', async (request: Request, response: Response, next: NextFu
       phone_number,
     } = request.body;
 
-    const result = await user_service.createUser({
+    const [error, data] = await user_service.createUser({
       email,
       name,
       password,
       phone_number,
     });
 
-    if (result.error instanceof EmailAlreadyRegisteredError) {
-      return response.redirect(`/pages/signup?error_message=${result.error.message}`);
+    if (error instanceof EmailAlreadyRegisteredError) {
+      return response.redirect(`/pages/signup?error_message=${error.message}`);
     }
 
-    await auth_service.sendConfirmationCode(result.data!.email);
+    await auth_service.sendConfirmationCode(data!.email);
 
-    return response.redirect(`/pages/confirm-code?email=${result.data!.email}`);
+    return response.redirect(`/pages/confirm-code?email=${data!.email}`);
   } catch (e) {
     return next(e);
   }
@@ -74,16 +74,16 @@ router.post('/confirm-code', async (request: Request, response: Response, next: 
   try {
     const { email, code } = request.body;
 
-    const result = await auth_service.confirmCode(email, code);
+    const [error, data] = await auth_service.confirmCode(email, code);
 
     const query_params = new URLSearchParams({ email });
 
-    if (result.error instanceof ExpiredCodeError) {
-      query_params.append('error_message', result.error.message);
+    if (error instanceof ExpiredCodeError) {
+      query_params.append('error_message', error.message);
       return response.redirect(`/pages/confirm-code?${query_params.toString()}`);
     }
 
-    if (!result.data) {
+    if (!data) {
       query_params.append('error_message', 'Código não encontrado.');
       return response.redirect(`/pages/confirm-code?${query_params.toString()}`);
     }
@@ -98,11 +98,11 @@ router.post('/forgot-password', async (request: Request, response: Response, nex
   try {
     const { email } = request.body;
 
-    const result = await auth_service.forgotPassword(email)
+    const [error] = await auth_service.forgotPassword(email)
 
     const query_params = new URLSearchParams();
 
-    if (result.error && result.error instanceof NotFoundError) {
+    if (error instanceof NotFoundError) {
       query_params.append('error_message', 'Não foi encontrado nenhum usuário com esse endereço de e-mail.');
     } else {
       query_params.append('info_message', 'Por favor verifique seu e-mail. Caso não tenha recebido tente novamente.');

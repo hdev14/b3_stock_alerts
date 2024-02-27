@@ -1,3 +1,4 @@
+import EmailAlreadyRegisteredError from '@shared/EmailAlreadyRegisteredError';
 import NotFoundError from '@shared/NotFoundError';
 import {
   NextFunction, Request, Response, Router,
@@ -22,15 +23,15 @@ router.post(
         password,
       } = request.body;
 
-      const result = await user_service.createUser({
+      const [error, data] = await user_service.createUser({
         name, email, phone_number, password,
       });
 
-      if (result.data) {
-        return response.status(201).json(result.data);
+      if (error instanceof EmailAlreadyRegisteredError) {
+        return response.status(422).json({ mesasge: error.message });
       }
 
-      return response.status(200).json({ mesasge: 'asdfas' });
+      return response.status(201).json(data);
     } catch (e) {
       return next(e);
     }
@@ -43,12 +44,13 @@ router.get(
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const result = await user_service.getUser(request.params.id);
-      if (result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      const [error, data] = await user_service.getUser(request.params.id);
+
+      if (error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
-      return response.status(200).json(result.data);
+      return response.status(200).json(data);
     } catch (e) {
       return next(e);
     }
@@ -57,9 +59,9 @@ router.get(
 
 router.get('/users', async (_: Request, response: Response, next: NextFunction) => {
   try {
-    const result = await user_service.listUsers();
+    const [, data] = await user_service.listUsers();
 
-    return response.status(200).json(result.data);
+    return response.status(200).json(data);
   } catch (e) {
     return next(e);
   }
@@ -79,7 +81,7 @@ router.put(
         password,
       } = request.body;
 
-      const result = await user_service.updateUser({
+      const [error, data] = await user_service.updateUser({
         user_id: request.params.id,
         name,
         email,
@@ -87,11 +89,11 @@ router.put(
         password,
       });
 
-      if (result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
-      return response.status(200).json(result.data);
+      return response.status(200).json(data);
     } catch (e) {
       return next(e);
     }
@@ -104,10 +106,10 @@ router.delete(
   validator,
   async (request: Request, response: Response, next: NextFunction) => {
     try {
-      const result = await user_service.removeUser(request.params.id);
+      const [error] = await user_service.removeUser(request.params.id);
 
-      if (result && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
       return response.sendStatus(204);

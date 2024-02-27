@@ -46,9 +46,9 @@ router.post(
         return response.sendStatus(204);
       }
 
-      const result = await auth_service.verifyCaptcha(user_ip, token);
+      const [, data] = await auth_service.verifyCaptcha(user_ip, token);
 
-      if (result.data) {
+      if (data) {
         return response.sendStatus(204);
       }
 
@@ -69,10 +69,10 @@ router.patch(
       const { user_id } = request.params;
       const { password } = request.body;
 
-      const result = await auth_service.resetPassword(user_id, password);
+      const [error] = await auth_service.resetPassword(user_id, password);
 
-      if (result.error && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error && error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
       return response.sendStatus(204);
@@ -90,10 +90,10 @@ router.post(
     try {
       const { email } = request.body;
 
-      const result = await auth_service.sendConfirmationCode(email);
+      const [error] = await auth_service.sendConfirmationCode(email);
 
-      if (result.error && result.error instanceof NotFoundError) {
-        return response.status(404).json({ message: result.error.message });
+      if (error && error instanceof NotFoundError) {
+        return response.status(404).json({ message: error.message });
       }
 
       return response.sendStatus(204);
