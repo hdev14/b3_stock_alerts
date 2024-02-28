@@ -4,7 +4,7 @@ import { type FullConfig } from '@playwright/test';
 async function globalTeardown(_config: FullConfig) {
   const user = {
     id: faker.string.uuid(),
-    email: 'user_test@test.com',
+    email: faker.internet.email(),
     name: faker.person.fullName(),
     password: faker.string.alphanumeric(100),
     phone_number: faker.string.numeric(11),
@@ -17,6 +17,7 @@ async function globalTeardown(_config: FullConfig) {
   });
 
   if (response.status >= 400) {
+    console.log(await response.json());
     throw new Error('Usuário não criado.');
   }
 

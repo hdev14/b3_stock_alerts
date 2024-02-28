@@ -1,4 +1,5 @@
 import auth from '@app/middlewares/auth';
+import checkAuthToken from '@app/middlewares/check_auth_token';
 import { Request, Response, Router } from 'express';
 import { getAlerts, getScripts } from '../page_utils';
 
@@ -8,22 +9,11 @@ router.get('/index', auth, (_request: Request, response: Response) => {
   response.render('index', { title: 'B3 Stock Alerts!' });
 });
 
-router.get('/login', (request: Request, response: Response) => {
-  if (request.headers.cookie) {
-    const cookies = request.headers.cookie.split(';');
-    const has_access_token = cookies.find((cookie) => cookie.split('=')[0] === 'AT');
-
-    if (has_access_token) {
-      return response.redirect('/');
-    }
-  }
-
-  return response.render('login', {
-    title: 'Login!',
-    scripts: getScripts(['captcha', 'validator', 'form']),
-    alerts: getAlerts(request.query),
-  });
-});
+router.get('/login', checkAuthToken, (request: Request, response: Response) => response.render('login', {
+  title: 'Login!',
+  scripts: getScripts(['captcha', 'validator', 'form']),
+  alerts: getAlerts(request.query),
+}));
 
 router.get('/signup', (request: Request, response: Response) => response.render('signup', {
   title: 'Sign up!',
