@@ -15,23 +15,19 @@ router.post('/login', async (request: Request, response: Response, next: NextFun
     const [error, data] = await auth_service.login(email, password);
     const isProd = process.env.NODE_ENV === 'production';
 
-    if (data) {
-      response.cookie('AT', data.token, {
-        httpOnly: isProd,
-        sameSite: isProd,
-        secure: true,
-        domain: isProd ? process.env.SERVER_DOMAIN : '',
-        expires: data.expired_at,
-      });
-
-      return response.redirect('/');
-    }
-
     if (error instanceof CredentialError) {
       return response.redirect(`/pages/login?error_message=${error.message}`);
     }
 
-    return response.render('/pages/login');
+    response.cookie('AT', data.token, {
+      httpOnly: isProd,
+      sameSite: isProd,
+      secure: true,
+      domain: isProd ? process.env.SERVER_DOMAIN : '',
+      expires: data.expired_at,
+    });
+
+    return response.redirect('/');
   } catch (e) {
     return next(e)
   }

@@ -25,13 +25,11 @@ router.get('/login', (request: Request, response: Response) => {
   });
 });
 
-router.get('/signup', (request: Request, response: Response) => {
-  response.render('signup', {
-    title: 'Sign up!',
-    scripts: getScripts(['captcha', 'validator', 'form', 'imask']),
-    alerts: getAlerts(request.query),
-  });
-});
+router.get('/signup', (request: Request, response: Response) => response.render('signup', {
+  title: 'Sign up!',
+  scripts: getScripts(['captcha', 'validator', 'form', 'imask']),
+  alerts: getAlerts(request.query),
+}));
 
 router.get('/confirm-code', (request: Request, response: Response) => {
   if (!request.query.email) {
@@ -46,13 +44,11 @@ router.get('/confirm-code', (request: Request, response: Response) => {
   });
 });
 
-router.get('/forgot-password', (request: Request, response: Response) => {
-  response.render('forgot_password', {
-    title: 'Esqueceu a senha?',
-    scripts: getScripts(['captcha', 'validator', 'form']),
-    alerts: getAlerts(request.query),
-  });
-});
+router.get('/forgot-password', (request: Request, response: Response) => response.render('forgot_password', {
+  title: 'Esqueceu a senha?',
+  scripts: getScripts(['captcha', 'validator', 'form']),
+  alerts: getAlerts(request.query),
+}));
 
 router.get('/reset-password', (request: Request, response: Response) => {
   if (!request.query.user_id) {
@@ -67,10 +63,8 @@ router.get('/reset-password', (request: Request, response: Response) => {
   });
 });
 
-router.get('/500', (_request: Request, response: Response) => {
-  response.render('500', {
-    title: 'Internal Server Error!',
-  });
-});
+router.get('/500', (_request: Request, response: Response) => response.render('500', {
+  title: 'Internal Server Error!',
+}));
 
 export default router;

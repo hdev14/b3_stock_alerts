@@ -1,4 +1,5 @@
 class Alert {
+  // TODO: fix class
   static ALERT_TYPES = {
     success_message: [
       'absolute',
