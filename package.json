@@ -12,8 +12,8 @@
     "test:int": "dotenv -e .env.test -- npx jest int --passWithNoTests --watch --silent=false --detectOpenHandles --config=jest.int.config.js",
     "test:e2e:api": "dotenv -e .env.e2e.api -- npx jest e2e --passWithNoTests --watch --silent=false --detectOpenHandles --runInBand --config=jest.e2e.config.js",
     "test:e2e:web": "dotenv -e .env.e2e.web -- npx playwright test --ui",
-    "css:dev": "tailwindcss -i ./src/application/public/css/tailwindcss.css -o ./src/application/public/css/global.css",
-    "css:prod": "tailwindcss -i ./src/application/public/css/tailwindcss.css -o ./build/src/application/public/css/global.css --minifiy"
+    "css:dev": "tailwindcss build -i ./src/application/public/css/tailwindcss.css -o ./src/application/public/css/global.css",
+    "css:prod": "tailwindcss build -i ./src/application/public/css/tailwindcss.css -o ./build/src/application/public/css/global.css --minifiy"
   },
   "keywords": [],
   "author": "",

@@ -102,7 +102,7 @@ test.describe('Login Page', () => {
     expect(cookies.some((cookie) => cookie.name === 'AT')).toBeTruthy();
   });
 
-  test.skip('should inform the user if credentials are wrong', async ({ page, baseURL }) => {
+  test('should inform the user if credentials are wrong', async ({ page, baseURL }) => {
     const email_input = page.getByTestId('login-email');
     await email_input.fill(user.email);
 
