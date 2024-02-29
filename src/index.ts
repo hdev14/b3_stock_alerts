@@ -45,6 +45,8 @@ function createJobWorker() {
     }
 
     server.application.listen(process.env.SERVER_PORT, () => {
+      console.log('PID: ', process.pid);
+
       createJobWorker(); // new thread
 
       if (isDev || isTest) {

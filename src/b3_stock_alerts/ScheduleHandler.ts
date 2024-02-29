@@ -14,7 +14,7 @@ export default class ScheduleHandler extends EventEmitter {
   }
 
   async handle() {
-    this.emit('error', new Error('tests'));
+    this.emit('message', `Send alerts at ${new Date().toISOString()}`);
 
     let alerts: Alert[];
     let skip = 0;
@@ -62,7 +62,7 @@ export default class ScheduleHandler extends EventEmitter {
         }
       } catch (e) {
         if (e instanceof StockNotFoundError) {
-          console.log(e.message);
+          this.emit('error', e);
           continue;
         }
 
