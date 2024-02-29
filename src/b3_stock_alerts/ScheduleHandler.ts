@@ -14,6 +14,8 @@ export default class ScheduleHandler extends EventEmitter {
   }
 
   async handle() {
+    this.emit('error', new Error('tests'));
+
     let alerts: Alert[];
     let skip = 0;
 

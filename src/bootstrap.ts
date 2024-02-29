@@ -14,12 +14,8 @@ const alert_repository = new PgAlertRepository();
 const user_repository = new PgUserRepository();
 const stock_searcher = new WSStockSearcher();
 const email_gateway = new EmailGateway();
-const stock_event_handler = new StockEventHandler(email_gateway, user_repository);
+export const stock_event_handler = new StockEventHandler(email_gateway, user_repository);
 export const schedule_handler = new ScheduleHandler(alert_repository, stock_searcher);
-schedule_handler.on('stock_event', stock_event_handler.handle.bind(stock_event_handler));
-schedule_handler.on('uncaughtException', (error) => {
-  console.error('uncaughtException:', error.stack);
-});
 const encryptor = new BcryptEncryptor();
 const authenticator = new CoreAuthenticator();
 export const user_service = new UserService(user_repository, encryptor);
