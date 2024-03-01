@@ -47,7 +47,9 @@ function createJobWorker() {
     server.application.listen(process.env.SERVER_PORT, () => {
       console.log('PID: ', process.pid);
 
-      createJobWorker(); // new thread
+      if (process.env.JOB_ENABLED === 'true') {
+        createJobWorker(); // new thread
+      }
 
       if (isDev || isTest) {
         console.info(`Server is running on http://localhost:${process.env.SERVER_PORT}/`);

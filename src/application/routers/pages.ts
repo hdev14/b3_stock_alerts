@@ -9,6 +9,10 @@ router.get('/index', auth, (_request: Request, response: Response) => {
   response.render('index', { title: 'B3 Stock Alerts!' });
 });
 
+router.get('/home', (_request: Request, response: Response) => {
+  response.render('home', { title: 'B3 Stock Alerts!' });
+});
+
 router.get('/login', checkAuthToken, (request: Request, response: Response) => response.render('login', {
   title: 'Login!',
   scripts: getScripts(['captcha', 'validator', 'form']),

@@ -33,8 +33,12 @@
 
   .default-button {
     @apply cursor-pointer px-8 py-2 rounded-md text-white font-semibold !bg-gray-600 hover:!bg-gray-700 w-auto;
-  }
+  } 
 
+  .gradient {
+    @apply bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-900;
+  }
+  
   .container-gradient {
     @apply w-screen h-screen text-gray-900 bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-900;
   }
